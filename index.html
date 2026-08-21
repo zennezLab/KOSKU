@@ -3,154 +3,582 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KOSKU - Manajemen Kos</title>
+<title>JOHAN KOSKU - Manajemen Kos Modern</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-:root{--primary:#3b82f6;--primary-dark:#2563eb;--primary-darker:#1d4ed8;--success:#10b981;--success-dark:#059669;--warning:#f59e0b;--warning-dark:#d97706;--danger:#ef4444;--danger-dark:#dc2626;--purple:#8b5cf6;--purple-dark:#7c3aed;--dark:#0f172a;--bg:#f1f5f9;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0}
-body{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+:root{
+    --gold:#FFD700;
+    --gold-dark:#D4AF37;
+    --blue-light:#38bdf8;
+    --blue-medium:#0ea5e9;
+    --blue-dark:#0284c7;
+    --bg-main:#e0f2fe;
+    --bg-card:rgba(255, 255, 255, 0.65);
+    --bg-sidebar:rgba(240, 249, 255, 0.85);
+    --text-main:#0c4a6e;
+    --text-light:#0369a1;
+    --muted-light:#0284c7;
+    --success:#10b981;
+    --danger:#ef4444;
+    --warning:#f59e0b;
+    --purple:#8b5cf6;
+    --border-light:rgba(125, 211, 252, 0.5);
+}
+
+body{
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0f2fe 100%);
+    color:var(--text-main);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    position:relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -10%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+    z-index: -1;
+    filter: blur(60px);
+    animation: float 15s ease-in-out infinite;
+}
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    right: -10%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+    z-index: -1;
+    filter: blur(80px);
+    animation: float 20s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(50px, 30px); }
+}
+
 svg{width:20px;height:20px;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:linear-gradient(180deg,#0f172a 0%,#1e293b 100%);color:white;padding:24px 16px;z-index:1000;transition:.3s;border-right:1px solid rgba(255,255,255,0.05);box-shadow:4px 0 15px rgba(0,0,0,0.1);overflow-y:auto}
-.logo{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:28px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
-.logo-icon{width:45px;height:45px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 4px 10px rgba(59,130,246,0.3)}
-.logo h2{font-size:18px;font-weight:800;letter-spacing:-0.5px}
-.logo small{color:#94a3b8;font-size:11px;font-weight:500}
-.menu-title{color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:12px;margin-top:10px}
-.menu{display:flex;align-items:center;gap:14px;padding:13px;border-radius:10px;color:#cbd5e1;cursor:pointer;margin-bottom:4px;transition:all .2s ease;font-weight:500;font-size:14px;position:relative}
-.menu:hover{background:rgba(255,255,255,0.05);color:white;transform:translateX(4px)}
-.menu.active{background:linear-gradient(90deg,rgba(59,130,246,0.2),transparent);color:white;border-left:3px solid var(--primary);padding-left:10px}
-.menu-icon{width:24px;display:flex;align-items:center;justify-content:center}
-.main{margin-left:260px;min-height:100vh}
-.topbar{height:70px;background:rgba(255,255,255,0.8);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:100}
-.topbar-left{display:flex;align-items:center;gap:15px}
-.page-title{font-size:22px;font-weight:700;letter-spacing:-0.5px}
-.menu-toggle{display:none;border:0;background:#eff6ff;padding:10px;border-radius:8px;cursor:pointer;color:var(--primary)}
-.user-area{display:flex;align-items:center;gap:15px}
-.notification{position:relative;cursor:pointer;padding:8px;border-radius:50%;background:#f1f5f9;color:#64748b;transition:.2s}
-.notification:hover{background:#e2e8f0;color:#1e293b}
-.notification-badge{position:absolute;right:-2px;top:-2px;background:var(--danger);color:white;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid white}
-.avatar{width:40px;height:40px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:white;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(59,130,246,0.3)}
-.content{padding:30px}
-.section{display:none;animation:fadeIn 0.3s ease-in-out}
-.section.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.welcome{background:linear-gradient(135deg,#2563eb 0%,#4f46e5 50%,#7c3aed 100%);color:white;border-radius:20px;padding:30px;margin-bottom:25px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 20px rgba(37,99,235,0.25);position:relative;overflow:hidden}
-.welcome::before{content:'';position:absolute;top:-50%;right:-10%;width:300px;height:300px;background:rgba(255,255,255,0.1);border-radius:50%}
-.welcome h1{font-size:26px;margin-bottom:8px;font-weight:800}
-.welcome p{color:#e0e7ff;font-weight:500}
-.welcome-icon{font-size:80px;opacity:.2;z-index:1}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:25px}
-.stat-card{background:white;border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);transition:transform .2s ease,box-shadow .2s ease}
-.stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 15px -3px rgba(0,0,0,0.1)}
-.stat-info small{color:var(--muted);font-weight:500;text-transform:uppercase;font-size:11px}
-.stat-info h2{font-size:28px;margin-top:6px;font-weight:800}
-.stat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1)}
-.blue{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:white}
-.green{background:linear-gradient(135deg,#34d399,#10b981);color:white}
-.orange{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:white}
-.red{background:linear-gradient(135deg,#f87171,#ef4444);color:white}
-.purple{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:white}
-.card{background:white;border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.02)}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.card-header h3{font-size:18px;font-weight:700}
-.btn{border:0;border-radius:10px;padding:10px 18px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px;transition:all .15s ease;position:relative;color:white;text-decoration:none}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,0.2) !important}
-.btn svg{width:16px;height:16px}
-.btn-primary{background:linear-gradient(to bottom,#3b82f6,#2563eb);box-shadow:0 4px 0 #1e40af,0 6px 10px rgba(37,99,235,0.3)}
-.btn-primary:hover{background:linear-gradient(to bottom,#60a5fa,#3b82f6)}
-.btn-success{background:linear-gradient(to bottom,#10b981,#059669);box-shadow:0 4px 0 #047857,0 6px 10px rgba(16,185,129,0.3)}
-.btn-success:hover{background:linear-gradient(to bottom,#34d399,#10b981)}
-.btn-danger{background:linear-gradient(to bottom,#ef4444,#dc2626);box-shadow:0 4px 0 #b91c1c,0 6px 10px rgba(239,68,68,0.3)}
-.btn-danger:hover{background:linear-gradient(to bottom,#f87171,#ef4444)}
-.btn-warning{background:linear-gradient(to bottom,#f59e0b,#d97706);box-shadow:0 4px 0 #b45309,0 6px 10px rgba(245,158,11,0.3)}
-.btn-light{background:linear-gradient(to bottom,#ffffff,#f1f5f9);color:#334155;border:1px solid #e2e8f0;box-shadow:0 4px 0 #cbd5e1,0 6px 10px rgba(0,0,0,0.05)}
-.btn-light:hover{background:linear-gradient(to bottom,#f8fafc,#e2e8f0)}
-.btn-small{padding:8px 12px;font-size:12px}
-.btn-small svg{width:14px;height:14px}
-.grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
-.room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.room{background:white;border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:.2s;position:relative;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
-.room:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,0.08)}
-.room-number{font-size:18px;font-weight:800;margin-bottom:6px}
-.room-name{font-size:12px;color:var(--muted);min-height:18px}
-.room-price{font-size:13px;margin-top:10px;font-weight:bold;color:#1e293b}
-.room-status{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-size:10px;font-weight:bold;text-transform:uppercase;margin-top:12px}
-.status-empty{background:#dcfce7;color:#15803d}
-.status-occupied{background:#dbeafe;color:#1d4ed8}
-.status-overdue{background:#fee2e2;color:#b91c1c}
-.room-edit{position:absolute;top:12px;right:12px;border:0;background:#f8fafc;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;transition:all .2s;border:1px solid #e2e8f0}
-.room-edit:hover{background:white;color:#3b82f6;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
-.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.quick{background:#f8fafc;border:1px solid #e2e8f0;padding:18px;border-radius:12px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
-.quick:hover{background:white;transform:translateY(-2px);box-shadow:0 8px 15px rgba(0,0,0,0.05)}
-.quick-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white}
-.table-container{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-th{background:#f8fafc;color:#64748b;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:14px;border-bottom:1px solid var(--border);font-weight:700}
-td{padding:14px;border-bottom:1px solid var(--border);font-size:13px}
-.badge{padding:6px 10px;border-radius:6px;font-size:10px;font-weight:bold;text-transform:uppercase}
-.badge-green{background:#dcfce7;color:#15803d}
-.badge-red{background:#fee2e2;color:#b91c1c}
-.badge-yellow{background:#fef3c7;color:#a16207}
-.badge-blue{background:#dbeafe;color:#1d4ed8}
-.badge-purple{background:#f3e8ff;color:#7c3aed}
-.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
-.search{flex:1;min-width:200px;position:relative}
-.search input{padding-left:40px}
-.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8}
-select,input,textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;outline:none;background:white;font-family:inherit;font-size:14px;transition:all .2s}
-select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2)}
-.toolbar select{width:auto;min-width:180px}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:#334155}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.modal{position:fixed;inset:0;background:rgba(15,23,42,0.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:3000;padding:20px}
-.modal.show{display:flex;animation:fadeIn 0.2s ease}
-.modal-box{width:100%;max-width:550px;max-height:90vh;overflow-y:auto;background:white;border-radius:20px;padding:28px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1),0 10px 10px -5px rgba(0,0,0,0.04)}
-.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.modal-header h3{font-size:20px;font-weight:800}
-.close{border:0;width:36px;height:36px;border-radius:10px;cursor:pointer;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.close:hover{background:#e2e8f0;color:#ef4444}
-.modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}
-.chart{height:240px;display:flex;align-items:flex-end;gap:12px;border-bottom:2px solid var(--border);padding:10px 0}
-.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
-.bar{width:60%;min-height:4px;background:linear-gradient(to top,#2563eb,#60a5fa);border-radius:6px 6px 0 0;position:relative;transition:height 0.5s ease;box-shadow:0 4px 6px -1px rgba(59,130,246,0.2)}
-.bar-label{font-size:11px;color:#64748b;margin-top:8px;font-weight:600}
-.bar-value{font-size:10px;color:#1e293b;margin-bottom:6px;font-weight:bold}
-.empty{text-align:center;padding:40px;color:#94a3b8}
-/* Accounting Report Styles */
-.income-statement{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:15px}
-.is-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #e2e8f0;font-size:14px}
-.is-row:last-child{border-bottom:0}
-.is-row.sub{padding-left:20px;color:var(--muted);font-size:13px}
-.is-row.total{font-weight:800;border-top:2px solid var(--border);margin-top:8px;padding-top:12px;font-size:16px}
-.is-row.gross{background:#fffbeb;padding:12px;border-radius:8px;margin:8px 0;font-weight:700;color:#92400e;border:1px solid #fde68a}
-.is-row.net{background:#f0fdf4;padding:12px;border-radius:8px;margin-top:8px;font-weight:800;color:#15803d;border:1px solid #bbf7d0;font-size:18px}
-.is-row.net.loss{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
-.is-label{font-weight:600}
-.is-section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--primary-dark);margin:15px 0 5px;padding-bottom:5px;border-bottom:2px solid var(--primary)}
-.toast{position:fixed;bottom:30px;right:30px;background:#0f172a;color:white;padding:14px 20px;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,0.2);z-index:5000;display:flex;align-items:center;gap:10px;transform:translateX(400px);transition:transform .3s ease}
-.toast.show{transform:translateX(0)}
-.toast.success{background:linear-gradient(135deg,#10b981,#059669)}
-.toast.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
-.sync-indicator{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#f1f5f9;color:#64748b}
-.sync-indicator.online{background:#dcfce7;color:#15803d}
-.sync-indicator.offline{background:#fee2e2;color:#b91c1c}
-@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-@media(max-width:750px){.sidebar{transform:translateX(-100%);box-shadow:10px 0 30px rgba(0,0,0,0.3)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu-toggle{display:flex}.content{padding:20px}.topbar{padding:0 20px}.room-grid{grid-template-columns:repeat(2,1fr)}.welcome-icon{display:none}}
-@media(max-width:480px){.stats{grid-template-columns:1fr}.room-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.user-area strong,.user-area small{display:none}}
-@media print{.sidebar,.topbar,.toolbar,.btn,.toast{display:none!important}.main{margin:0}.content{padding:0}.section{display:block!important}}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+    position:fixed;
+    left:0;top:0;
+    width:280px;
+    height:100vh;
+    background: var(--bg-sidebar);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-right:1px solid var(--border-light);
+    z-index:1000;
+    transition:.3s;
+    box-shadow:10px 0 40px rgba(14, 165, 233, 0.1);
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    position:relative;
+    padding:30px 20px;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--border-light);
+    overflow:hidden;
+    background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(56,189,248,0.1));
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.7), transparent);
+    transform: skewX(-25deg);
+    animation: shine 4s infinite;
+}
+
+@keyframes shine {
+    0% { left: -150%; }
+    60%, 100% { left: 150%; }
+}
+
+.logo h2{
+    font-family:'Caveat', cursive;
+    font-size:42px;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-medium));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(14, 165, 233, 0.2);
+    font-weight:700;
+    letter-spacing:1px;
+    position:relative;
+    z-index:2;
+}
+
+/* Marquee Subtitle */
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 10px;
+    position: relative;
+    z-index: 2;
+}
+.marquee {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 15s linear infinite;
+    font-size: 12px;
+    color: var(--blue-dark);
+    font-weight: 600;
+}
+@keyframes marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.menu-title{
+    color:var(--blue-medium);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    font-weight:700;
+    padding:20px 24px 10px;
+}
+
+.menu{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 24px;
+    margin:2px 12px;
+    border-radius:12px;
+    color:var(--text-light);
+    cursor:pointer;
+    transition:all .3s ease;
+    font-weight:500;
+    font-size:14px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid transparent;
+}
+
+.menu:hover{
+    background:rgba(56,189,248,0.1);
+    color:var(--blue-dark);
+    transform:translateX(5px);
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);
+}
+
+.menu.active{
+    background:linear-gradient(90deg, rgba(56,189,248,0.2), rgba(255,215,0,0.1));
+    color:var(--blue-dark);
+    border:1px solid var(--border-light);
+    box-shadow: inset 3px 0 0 var(--blue-medium), 0 4px 15px rgba(14, 165, 233, 0.1);
+    font-weight: 600;
+}
+
+.menu-icon{
+    width:24px;
+    height:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.menu.active .menu-icon{
+    color:var(--gold-dark);
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));
+}
+
+/* ================= MAIN ================= */
+.main{margin-left:280px;min-height:100vh;}
+
+.topbar{
+    height:80px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border-light);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+    position:sticky;
+    top:0;
+    z-index:100;
+    box-shadow:0 4px 20px rgba(14, 165, 233, 0.05);
+}
+
+.topbar-left{display:flex;align-items:center;gap:15px;}
+.page-title{font-size:24px;font-weight:700;letter-spacing:-0.5px; color:var(--text-main);}
+
+.menu-toggle{display:none;border:0;background:rgba(56,189,248,0.1);padding:10px;border-radius:8px;cursor:pointer;color:var(--blue-medium);}
+
+.user-area{display:flex;align-items:center;gap:20px;}
+
+.sync-indicator{
+    display:flex; align-items:center; gap:8px;
+    padding:8px 16px;
+    border-radius:20px;
+    font-size:12px; font-weight:600;
+    background: rgba(255,255,255,0.5);
+    color: var(--text-light);
+    border: 1px solid var(--border-light);
+}
+.sync-indicator.online{background: rgba(16,185,129,0.1); color: #047857; border-color: rgba(16,185,129,0.3);}
+.sync-indicator.offline{background: rgba(239,68,68,0.1); color: #b91c1c; border-color: rgba(239,68,68,0.3);}
+
+.avatar{
+    width:45px;height:45px;
+    background:linear-gradient(135deg, var(--gold), var(--blue-medium));
+    color:white;
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+    font-size:18px;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+/* ================= CONTENT ================= */
+.content{padding:40px;}
+.section{display:none;animation:fadeIn 0.4s ease-in-out;}
+.section.active{display:block;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+
+/* ================= GLASS CARDS ================= */
+.card{
+    background: var(--bg-card);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    border:1px solid rgba(255, 255, 255, 0.6);
+    border-radius:20px;
+    padding:28px;
+    margin-bottom:24px;
+    box-shadow: 0 10px 30px rgba(14, 165, 233, 0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+    position:relative;
+    overflow:hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.5), transparent);
+}
+
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.card-header h3{font-size:18px;font-weight:700;color:var(--text-main);}
+
+/* ================= WELCOME ================= */
+.welcome{
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 215, 0, 0.2) 100%);
+    border: 1px solid rgba(255,255,255,0.6);
+    backdrop-filter: blur(15px);
+    color:var(--text-main);
+    border-radius:24px;
+    padding:40px;
+    margin-bottom:30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow: 0 15px 40px rgba(14, 165, 233, 0.1);
+    position:relative;
+    overflow:hidden;
+}
+.welcome::after {
+    content: '';
+    position: absolute;
+    top: -50%; right: 0;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,215,0,0.2), transparent 70%);
+    pointer-events: none;
+}
+.welcome h1{font-size:32px;margin-bottom:10px;font-weight:800;color:var(--blue-dark);}
+.welcome p{color:var(--text-light);font-weight:500;max-width:500px;line-height:1.6;}
+.welcome-icon{font-size:100px;opacity:.8;color:var(--gold-dark);filter: drop-shadow(0 0 15px rgba(255,215,0,0.3));}
+
+/* ================= STATS ================= */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:30px;}
+
+.stat-card{
+    background: rgba(255, 255, 255, 0.6);
+    border:1px solid rgba(255, 255, 255, 0.8);
+    border-radius:20px;
+    padding:24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow: 8px 8px 16px rgba(14, 165, 233, 0.08), -4px -4px 12px rgba(255,255,255,0.9);
+    transition: transform .3s ease, box-shadow .3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 12px 12px 24px rgba(14, 165, 233, 0.12), 0 0 0 1px var(--blue-light);
+}
+
+.stat-info small{color:var(--text-light);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:1px;}
+.stat-info h2{font-size:28px;margin-top:8px;font-weight:800;color:var(--text-main);}
+
+.stat-icon{
+    width:56px;height:56px;
+    border-radius:16px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow: 0 8px 15px rgba(14, 165, 233, 0.2);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.blue{background:linear-gradient(135deg,#38bdf8,#0ea5e9);color:white;}
+.green{background:linear-gradient(135deg,#34d399,#10b981);color:white;}
+.orange{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:white;}
+.red{background:linear-gradient(135deg,#f87171,#ef4444);color:white;}
+.purple{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:white;}
+.gold{background:linear-gradient(135deg,#FFD700,#D4AF37);color:white;}
+
+/* ================= 3D BUTTON ================= */
+.btn{
+    border:0;
+    border-radius:12px;
+    padding:12px 22px;
+    cursor:pointer;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-size:14px;
+    transition: all .2s ease;
+    position:relative;
+    color:white;
+    text-decoration:none;
+    letter-spacing:0.5px;
+}
+
+.btn:active{transform:translateY(3px) scale(0.98);}
+.btn svg{width:16px;height:16px;}
+
+.btn-primary{
+    background:linear-gradient(135deg, #0ea5e9, #0284c7);
+    box-shadow: 0 6px 0 #075985, 0 8px 15px rgba(14, 165, 233, 0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.btn-primary:hover{background:linear-gradient(135deg, #38bdf8, #0ea5e9);box-shadow: 0 6px 0 #075985, 0 10px 20px rgba(56, 189, 248, 0.4);}
+
+.btn-success{
+    background:linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 6px 0 #047857, 0 8px 15px rgba(16, 185, 129, 0.3);
+}
+.btn-danger{
+    background:linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 0 #b91c1c, 0 8px 15px rgba(239, 68, 68, 0.3);
+}
+.btn-warning{
+    background:linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 6px 0 #b45309, 0 8px 15px rgba(245, 158, 11, 0.3);
+}
+.btn-gold{
+    background:linear-gradient(135deg, #FFD700, #D4AF37);
+    color: white;
+    box-shadow: 0 6px 0 #b45309, 0 8px 15px rgba(255, 215, 0, 0.3);
+}
+
+.btn-light{
+    background: rgba(255,255,255,0.8);
+    color: var(--blue-dark);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 0 rgba(14, 165, 233, 0.1);
+}
+.btn-light:hover{background: rgba(255,255,255,1);}
+
+.btn-small{padding:8px 14px;font-size:12px;}
+
+/* ================= ROOMS ================= */
+.grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:24px;}
+.room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+
+.room{
+    background: rgba(255, 255, 255, 0.6);
+    border:1px solid rgba(255, 255, 255, 0.8);
+    border-radius:16px;
+    padding:20px;
+    cursor:pointer;
+    transition: all .3s ease;
+    position:relative;
+    box-shadow: 6px 6px 12px rgba(14, 165, 233, 0.08), -4px -4px 10px rgba(255,255,255,0.9);
+}
+.room:hover{
+    transform: translateY(-5px);
+    border-color: var(--blue-light);
+    box-shadow: 10px 10px 20px rgba(14, 165, 233, 0.12), 0 0 0 1px var(--blue-light);
+}
+.room-number{font-size:20px;font-weight:800;margin-bottom:8px;color:var(--text-main);}
+.room-name{font-size:13px;color:var(--text-light);min-height:20px;}
+.room-price{font-size:14px;margin-top:12px;font-weight:bold;color:var(--gold-dark);}
+
+.room-status{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:5px 12px;border-radius:6px;
+    font-size:10px;font-weight:bold;text-transform:uppercase;margin-top:15px;
+}
+.status-empty{background:rgba(16,185,129,0.15);color:#047857;border:1px solid rgba(16,185,129,0.3);}
+.status-occupied{background:rgba(14,165,233,0.15);color:#0284c7;border:1px solid rgba(14,165,233,0.3);}
+.status-overdue{background:rgba(239,68,68,0.15);color:#b91c1c;border:1px solid rgba(239,68,68,0.3);}
+
+.room-edit{
+    position:absolute;top:16px;right:16px;
+    border:0;background:rgba(14,165,233,0.1);
+    width:32px;height:32px;border-radius:8px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:var(--blue-medium);transition: all .2s;
+}
+.room-edit:hover{background:var(--blue-medium);color:white;}
+
+/* ================= QUICK ACTIONS ================= */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.quick{
+    background:rgba(255,255,255,0.5);
+    border:1px solid rgba(255, 255, 255, 0.8);
+    padding:20px;border-radius:16px;cursor:pointer;transition: all .3s;
+    display:flex;flex-direction:column;align-items:flex-start;gap:12px;
+}
+.quick:hover{background:rgba(255,255,255,0.8);transform:translateY(-3px);box-shadow:0 10px 20px rgba(14, 165, 233, 0.1);}
+.quick-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;}
+
+/* ================= TABLE ================= */
+.table-container{overflow-x:auto; border-radius: 12px;}
+table{width:100%;border-collapse:collapse;}
+th{
+    background:rgba(14, 165, 233, 0.1);
+    color:var(--blue-dark);
+    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;
+    padding:16px;border-bottom:1px solid var(--border-light);font-weight:700;
+}
+td{padding:16px;border-bottom:1px solid rgba(14, 165, 233, 0.05);font-size:13px;color:var(--text-main);}
+
+.badge{padding:6px 12px;border-radius:6px;font-size:10px;font-weight:bold;text-transform:uppercase;}
+.badge-green{background:rgba(16,185,129,0.15);color:#047857;}
+.badge-red{background:rgba(239,68,68,0.15);color:#b91c1c;}
+.badge-yellow{background:rgba(245,158,11,0.15);color:#b45309;}
+.badge-blue{background:rgba(14,165,233,0.15);color:#0284c7;}
+.badge-purple{background:rgba(139,92,246,0.15);color:#6d28d9;}
+
+/* ================= FORMS ================= */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;align-items:center;}
+.search{flex:1;min-width:200px;position:relative;}
+.search input{padding-left:42px;background:rgba(255,255,255,0.7);border-color:var(--border-light);color:var(--text-main);}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-light);}
+
+select, input, textarea{
+    width:100%;padding:14px 16px;
+    background:rgba(255,255,255,0.7);
+    border:1px solid var(--border-light);
+    border-radius:12px;outline:none;
+    font-family:inherit;font-size:14px;
+    color:var(--text-main);transition: all .2s;
+}
+select option{background:#ffffff;}
+
+select:focus, input:focus, textarea:focus{
+    border-color:var(--blue-medium);
+    background:rgba(255,255,255,0.9);
+    box-shadow:0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+.toolbar select{width:auto;min-width:180px;}
+
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text-main);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* ================= MODAL ================= */
+.modal{
+    position:fixed;inset:0;
+    background:rgba(14, 165, 233, 0.2);
+    backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;z-index:3000;padding:20px;
+}
+.modal.show{display:flex;animation:fadeIn 0.3s ease;}
+
+.modal-box{
+    width:100%;max-width:600px;max-height:90vh;overflow-y:auto;
+    background:rgba(255, 255, 255, 0.95);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255, 255, 255, 0.8);
+    border-radius:24px;padding:32px;
+    box-shadow: 0 25px 50px rgba(14, 165, 233, 0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+    position:relative;
+}
+
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.modal-header h3{font-size:22px;font-weight:800;color:var(--text-main);}
+.close{border:0;width:40px;height:40px;border-radius:10px;cursor:pointer;background:rgba(14,165,233,0.1);color:var(--blue-dark);display:flex;align-items:center;justify-content:center;transition: all .2s;}
+.close:hover{background:rgba(239,68,68,0.2);color:#b91c1c;}
+
+.modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:28px;}
+
+/* ================= CHART ================= */
+.chart{height:280px;display:flex;align-items:flex-end;gap:14px;border-bottom:1px solid var(--border-light);padding:10px 0;}
+.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;}
+.chart-bars {display:flex;gap:4px;width:100%;justify-content:center;align-items:flex-end;height:100%;}
+.bar{width:45%;min-height:4px;background:linear-gradient(to top, #0284c7, #38bdf8);border-radius:6px 6px 0 0;position:relative;transition: height 0.5s ease;box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);}
+.bar.expense{background:linear-gradient(to top, #D4AF37, #FFD700);box-shadow: 0 0 10px rgba(255,215,0,0.2);}
+.bar-label{font-size:11px;color:var(--text-light);font-weight:600;}
+.empty{text-align:center;padding:40px;color:var(--text-light);grid-column:1/-1;}
+
+/* ================= INCOME STATEMENT ================= */
+.income-statement{background:rgba(14, 165, 233, 0.03);border:1px solid var(--border-light);border-radius:16px;padding:24px;margin-top:20px;}
+.is-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed rgba(14, 165, 233, 0.1);font-size:14px;color:var(--text-main);}
+.is-row.sub{padding-left:20px;color:var(--text-light);font-size:13px;}
+.is-row.total{font-weight:800;border-top:2px solid var(--border-light);margin-top:10px;padding-top:14px;font-size:16px;color:var(--text-main);}
+.is-row.gross{background:rgba(255,215,0,0.1);padding:16px;border-radius:8px;margin:12px 0;font-weight:700;color:var(--gold-dark);border:1px solid rgba(255,215,0,0.3);}
+.is-row.net{background:rgba(16,185,129,0.1);padding:16px;border-radius:8px;margin-top:12px;font-weight:800;color:#047857;border:1px solid rgba(16,185,129,0.3);font-size:18px;}
+.is-row.net.loss{background:rgba(239,68,68,0.1);color:#b91c1c;border-color:rgba(239,68,68,0.3);}
+.is-label{font-weight:600;}
+.is-section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--blue-dark);margin:20px 0 8px;padding-bottom:5px;border-bottom:2px solid rgba(14, 165, 233, 0.2);}
+
+/* ================= TOAST ================= */
+.toast{position:fixed;bottom:30px;right:30px;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);color:var(--text-main);padding:16px 24px;border-radius:12px;box-shadow:0 15px 30px rgba(14, 165, 233, 0.15);z-index:5000;display:flex;align-items:center;gap:12px;transform:translateX(450px);transition:transform .3s ease;border:1px solid var(--border-light);}
+.toast.show{transform:translateX(0);}
+.toast.success{border-left:4px solid var(--success);}
+.toast.error{border-left:4px solid var(--danger);}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr);}.grid-2{grid-template-columns:1fr;}}
+@media(max-width:750px){
+    .sidebar{transform:translateX(-100%);}
+    .sidebar.open{transform:translateX(0);}
+    .main{margin-left:0;}
+    .menu-toggle{display:flex;}
+    .content{padding:20px;}
+    .topbar{padding:0 20px;}
+    .room-grid{grid-template-columns:repeat(2,1fr);}
+    .welcome-icon{display:none;}
+}
+@media(max-width:480px){.stats{grid-template-columns:1fr;}.room-grid{grid-template-columns:1fr;}.form-grid{grid-template-columns:1fr;}.user-area strong,.user-area small{display:none;}}
+@media print{.sidebar,.topbar,.toolbar,.btn,.toast{display:none!important;}.main{margin:0;}.content{padding:0;}.section{display:block!important;}}
 </style>
 </head>
 <body>
 
 <aside class="sidebar" id="sidebar">
     <div class="logo">
-        <div class="logo-icon">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        </div>
-        <div>
-            <h2>KOSKU</h2>
-            <small id="logoRoomCount">38 Kamar</small>
+        <h2>JOHAN KOSKU</h2>
+        <div class="marquee-container">
+            <div class="marquee">“Mau kos yang nggak bikin banyak drama? Kamar mandi dalam ✔️ Parkir ✔️ Bersih ✔️ Nyaman ✔️ Tinggal pulang, rebahan, beres.”</div>
         </div>
     </div>
 
@@ -198,17 +626,9 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
     <div class="user-area">
         <span class="sync-indicator" id="syncIndicator">
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span id="syncText">Sync: Aktif</span>
+            <span id="syncText">Sync: Off</span>
         </span>
-        <div class="notification" onclick="showNotifications()">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-            <span class="notification-badge" id="notifCount">0</span>
-        </div>
-        <div class="avatar">O</div>
-        <div>
-            <strong>Owner</strong>
-            <small style="display:block;color:#64748b;font-size:12px;">Pemilik Kos</small>
-        </div>
+        <div class="avatar">J</div>
     </div>
 </header>
 
@@ -217,17 +637,17 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 <section id="dashboard" class="section active">
     <div class="welcome">
         <div>
-            <h1>Selamat Datang, Owner 👋</h1>
-            <p>Kelola kos Anda dengan lebih mudah - 38 kamar awal, bisa ditambah sesuai kebutuhan.</p>
+            <h1>Selamat Datang, Admin!</h1>
+            <p>Kelola kos Anda dengan lebih mudah, realistis, dan modern. Tinggal pulang, rebahan, beres.</p>
         </div>
         <div class="welcome-icon">
-            <svg width="100" height="100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <svg width="120" height="120" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         </div>
     </div>
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-info"><small>Total Kamar</small><h2 id="totalKamar">38</h2></div>
+            <div class="stat-info"><small>Total Kamar</small><h2 id="totalKamar">0</h2></div>
             <div class="stat-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
         </div>
         <div class="stat-card">
@@ -261,22 +681,22 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
                 <div class="quick" onclick="openModal('roomModal')">
                     <div class="quick-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
                     <strong>Tambah Kamar</strong>
-                    <small style="color:var(--muted);">Kamar baru tak terbatas</small>
+                    <small style="color:var(--text-light);">Kamar baru tak terbatas</small>
                 </div>
                 <div class="quick" onclick="openModal('tenantModal')">
                     <div class="quick-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg></div>
                     <strong>Penghuni Baru</strong>
-                    <small style="color:var(--muted);">Daftarkan penghuni</small>
+                    <small style="color:var(--text-light);">Daftarkan penghuni</small>
                 </div>
                 <div class="quick" onclick="openModal('paymentModal')">
                     <div class="quick-icon purple"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
                     <strong>Pembayaran</strong>
-                    <small style="color:var(--muted);">Catat pembayaran</small>
+                    <small style="color:var(--text-light);">Catat pembayaran</small>
                 </div>
                 <div class="quick" onclick="openModal('expenseModal')">
-                    <div class="quick-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+                    <div class="quick-icon gold"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
                     <strong>Pengeluaran</strong>
-                    <small style="color:var(--muted);">Catat biaya operasional</small>
+                    <small style="color:var(--text-light);">Catat biaya operasional</small>
                 </div>
             </div>
         </div>
@@ -291,11 +711,11 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
         </div>
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-info"><small>Pendapatan Bulan Ini</small><h2 id="monthIncome" style="font-size:20px;">Rp0</h2></div>
+                <div class="stat-info"><small>Pendapatan</small><h2 id="monthIncome" style="font-size:20px;">Rp0</h2></div>
                 <div class="stat-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
             </div>
             <div class="stat-card">
-                <div class="stat-info"><small>Pengeluaran Bulan Ini</small><h2 id="monthExpense" style="font-size:20px;">Rp0</h2></div>
+                <div class="stat-info"><small>Pengeluaran</small><h2 id="monthExpense" style="font-size:20px;">Rp0</h2></div>
                 <div class="stat-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg></div>
             </div>
             <div class="stat-card">
@@ -344,7 +764,7 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
     <div class="card">
         <div class="card-header">
             <h3>Daftar Kamar</h3>
-            <span id="roomCountText" style="font-size:14px;color:var(--muted);font-weight:600;">38 kamar</span>
+            <span id="roomCountText" style="font-size:14px;color:var(--text-light);font-weight:600;">0 kamar</span>
         </div>
         <div class="room-grid" id="allRooms"></div>
     </div>
@@ -448,7 +868,7 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 <section id="laporan" class="section">
     <div class="toolbar">
         <select id="reportMonth" onchange="renderReport()"></select>
-        <button class="btn btn-primary" onclick="window.print()">
+        <button class="btn btn-gold" onclick="window.print()">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg> Cetak Laporan
         </button>
     </div>
@@ -480,13 +900,13 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
         <div class="card">
             <div class="card-header"><h3>Grafik Keuangan</h3></div>
             <div class="chart" id="incomeChart"></div>
-            <p style="color:var(--muted);font-size:12px;margin-top:15px;text-align:center;">Grafik Pendapatan vs Pengeluaran per Bulan</p>
+            <p style="color:var(--text-light);font-size:12px;margin-top:15px;text-align:center;">Grafik Pendapatan (Biru) vs Pengeluaran (Emas) per Bulan</p>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header"><h3>Ringkasan Periode</h3></div>
-        <p style="color:var(--muted);font-size:14px;line-height:1.6;">Laporan ini menggunakan standar akuntansi sederhana. Laba Kotor dihitung dari Pendapatan dikurangi Harga Pokok Pendapatan (HPP) yaitu biaya langsung yang terkait dengan penyediaan layanan kamar. Laba Bersih dihitung dari Laba Kotor dikurangi Biaya Operasional dan Biaya Lain-lain. Cetak laporan untuk arsip fisik Anda.</p>
+        <p style="color:var(--text-light);font-size:14px;line-height:1.6;">Laporan ini menggunakan standar akuntansi sederhana. Laba Kotor dihitung dari Pendapatan dikurangi Harga Pokok Pendapatan (HPP) yaitu biaya langsung yang terkait dengan penyediaan layanan kamar. Laba Bersih dihitung dari Laba Kotor dikurangi Biaya Operasional dan Biaya Lain-lain. Cetak laporan untuk arsip fisik Anda.</p>
     </div>
 </section>
 
@@ -494,8 +914,8 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
     <div class="card">
         <div class="card-header"><h3>Pengaturan Kos</h3></div>
         <div class="form-grid">
-            <div class="form-group"><label>Nama Kos</label><input id="settingName" value="KOSKU"></div>
-            <div class="form-group"><label>Nama Pemilik</label><input id="settingOwner" value="Owner"></div>
+            <div class="form-group"><label>Nama Kos</label><input id="settingName" value="JOHAN KOSKU"></div>
+            <div class="form-group"><label>Nama Pemilik</label><input id="settingOwner" value="Admin"></div>
             <div class="form-group"><label>WhatsApp Pemilik</label><input id="settingPhone" placeholder="628xxxxxxxxxx"></div>
             <div class="form-group"><label>Alamat Kos</label><input id="settingAddress" placeholder="Alamat kos"></div>
         </div>
@@ -510,7 +930,7 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
             <label>URL Web App Google Apps Script</label>
             <input id="settingSheetURL" placeholder="https://script.google.com/macros/s/XXXXX/exec">
         </div>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:15px;line-height:1.6;">
+        <p style="color:var(--text-light);font-size:13px;margin-bottom:15px;line-height:1.6;">
             <strong>Cara setup:</strong><br>
             1. Buka spreadsheet Anda di Google Sheets<br>
             2. Klik <strong>Extensions → Apps Script</strong><br>
@@ -519,14 +939,14 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
             5. Pada "Who has access": pilih <strong>Anyone</strong><br>
             6. Copy URL web app, paste ke kolom di atas, lalu Simpan
         </p>
-        <button class="btn btn-success" onclick="saveSettings()">
+        <button class="btn btn-gold" onclick="saveSettings()">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Simpan & Aktifkan Sync
         </button>
     </div>
 
     <div class="card">
         <div class="card-header"><h3>Data Aplikasi</h3></div>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Data aplikasi tersimpan pada browser menggunakan localStorage. Backup otomatis ke Spreadsheet jika URL Web App telah diatur.</p>
+        <p style="color:var(--text-light);font-size:14px;margin-bottom:20px;">Data aplikasi tersimpan pada browser menggunakan localStorage. Backup otomatis ke Spreadsheet jika URL Web App telah diatur.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button class="btn btn-light" onclick="exportData()">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> Export JSON
@@ -552,7 +972,7 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
         </div>
         <form onsubmit="saveRoom(event)">
             <input type="hidden" id="roomId">
-            <div class="form-group"><label>Nomor Kamar</label><input id="roomNumber" placeholder="Contoh: Kamar 39" required></div>
+            <div class="form-group"><label>Nomor Kamar</label><input id="roomNumber" placeholder="Contoh: Kamar 01" required></div>
             <div class="form-group"><label>Harga Sewa / Bulan</label><input id="roomPrice" type="number" required></div>
             <div class="form-group">
                 <label>Status</label>
@@ -680,114 +1100,27 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 
 <script>
 /* ===================================================================
- * KOSKU - SISTEM MANAJEMEN KOS
- * ===================================================================
- * Fitur:
- * 1. Manajemen Kamar (Unlimited, default 38 kamar)
- * 2. Manajemen Penghuni + WhatsApp Reminder
- * 3. Pencatatan Pembayaran
- * 4. Pencatatan Pengeluaran dengan Kategori Akuntansi
- * 5. Perhitungan Laba Kotor & Laba Bersih (Standar Akuntansi)
- * 6. Integrasi Google Spreadsheet via Apps Script Web App
- * =================================================================*/
+ * JOHAN KOSKU - SISTEM MANAJEMEN KOS MODERN (LIGHT BLUE GLASSMORPHISM)
+ * ===================================================================*/
 
-// === KONFIGURASI SPREADSHEET ===
-// Ganti dengan URL Web App Google Apps Script Anda
-// Lihat panduan di menu Pengaturan → Integrasi Google Spreadsheet
 let SPREADSHEET_WEBAPP_URL = "";
 
-/* === KODE APPS SCRIPT YANG HARUS DIPASTE KE EDITOR APPS SCRIPT ===
-function doPost(e) {
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var data = JSON.parse(e.postData.contents);
-    
-    var roomsSheet = ss.getSheetByName("Kamar") || ss.insertSheet("Kamar");
-    var tenantsSheet = ss.getSheetByName("Penghuni") || ss.insertSheet("Penghuni");
-    var paymentsSheet = ss.getSheetByName("Pembayaran") || ss.insertSheet("Pembayaran");
-    var expensesSheet = ss.getSheetByName("Pengeluaran") || ss.insertSheet("Pengeluaran");
-    
-    if (roomsSheet.getLastRow() === 0) roomsSheet.appendRow(["Timestamp","ID","Nomor Kamar","Harga","Status"]);
-    if (tenantsSheet.getLastRow() === 0) tenantsSheet.appendRow(["Timestamp","ID","Nama","WhatsApp","Kamar","Harga","Tanggal Masuk","Jatuh Tempo"]);
-    if (paymentsSheet.getLastRow() === 0) paymentsSheet.appendRow(["Timestamp","ID","Tanggal","Penghuni","Kamar","Periode","Jumlah","Status"]);
-    if (expensesSheet.getLastRow() === 0) expensesSheet.appendRow(["Timestamp","ID","Tanggal","Tipe Biaya","Kategori","Keterangan","Jumlah"]);
-    
-    if (data.type === "room") {
-      roomsSheet.appendRow([new Date(), data.id, data.number, data.price, data.status]);
-    } else if (data.type === "tenant") {
-      tenantsSheet.appendRow([new Date(), data.id, data.name, data.phone, data.room, data.price, data.date, data.due]);
-    } else if (data.type === "payment") {
-      paymentsSheet.appendRow([new Date(), data.id, data.date, data.tenant, data.room, data.period, data.amount, data.status]);
-    } else if (data.type === "expense") {
-      expensesSheet.appendRow([new Date(), data.id, data.date, data.categoryType, data.category, data.description, data.amount]);
-    }
-    return ContentService.createTextOutput(JSON.stringify({status:"success"})).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({status:"error",message:err.toString()})).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-function doGet() { return ContentService.createTextOutput("KOSKU Web App Running"); }
-=== END APPS SCRIPT ===
-*/
-
-// === KATEGORI PENGELUARAN BERDASARKAN TIPE AKUNTANSI ===
 const EXPENSE_CATEGORIES = {
   hpp: ["Listrik Kamar", "Air Kamar", "Kebersihan Kamar", "Perbaikan Kamar", "ATK Kamar", "Gas"],
   operasional: ["Listrik Umum", "Air Umum", "WiFi/Internet", "Gaji Pegawai", "Kebersihan Umum", "Perbaikan Umum", "Renovasi", "Pajak", "Iuran RT/RW", "Promosi/Iklan", "Pulsa/Paket Data", "Perlengkapan Kantor"],
   lainnya: ["Denda/Bunga", "Biaya Bank", "Kerugian", "Donasi/Sumbangan", "Biaya Hukum", "Lainnya"]
 };
 
-// === GENERATE 38 KAMAR AWAL ===
-function generateDefaultRooms() {
-  const rooms = [];
-  for (let i = 1; i <= 38; i++) {
-    const num = String(i).padStart(2, '0');
-    let status = "empty";
-    // 25 terisi, 8 kosong, 5 menunggak
-    if (i <= 25) status = "occupied";
-    else if (i >= 34) status = "overdue";
-    rooms.push({
-      id: i,
-      number: "Kamar " + num,
-      price: 1000000,
-      status: status
-    });
-  }
-  return rooms;
-}
-
-// === GENERATE PENGHUNI AWAL (25 orang) ===
-function generateDefaultTenants() {
-  const names = ["Ahmad Fauzi","Budi Santoso","Muhammad Rizky","Fajar Hidayat","Dimas Pratama","Rizal Rahman","Andi Wijaya","Bayu Setiawan","Cahyo Utomo","Dedi Kurniawan","Eko Prasetyo","Ferryanto","Galih Nugroho","Hadi Sutrisno","Imam Syafii","Joko Susilo","Kris Wibowo","Lukman Hakim","Mahendra Putra","Nanang Sutrisno","Oki Setiawan","Prio Santoso","Qori Ramadhan","Rendi Pratama","Surya Adi"];
-  const phones = ["628123456789","628987654321","628111222333","628555666777","628222333444","628333444555","628444555666","628555666777","628666777888","628777888999","628888999000","628999000111","628000111222","628111222333","628222333444","628333444555","628444555666","628555666777","628666777888","628777888999","628888999000","628999000111","628000111222","628111222333","628222333444"];
-  const tenants = [];
-  names.forEach((name, i) => {
-    const num = String(i + 1).padStart(2, '0');
-    tenants.push({
-      id: i + 1,
-      name: name,
-      phone: phones[i],
-      room: "Kamar " + num,
-      price: 1000000,
-      date: "2023-08-0" + ((i % 9) + 1),
-      due: ((i % 28) + 1)
-    });
-  });
-  return tenants;
-}
-
-// === DATA STATE ===
-let rooms = JSON.parse(localStorage.getItem("kos_rooms")) || generateDefaultRooms();
-let tenants = JSON.parse(localStorage.getItem("kos_tenants")) || generateDefaultTenants();
+// === DATA AWAL KOSONG ===
+let rooms = JSON.parse(localStorage.getItem("kos_rooms")) || [];
+let tenants = JSON.parse(localStorage.getItem("kos_tenants")) || [];
 let payments = JSON.parse(localStorage.getItem("kos_payments")) || [];
 let expenses = JSON.parse(localStorage.getItem("kos_expenses")) || [];
 
-// === ICONS ===
 const ICON_EDIT = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
 const ICON_WHATSAPP = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
 const ICON_DELETE = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>';
 
-// === FUNGSI UTILITY ===
 function saveData() {
   localStorage.setItem("kos_rooms", JSON.stringify(rooms));
   localStorage.setItem("kos_tenants", JSON.stringify(tenants));
@@ -819,10 +1152,8 @@ function formatShort(value) {
   return "Rp" + value;
 }
 
-// === SPREADSHEET SYNC ===
 function syncToSpreadsheet(data) {
   if (!SPREADSHEET_WEBAPP_URL) return;
-  
   try {
     fetch(SPREADSHEET_WEBAPP_URL, {
       method: "POST",
@@ -847,17 +1178,14 @@ function updateSyncIndicator() {
   }
 }
 
-// === NAVIGATION ===
 function showPage(page, element) {
   document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
   document.getElementById(page).classList.add("active");
-  
   document.querySelectorAll(".menu").forEach(m => m.classList.remove("active"));
   if (element) element.classList.add("active");
 
   const titles = {dashboard:"Dashboard", kamar:"Data Kamar", penghuni:"Data Penghuni", pembayaran:"Pembayaran", pengeluaran:"Pengeluaran", laporan:"Laporan Keuangan", pengaturan:"Pengaturan"};
   document.getElementById("pageTitle").textContent = titles[page];
-
   if (window.innerWidth <= 750) document.getElementById("sidebar").classList.remove("open");
   renderAll();
 }
@@ -873,7 +1201,6 @@ function showPageByName(page) {
 
 function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); }
 
-// === MODAL ===
 function openModal(id) {
   if (id === "tenantModal") {
     populateRoomSelect();
@@ -897,18 +1224,10 @@ function openModal(id) {
 
 function closeModal(id) { 
   document.getElementById(id).classList.remove("show");
-  // Reset forms
-  if (id === "roomModal") {
-    document.getElementById("roomId").value = "";
-    document.getElementById("roomModalTitle").textContent = "Tambah Kamar";
-  }
-  if (id === "tenantModal") {
-    document.getElementById("tenantId").value = "";
-    document.getElementById("tenantModalTitle").textContent = "Tambah Penghuni";
-  }
+  if (id === "roomModal") document.getElementById("roomId").value = "";
+  if (id === "tenantModal") document.getElementById("tenantId").value = "";
 }
 
-// === KAMAR ===
 function renderDashboard() {
   const total = rooms.length;
   const occupied = rooms.filter(r => r.status === "occupied").length;
@@ -919,11 +1238,15 @@ function renderDashboard() {
   document.getElementById("kamarTerisi").textContent = occupied;
   document.getElementById("kamarKosong").textContent = empty;
   document.getElementById("kamarTunggak").textContent = overdue;
-  document.getElementById("logoRoomCount").textContent = total + " Kamar";
 
-  // Show only first 6 rooms on dashboard
-  document.getElementById("dashboardRooms").innerHTML = rooms.slice(0, 6).map(roomHTML).join("") + 
-    (rooms.length > 6 ? `<div class="room" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;border:2px dashed var(--border);" onclick="showPageByName('kamar')"><strong style="color:var(--primary);">+${rooms.length - 6} kamar lainnya</strong></div>` : "");
+  let dashRoomsHTML = "";
+  if (rooms.length === 0) {
+    dashRoomsHTML = `<div class="empty">Belum ada kamar. Silakan tambahkan.</div>`;
+  } else {
+    dashRoomsHTML = rooms.slice(0, 6).map(roomHTML).join("") + 
+    (rooms.length > 6 ? `<div class="room" style="display:flex;align-items:center;justify-content:center;background:rgba(14,165,233,0.05);border:2px dashed var(--border-light);cursor:pointer;" onclick="showPageByName('kamar')"><strong style="color:var(--blue-dark);">+${rooms.length - 6} kamar lainnya</strong></div>` : "");
+  }
+  document.getElementById("dashboardRooms").innerHTML = dashRoomsHTML;
   
   renderDashboardPayments();
   renderMonthlySummary();
@@ -940,7 +1263,7 @@ function roomHTML(room) {
       <button class="room-edit" onclick="editRoom(event, ${room.id})">${ICON_EDIT}</button>
       <div class="room-number">${room.number}</div>
       <div class="room-name">${tenant ? tenant.name : "Belum ada penghuni"}</div>
-      <div class="room-price">${rupiah(room.price)} <span style="font-weight:400;color:var(--muted);font-size:11px;">/bulan</span></div>
+      <div class="room-price">${rupiah(room.price)} <span style="font-weight:400;color:var(--text-light);font-size:11px;">/bulan</span></div>
       <span class="room-status ${statusClass}">${statusText}</span>
     </div>
   `;
@@ -958,7 +1281,11 @@ function renderRooms() {
     return matchSearch && matchFilter;
   });
 
-  container.innerHTML = result.length ? result.map(roomHTML).join("") : `<div class="empty">Kamar tidak ditemukan.</div>`;
+  if (result.length === 0) {
+    container.innerHTML = `<div class="empty">Belum ada kamar ditemukan. Silakan tambahkan kamar baru.</div>`;
+  } else {
+    container.innerHTML = result.map(roomHTML).join("");
+  }
   document.getElementById("roomCountText").textContent = result.length + " kamar";
 }
 
@@ -987,19 +1314,17 @@ function saveRoom(event) {
     const index = rooms.findIndex(r => r.id == id);
     rooms[index] = {...rooms[index], ...data};
     showToast("Kamar berhasil diperbarui!");
+    syncToSpreadsheet({...rooms[index], type: "room"});
   } else {
-    // Cek duplikasi nomor kamar
     if (rooms.some(r => r.number === data.number)) {
       alert("Nomor kamar sudah ada! Gunakan nomor lain.");
       return;
     }
-    rooms.push({id: Date.now(), ...data});
-    showToast("Kamar baru berhasil ditambahkan! (Unlimited)");
+    const newRoom = {id: Date.now(), ...data};
+    rooms.push(newRoom);
+    showToast("Kamar baru berhasil ditambahkan!");
+    syncToSpreadsheet({...newRoom, type: "room"});
   }
-
-  // Sync to spreadsheet
-  const roomData = {...data, type: "room", id: id || rooms[rooms.length-1].id};
-  syncToSpreadsheet(roomData);
 
   saveData();
   closeModal("roomModal");
@@ -1008,7 +1333,6 @@ function saveRoom(event) {
   renderAll();
 }
 
-// === PENGHUNI ===
 function populateRoomSelect() {
   const select = document.getElementById("tenantRoom");
   select.innerHTML = "";
@@ -1039,7 +1363,6 @@ function saveTenant(event) {
 
   if (id) {
     const index = tenants.findIndex(t => t.id == id);
-    // Jika pindah kamar, kosongkan kamar lama
     if (tenants[index].room !== tenantData.room) {
       const oldRoom = rooms.find(r => r.number === tenants[index].room);
       if (oldRoom) oldRoom.status = "empty";
@@ -1048,13 +1371,13 @@ function saveTenant(event) {
     }
     tenants[index] = {...tenants[index], ...tenantData};
     showToast("Data penghuni diperbarui!");
+    syncToSpreadsheet({...tenants[index], type: "tenant"});
   } else {
     const newTenant = {id: Date.now(), ...tenantData};
     tenants.push(newTenant);
     const room = rooms.find(r => r.number === roomNumber);
     if (room) room.status = "occupied";
     showToast("Penghuni baru berhasil ditambahkan!");
-    // Sync to spreadsheet
     syncToSpreadsheet({...newTenant, type: "tenant"});
   }
 
@@ -1104,7 +1427,6 @@ function editTenant(id) {
   document.getElementById("tenantDate").value = tenant.date;
   document.getElementById("tenantDue").value = tenant.due;
   
-  // Populate room select with current room + empty rooms
   const select = document.getElementById("tenantRoom");
   select.innerHTML = `<option value="${tenant.room}">${tenant.room} (Sekarang)</option>`;
   rooms.filter(r => r.status === "empty").forEach(room => {
@@ -1137,7 +1459,6 @@ function whatsapp(id) {
   window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(message), "_blank");
 }
 
-// === PEMBAYARAN ===
 function populateTenantSelect() {
   const select = document.getElementById("paymentTenant");
   select.innerHTML = "";
@@ -1175,7 +1496,6 @@ function savePayment(event) {
 
   payments.push(payment);
   
-  // Jika lunas, update status kamar dari overdue ke occupied
   if (payment.status === "lunas") {
     const room = rooms.find(r => r.number === tenant.room);
     if (room && room.status === "overdue") room.status = "occupied";
@@ -1263,7 +1583,6 @@ function deletePayment(id) {
   renderAll();
 }
 
-// === PENGELUARAN ===
 function updateExpenseCategories() {
   const type = document.getElementById("expenseCategoryType").value;
   const select = document.getElementById("expenseCategory");
@@ -1323,7 +1642,6 @@ function renderExpenses() {
     });
   }
 
-  // Total per kategori
   const totalAll = expenses.reduce((sum, e) => sum + e.amount, 0);
   const totalHPP = expenses.filter(e => e.categoryType === "hpp").reduce((sum, e) => sum + e.amount, 0);
   const totalOps = expenses.filter(e => e.categoryType === "operasional").reduce((sum, e) => sum + e.amount, 0);
@@ -1343,11 +1661,6 @@ function deleteExpense(id) {
   renderAll();
 }
 
-// === AKUNTANSI: LABA KOTOR & LABA BERSIH ===
-// Rumus standar akuntansi:
-// Laba Kotor = Pendapatan - Harga Pokok Pendapatan (HPP / Biaya Langsung)
-// Laba Bersih = Laba Kotor - Biaya Operasional - Biaya Lain-lain
-
 function calculateAccounting(monthFilter = null) {
   let filteredPayments = payments;
   let filteredExpenses = expenses;
@@ -1366,7 +1679,6 @@ function calculateAccounting(monthFilter = null) {
   const totalBiaya = hpp + biayaOperasional + biayaLainnya;
   const labaBersih = pendapatan - totalBiaya;
   
-  // Detail per kategori
   const hppDetail = {};
   filteredExpenses.filter(e => e.categoryType === "hpp").forEach(e => {
     hppDetail[e.category] = (hppDetail[e.category] || 0) + e.amount;
@@ -1398,16 +1710,13 @@ function renderReport() {
   document.getElementById("reportGross").textContent = rupiah(acc.labaKotor);
   document.getElementById("reportNet").textContent = rupiah(acc.labaBersih);
   
-  // Build Income Statement
   const statement = document.getElementById("incomeStatement");
   let html = "";
   
-  // Section: Pendapatan
   html += `<div class="is-section-title">Pendapatan</div>`;
   html += `<div class="is-row"><span class="is-label">Pendapatan Sewa Kamar</span><strong>${rupiah(acc.pendapatan)}</strong></div>`;
   html += `<div class="is-row total"><span>Total Pendapatan</span><strong>${rupiah(acc.pendapatan)}</strong></div>`;
   
-  // Section: HPP
   html += `<div class="is-section-title">Harga Pokok Pendapatan (HPP) / Biaya Langsung</div>`;
   if (Object.keys(acc.hppDetail).length === 0) {
     html += `<div class="is-row sub"><span>Tidak ada biaya langsung</span><span>Rp0</span></div>`;
@@ -1418,11 +1727,9 @@ function renderReport() {
   }
   html += `<div class="is-row total"><span>Total HPP</span><strong>-${rupiah(acc.hpp)}</strong></div>`;
   
-  // Laba Kotor
   html += `<div class="is-row gross"><span>LABA KOTOR (Gross Profit)</span><strong>${rupiah(acc.labaKotor)}</strong></div>`;
-  html += `<p style="font-size:11px;color:#92400e;margin:5px 0;font-style:italic;">* Laba Kotor = Pendapatan - HPP</p>`;
+  html += `<p style="font-size:11px;color:var(--gold-dark);margin:5px 0;font-style:italic;">* Laba Kotor = Pendapatan - HPP</p>`;
   
-  // Section: Biaya Operasional
   html += `<div class="is-section-title">Biaya Operasional</div>`;
   if (Object.keys(acc.opsDetail).length === 0) {
     html += `<div class="is-row sub"><span>Tidak ada biaya operasional</span><span>Rp0</span></div>`;
@@ -1433,7 +1740,6 @@ function renderReport() {
   }
   html += `<div class="is-row total"><span>Total Biaya Operasional</span><strong>-${rupiah(acc.biayaOperasional)}</strong></div>`;
   
-  // Section: Biaya Lain-lain
   html += `<div class="is-section-title">Biaya Lain-lain (Non-Operasional)</div>`;
   if (Object.keys(acc.otherDetail).length === 0) {
     html += `<div class="is-row sub"><span>Tidak ada biaya lainnya</span><span>Rp0</span></div>`;
@@ -1444,13 +1750,11 @@ function renderReport() {
   }
   html += `<div class="is-row total"><span>Total Biaya Lain-lain</span><strong>-${rupiah(acc.biayaLainnya)}</strong></div>`;
   
-  // Laba Bersih
   const lossClass = acc.labaBersih < 0 ? "loss" : "";
   html += `<div class="is-row net ${lossClass}"><span>LABA BERSIH (Net Profit)</span><strong>${rupiah(acc.labaBersih)}</strong></div>`;
-  html += `<p style="font-size:11px;color:${acc.labaBersih < 0 ? '#b91c1c' : '#15803d'};margin:5px 0;font-style:italic;">* Laba Bersih = Laba Kotor - Biaya Operasional - Biaya Lain-lain</p>`;
+  html += `<p style="font-size:11px;color:${acc.labaBersih < 0 ? '#b91c1c' : '#047857'};margin:5px 0;font-style:italic;">* Laba Bersih = Laba Kotor - Biaya Operasional - Biaya Lain-lain</p>`;
   
   statement.innerHTML = html;
-  
   renderChart();
 }
 
@@ -1480,9 +1784,9 @@ function renderChart() {
     
     chart.innerHTML += `
       <div class="bar-wrap">
-        <div style="display:flex;gap:3px;width:100%;justify-content:center;align-items:flex-end;height:180px;">
-          <div class="bar" style="width:40%;background:linear-gradient(to top,#10b981,#34d399);height:${incomeHeight}px;" title="Pendapatan: ${rupiah(incomeValues[index])}"></div>
-          <div class="bar" style="width:40%;background:linear-gradient(to top,#ef4444,#f87171);height:${expenseHeight}px;" title="Pengeluaran: ${rupiah(expenseValues[index])}"></div>
+        <div class="chart-bars" style="height:180px;">
+          <div class="bar" style="height:${incomeHeight}%;" title="Pendapatan: ${rupiah(incomeValues[index])}"></div>
+          <div class="bar expense" style="height:${expenseHeight}%;" title="Pengeluaran: ${rupiah(expenseValues[index])}"></div>
         </div>
         <div class="bar-label">${month}</div>
       </div>
@@ -1505,12 +1809,10 @@ function populateReportMonth() {
   const select = document.getElementById("reportMonth");
   if (!select) return;
   
-  // Get all unique months from payments and expenses
   const months = new Set();
   payments.forEach(p => { if (p.period) months.add(p.period); });
   expenses.forEach(e => { if (e.date) months.add(e.date.substring(0, 7)); });
   
-  // Add current month
   months.add(new Date().toISOString().substring(0, 7));
   
   const sortedMonths = Array.from(months).sort().reverse();
@@ -1523,7 +1825,6 @@ function populateReportMonth() {
   });
 }
 
-// === PENGATURAN ===
 function saveSettings() {
   const settings = {
     name: document.getElementById("settingName").value,
@@ -1541,8 +1842,8 @@ function saveSettings() {
 function loadSettings() {
   const settings = JSON.parse(localStorage.getItem("kos_settings"));
   if (!settings) return;
-  document.getElementById("settingName").value = settings.name || "KOSKU";
-  document.getElementById("settingOwner").value = settings.owner || "Owner";
+  document.getElementById("settingName").value = settings.name || "JOHAN KOSKU";
+  document.getElementById("settingOwner").value = settings.owner || "Admin";
   document.getElementById("settingPhone").value = settings.phone || "";
   document.getElementById("settingAddress").value = settings.address || "";
   document.getElementById("settingSheetURL").value = settings.sheetURL || "";
@@ -1550,57 +1851,33 @@ function loadSettings() {
   updateSyncIndicator();
 }
 
-// === NOTIFIKASI ===
-function updateNotifications() {
-  const count = rooms.filter(r => r.status === "overdue").length;
-  document.getElementById("notifCount").textContent = count;
-}
-
-function showNotifications() {
-  const overdue = rooms.filter(r => r.status === "overdue");
-  if (overdue.length === 0) {
-    alert("✅ Tidak ada kamar yang menunggak. Semua aman!");
-    return;
-  }
-  const overdueTenants = overdue.map(r => {
-    const tenant = tenants.find(t => t.room === r.number);
-    return `${r.number}: ${tenant ? tenant.name : "Tidak ada penghuni"}`;
-  }).join("\n");
-  alert(`⚠️ Ada ${overdue.length} kamar menunggak:\n\n${overdueTenants}`);
-}
-
-// === EXPORT/IMPORT DATA ===
 function exportData() {
-  const data = {
-    rooms, tenants, payments, expenses,
-    exportDate: new Date().toISOString()
-  };
+  const data = { rooms, tenants, payments, expenses, exportDate: new Date().toISOString() };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "kosku-backup-" + new Date().toISOString().split("T")[0] + ".json";
+  a.download = "johan-kosku-backup-" + new Date().toISOString().split("T")[0] + ".json";
   a.click();
   URL.revokeObjectURL(url);
   showToast("Data diexport!");
 }
 
 function resetData() {
-  if (!confirm("⚠️ Semua data akan dihapus dan dikembalikan ke 38 kamar awal. Lanjutkan?")) return;
+  if (!confirm("⚠️ Semua data akan dihapus. Lanjutkan?")) return;
   localStorage.removeItem("kos_rooms");
   localStorage.removeItem("kos_tenants");
   localStorage.removeItem("kos_payments");
   localStorage.removeItem("kos_expenses");
-  rooms = generateDefaultRooms();
-  tenants = generateDefaultTenants();
+  rooms = [];
+  tenants = [];
   payments = [];
   expenses = [];
   saveData();
   renderAll();
-  showToast("Data berhasil direset ke 38 kamar awal.");
+  showToast("Data berhasil direset.");
 }
 
-// === RENDER ALL ===
 function renderAll() {
   renderDashboard();
   renderRooms();
@@ -1609,10 +1886,8 @@ function renderAll() {
   renderExpenses();
   populateReportMonth();
   renderReport();
-  updateNotifications();
 }
 
-// === EVENT LISTENERS ===
 document.querySelectorAll(".modal").forEach(modal => {
   modal.addEventListener("click", event => {
     if (event.target === modal) {
@@ -1629,64 +1904,5 @@ document.addEventListener("DOMContentLoaded", () => {
   renderAll();
 });
 </script>
-
-<!-- 
-========================================================================
-PANDUAN SETUP GOOGLE SPREADSHEET INTEGRATION
-========================================================================
-
-1. Buka spreadsheet: https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit
-2. Klik menu: Extensions → Apps Script
-3. Hapus kode default, paste kode berikut:
-
-function doPost(e) {
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var data = JSON.parse(e.postData.contents);
-    
-    var roomsSheet = ss.getSheetByName("Kamar") || ss.insertSheet("Kamar");
-    var tenantsSheet = ss.getSheetByName("Penghuni") || ss.insertSheet("Penghuni");
-    var paymentsSheet = ss.getSheetByName("Pembayaran") || ss.insertSheet("Pembayaran");
-    var expensesSheet = ss.getSheetByName("Pengeluaran") || ss.insertSheet("Pengeluaran");
-    
-    if (roomsSheet.getLastRow() === 0) roomsSheet.appendRow(["Timestamp","ID","Nomor Kamar","Harga","Status"]);
-    if (tenantsSheet.getLastRow() === 0) tenantsSheet.appendRow(["Timestamp","ID","Nama","WhatsApp","Kamar","Harga","Tanggal Masuk","Jatuh Tempo"]);
-    if (paymentsSheet.getLastRow() === 0) paymentsSheet.appendRow(["Timestamp","ID","Tanggal","Penghuni","Kamar","Periode","Jumlah","Status"]);
-    if (expensesSheet.getLastRow() === 0) expensesSheet.appendRow(["Timestamp","ID","Tanggal","Tipe Biaya","Kategori","Keterangan","Jumlah"]);
-    
-    if (data.type === "room") {
-      roomsSheet.appendRow([new Date(), data.id, data.number, data.price, data.status]);
-    } else if (data.type === "tenant") {
-      tenantsSheet.appendRow([new Date(), data.id, data.name, data.phone, data.room, data.price, data.date, data.due]);
-    } else if (data.type === "payment") {
-      paymentsSheet.appendRow([new Date(), data.id, data.date, data.tenant, data.room, data.period, data.amount, data.status]);
-    } else if (data.type === "expense") {
-      expensesSheet.appendRow([new Date(), data.id, data.date, data.categoryType, data.category, data.description, data.amount]);
-    }
-    return ContentService.createTextOutput(JSON.stringify({status:"success"})).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({status:"error",message:err.toString()})).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-function doGet() {
-  return ContentService.createTextOutput("KOSKU Web App Running");
-}
-
-4. Klik Save (ikon disket)
-5. Klik Deploy → New deployment
-6. Pilih type: Web app
-7. Description: KOSKU API
-8. Execute as: Me
-9. Who has access: Anyone
-10. Klik Deploy, authorize jika diminta
-11. Copy Web App URL (format: https://script.google.com/macros/s/XXXXX/exec)
-12. Paste URL tersebut di menu Pengaturan → Integrasi Google Spreadsheet
-13. Klik Simpan
-
-Setiap kali Anda menambah/mengedit data, otomatis terkirim ke spreadsheet.
-========================================================================
--->
-
 </body>
 </html>
