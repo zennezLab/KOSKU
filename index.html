@@ -655,6 +655,15 @@ select:focus, input:focus, textarea:focus{
 .is-label{ font-weight:600; }
 .is-section-title{ font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--primary-dark); margin:15px 0 5px; padding-bottom:5px; border-bottom:2px solid var(--primary); }
 
+/* ================= NOTIFICATION LIST ================= */
+.notif-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px; border:1px solid var(--border); border-radius:10px;
+    margin-bottom:10px; background:#fff5f5;
+}
+.notif-item .info strong { display:block; color:var(--text); font-size:14px; }
+.notif-item .info small { color:var(--muted); font-size:12px; }
+
 /* ================= TOAST ================= */
 .toast{ position:fixed; bottom:30px; right:30px; background:white; color:var(--text); padding:14px 20px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,0.1); z-index:5000; display:flex; align-items:center; gap:10px; transform:translateX(400px); transition:transform .3s ease; border:1px solid var(--border); }
 .toast.show{ transform:translateX(0); }
@@ -701,7 +710,7 @@ select:focus, input:focus, textarea:focus{
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         </div>
         <div>
-            <h2>KOSKU</h2>
+            <h2 id="logoNameDisplay">KOSKU</h2>
             <small>Manajemen Kos</small>
         </div>
     </div>
@@ -756,9 +765,9 @@ select:focus, input:focus, textarea:focus{
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
             <span class="notification-badge" id="notifCount">0</span>
         </div>
-        <div class="avatar">O</div>
+        <div class="avatar" id="avatarDisplay">O</div>
         <div>
-            <strong>Owner</strong>
+            <strong id="ownerNameDisplay">Owner</strong>
             <small style="display:block;color:#64748b;font-size:12px;">Pemilik Kos</small>
         </div>
     </div>
@@ -769,7 +778,7 @@ select:focus, input:focus, textarea:focus{
 <section id="dashboard" class="section active">
     <div class="welcome">
         <div>
-            <h1>Selamat Datang, Owner 👋</h1>
+            <h1>Selamat Datang, <span id="welcomeOwnerName">Owner</span> 👋</h1>
             <p>Kelola kos Anda dengan lebih mudah dan realistis.</p>
         </div>
         <div class="welcome-icon">
@@ -1238,6 +1247,22 @@ select:focus, input:focus, textarea:focus{
     </div>
 </div>
 
+<!-- MODAL NOTIFIKASI -->
+<div class="modal" id="notifModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Notifikasi Tagihan Menunggak</h3>
+            <button class="close" onclick="closeModal('notifModal')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="notifContent"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" onclick="closeModal('notifModal')">Tutup</button>
+        </div>
+    </div>
+</div>
+
 <div class="toast" id="toast">
     <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
     <span id="toastText">Berhasil!</span>
@@ -1554,7 +1579,7 @@ function renderTenants() {
         <td>${rupiah(t.price)}</td>
         <td>Tanggal ${t.due}</td>
         <td>
-          <button class="btn btn-success btn-small" onclick="whatsapp(${t.id})">${ICON_WHATSAPP} WA</button>
+          <button class="btn btn-success btn-small" onclick="sendReminder(${t.id})">${ICON_WHATSAPP} WA</button>
           <button class="btn btn-light btn-small" onclick="editTenant(${t.id})">${ICON_EDIT} Edit</button>
           <button class="btn btn-danger btn-small" onclick="deleteTenant(${t.id})">${ICON_DELETE} Hapus</button>
         </td>
@@ -1597,10 +1622,15 @@ function deleteTenant(id) {
   renderAll();
 }
 
-function whatsapp(id) {
-  const tenant = tenants.find(t => t.id === id);
+function sendReminder(tenantId) {
+  const tenant = tenants.find(t => t.id === tenantId);
   if (!tenant) return;
-  const message = `Halo ${tenant.name},\n\nIni pengingat pembayaran kos.\n\nKamar: ${tenant.room}\nTagihan: ${rupiah(tenant.price)}\nJatuh tempo: tanggal ${tenant.due}\n\nTerima kasih.`;
+  
+  const settings = JSON.parse(localStorage.getItem("kos_settings")) || {name: "Kos"};
+  const kosName = settings.name || "Kos";
+  
+  const message = `Halo ${tenant.name},\n\nSemoga Anda dalam keadaan sehat dan lancar aktivitasnya. 😊\n\nKami dari pengelola ${kosName} ingin menyampaikan pengingat mengenai pembayaran sewa kamar Anda dengan rincian:\n\n- Kamar: ${tenant.room}\n- Jumlah Tagihan: ${rupiah(tenant.price)}\n- Jatuh Tempo: Tanggal ${tenant.due}\n\nKarena saat ini pembayaran belum kami terima, mohon kiranya dapat segera dilunasi. Jika sudah melakukan pembayaran, mohon abaikan pesan ini.\n\nTerima kasih atas perhatian dan kerja samanya. 🙏`;
+  
   const number = tenant.phone.replace(/\D/g, "");
   window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(message), "_blank");
 }
@@ -1981,19 +2011,33 @@ function saveSettings() {
   };
   localStorage.setItem("kos_settings", JSON.stringify(settings));
   SPREADSHEET_WEBAPP_URL = settings.sheetURL;
+  
+  // Update UI directly
+  document.getElementById("logoNameDisplay").textContent = settings.name;
+  document.getElementById("ownerNameDisplay").textContent = settings.owner;
+  document.getElementById("avatarDisplay").textContent = settings.owner.charAt(0).toUpperCase();
+  document.getElementById("welcomeOwnerName").textContent = settings.owner;
+  
   updateSyncIndicator();
   showToast("Pengaturan berhasil disimpan!");
 }
 
 function loadSettings() {
-  const settings = JSON.parse(localStorage.getItem("kos_settings"));
-  if (!settings) return;
+  const settings = JSON.parse(localStorage.getItem("kos_settings")) || { name: "KOSKU", owner: "Owner", phone: "", address: "", sheetURL: SPREADSHEET_WEBAPP_URL };
+  
   document.getElementById("settingName").value = settings.name || "KOSKU";
   document.getElementById("settingOwner").value = settings.owner || "Owner";
   document.getElementById("settingPhone").value = settings.phone || "";
   document.getElementById("settingAddress").value = settings.address || "";
   document.getElementById("settingSheetURL").value = settings.sheetURL || SPREADSHEET_WEBAPP_URL;
   SPREADSHEET_WEBAPP_URL = settings.sheetURL || SPREADSHEET_WEBAPP_URL;
+  
+  // Apply to UI
+  document.getElementById("logoNameDisplay").textContent = settings.name || "KOSKU";
+  document.getElementById("ownerNameDisplay").textContent = settings.owner || "Owner";
+  document.getElementById("avatarDisplay").textContent = (settings.owner || "O").charAt(0).toUpperCase();
+  document.getElementById("welcomeOwnerName").textContent = settings.owner || "Owner";
+  
   updateSyncIndicator();
 }
 
@@ -2066,15 +2110,41 @@ function updateNotifications() {
 
 function showNotifications() {
   const overdue = rooms.filter(r => r.status === "overdue");
+  const contentDiv = document.getElementById("notifContent");
+  
   if (overdue.length === 0) {
-    alert("✅ Tidak ada kamar yang menunggak. Semua aman!");
-    return;
+    contentDiv.innerHTML = `<div class="empty" style="padding: 30px;">✅ Tidak ada kamar yang menunggak. Semua aman!</div>`;
+  } else {
+    let html = `<p style="margin-bottom:15px; color:var(--text);">Ada <strong style="color:var(--danger);">${overdue.length} kamar</strong> yang menunggak. Silakan kirimkan pengingat tagihan ke penghuni:</p><div style="display:flex; flex-direction:column; gap:10px;">`;
+    overdue.forEach(r => {
+      const tenant = tenants.find(t => t.room === r.number);
+      if (tenant) {
+        html += `
+          <div class="notif-item">
+            <div class="info">
+              <strong>${tenant.name}</strong>
+              <small>${r.number} • Jatuh tempo tgl ${tenant.due} • ${rupiah(tenant.price)}</small>
+            </div>
+            <button class="btn btn-success btn-small" onclick="sendReminder(${tenant.id})">
+              ${ICON_WHATSAPP} Tagih
+            </button>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="notif-item">
+            <div class="info">
+              <strong>${r.number}</strong>
+              <small>Belum ada penghuni terdaftar</small>
+            </div>
+          </div>
+        `;
+      }
+    });
+    html += `</div>`;
+    contentDiv.innerHTML = html;
   }
-  const overdueTenants = overdue.map(r => {
-    const tenant = tenants.find(t => t.room === r.number);
-    return `${r.number}: ${tenant ? tenant.name : "Tidak ada penghuni"}`;
-  }).join("\n");
-  alert(`⚠️ Ada ${overdue.length} kamar menunggak:\n\n${overdueTenants}`);
+  openModal('notifModal');
 }
 
 function renderAll() {
