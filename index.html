@@ -33,7 +33,6 @@
 }
 
 body{
-    /* Background gambarhut.png dengan overlay warna agar teks tetap terbaca */
     background: linear-gradient(rgba(241, 245, 249, 0.85), rgba(241, 245, 249, 0.9)), url('gambarhut.png') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -194,6 +193,7 @@ svg {
     background: #eff6ff;
     color: var(--primary-dark);
     border: 1px solid #dbeafe;
+    cursor:pointer;
 }
 .sync-indicator.online{ background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
 .sync-indicator.offline{ background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
@@ -531,6 +531,7 @@ td{ padding:14px; border-bottom:1px solid var(--border); font-size:13px; }
     font-size:10px;
     font-weight:bold;
     text-transform:uppercase;
+    display:inline-block;
 }
 .badge-green{ background:#dcfce7; color:#15803d; }
 .badge-red{ background:#fee2e2; color:#b91c1c; }
@@ -647,7 +648,6 @@ select:focus, input:focus, textarea:focus{
 .bar.expense{ background:linear-gradient(to top, #ef4444, #f87171); box-shadow: 0 4px 6px -1px rgba(239,68,68,0.2); }
 
 .bar-label{ font-size:11px; color:#64748b; margin-top:8px; font-weight:600; }
-.bar-value{ font-size:10px; color:#1e293b; margin-bottom:6px; font-weight:bold; }
 
 .empty{ text-align:center; padding:40px; color:#94a3b8; }
 
@@ -672,7 +672,7 @@ select:focus, input:focus, textarea:focus{
 .notif-item .info small { color:var(--muted); font-size:12px; }
 
 /* ================= TOAST ================= */
-.toast{ position:fixed; bottom:30px; right:30px; background:white; color:var(--text); padding:14px 20px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,0.1); z-index:5000; display:flex; align-items:center; gap:10px; transform:translateX(400px); transition:transform .3s ease; border:1px solid var(--border); }
+.toast{ position:fixed; bottom:30px; right:30px; background:white; color:var(--text); padding:14px 20px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,0.1); z-index:5000; display:flex; align-items:center; gap:10px; transform:translateX(400px); transition:transform .3s ease; border:1px solid var(--border); max-width:360px; }
 .toast.show{ transform:translateX(0); }
 .toast.success{ border-left:4px solid var(--success); }
 .toast.error{ border-left:4px solid var(--danger); }
@@ -765,7 +765,7 @@ select:focus, input:focus, textarea:focus{
         <div class="page-title" id="pageTitle">Dashboard</div>
     </div>
     <div class="user-area">
-        <span class="sync-indicator" id="syncIndicator">
+        <span class="sync-indicator" id="syncIndicator" onclick="loadFromSheet()" title="Klik untuk sinkron ulang">
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             <span id="syncText">Sync: Aktif</span>
         </span>
@@ -783,6 +783,7 @@ select:focus, input:focus, textarea:focus{
 
 <div class="content">
 
+<!-- ================= DASHBOARD ================= -->
 <section id="dashboard" class="section active">
     <div class="welcome">
         <div>
@@ -906,6 +907,7 @@ select:focus, input:focus, textarea:focus{
     </div>
 </section>
 
+<!-- ================= KAMAR ================= -->
 <section id="kamar" class="section">
     <div class="toolbar">
         <div class="search">
@@ -934,6 +936,7 @@ select:focus, input:focus, textarea:focus{
     </div>
 </section>
 
+<!-- ================= PENGHUNI ================= -->
 <section id="penghuni" class="section">
     <div class="toolbar">
         <div class="search">
@@ -958,6 +961,7 @@ select:focus, input:focus, textarea:focus{
     </div>
 </section>
 
+<!-- ================= PEMBAYARAN ================= -->
 <section id="pembayaran" class="section">
     <div class="stats">
         <div class="stat-card">
@@ -995,6 +999,7 @@ select:focus, input:focus, textarea:focus{
     </div>
 </section>
 
+<!-- ================= PENGELUARAN ================= -->
 <section id="pengeluaran" class="section">
     <div class="stats">
         <div class="stat-card">
@@ -1038,6 +1043,7 @@ select:focus, input:focus, textarea:focus{
     </div>
 </section>
 
+<!-- ================= LAPORAN ================= -->
 <section id="laporan" class="section">
     <div class="toolbar">
         <select id="reportMonth" onchange="renderReport()"></select>
@@ -1083,6 +1089,7 @@ select:focus, input:focus, textarea:focus{
     </div>
 </section>
 
+<!-- ================= PENGATURAN ================= -->
 <section id="pengaturan" class="section">
     <div class="card">
         <div class="card-header"><h3>Pengaturan Kos</h3></div>
@@ -1112,6 +1119,16 @@ select:focus, input:focus, textarea:focus{
     </div>
 
     <div class="card">
+        <div class="card-header"><h3>Link Google Spreadsheet (Sumber Data)</h3></div>
+        <div class="form-grid">
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=2036671382#gid=2036671382">🏠 Sheet Kamar</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=414114963#gid=414114963">👥 Sheet Penghuni</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=1931011124#gid=1931011124">💳 Sheet Pembayaran</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=745355797#gid=745355797">💸 Sheet Pengeluaran</a>
+        </div>
+    </div>
+
+    <div class="card">
         <div class="card-header"><h3>Reset Semua Data</h3></div>
         <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Hapus SEMUA data aplikasi (Kamar, Penghuni, Pembayaran, Pengeluaran) sekaligus.</p>
         <button class="btn btn-danger" onclick="resetData()">
@@ -1123,7 +1140,7 @@ select:focus, input:focus, textarea:focus{
 </div>
 </main>
 
-<!-- MODAL KAMAR -->
+<!-- ================= MODAL KAMAR ================= -->
 <div class="modal" id="roomModal">
     <div class="modal-box">
         <div class="modal-header">
@@ -1134,27 +1151,46 @@ select:focus, input:focus, textarea:focus{
         </div>
         <form onsubmit="saveRoom(event)">
             <input type="hidden" id="roomId">
-            <div class="form-group"><label>Nomor Kamar</label><input id="roomNumber" placeholder="Contoh: Kamar 01" required></div>
-            <div class="form-group"><label>Harga Sewa / Bulan</label><input id="roomPrice" type="number" required></div>
-            <div class="form-group">
-                <label>Status</label>
-                <select id="roomStatus">
-                    <option value="empty">Kosong</option>
-                    <option value="occupied">Terisi</option>
-                    <option value="overdue">Menunggak</option>
-                </select>
+            <div class="form-group"><label>Nomor/Nama Kamar</label><input id="roomNumber" placeholder="Contoh: Kamar 01 / A-101" required></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Harga Sewa / Bulan (Rp)</label><input id="roomPrice" type="number" min="0" required></div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="roomStatus">
+                        <option value="empty">Kosong</option>
+                        <option value="occupied">Terisi</option>
+                    </select>
+                </div>
             </div>
+
+            <!-- FITUR UNLIMITED: tambah massal -->
+            <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:16px;margin:8px 0;">
+                <label style="font-size:13px;font-weight:700;color:var(--primary-dark);">⚡ Tambah Massal — Tanpa Batas</label>
+                <small style="display:block;color:var(--muted);margin:4px 0 12px;">Buat banyak kamar sekaligus memakai harga &amp; status di atas.</small>
+                <div class="form-grid">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px;">Jumlah Kamar</label>
+                        <input id="roomBulkCount" type="number" min="1" max="500" placeholder="mis. 20">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px;">Nomor Awal</label>
+                        <input id="roomBulkStart" type="number" min="1" value="1">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-light btn-small" style="margin-top:12px;" onclick="bulkAddRooms()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Generate Kamar
+                </button>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" onclick="closeModal('roomModal')">Batal</button>
-                <button type="submit" class="btn btn-primary">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Simpan
-                </button>
+                <button type="submit" class="btn btn-primary">Simpan Kamar</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL PENGHUNI -->
+<!-- ================= MODAL PENGHUNI ================= -->
 <div class="modal" id="tenantModal">
     <div class="modal-box">
         <div class="modal-header">
@@ -1167,1019 +1203,917 @@ select:focus, input:focus, textarea:focus{
             <input type="hidden" id="tenantId">
             <div class="form-group"><label>Nama Lengkap</label><input id="tenantName" placeholder="Nama penghuni" required></div>
             <div class="form-grid">
-                <div class="form-group"><label>WhatsApp</label><input id="tenantPhone" placeholder="628xxxxxxxxxx" required></div>
-                <div class="form-group"><label>Kamar</label><select id="tenantRoom" required></select></div>
+                <div class="form-group"><label>Nomor WhatsApp</label><input id="tenantPhone" placeholder="628xxxxxxxxxx"></div>
+                <div class="form-group"><label>Kamar</label><select id="tenantRoom" onchange="onTenantRoomChange()" required></select></div>
             </div>
             <div class="form-grid">
-                <div class="form-group"><label>Harga Sewa</label><input id="tenantPrice" type="number" required></div>
+                <div class="form-group"><label>Harga Sewa / Bulan (Rp)</label><input id="tenantPrice" type="number" min="0" required></div>
                 <div class="form-group"><label>Tanggal Masuk</label><input id="tenantDate" type="date" required></div>
             </div>
-            <div class="form-group"><label>Tanggal Jatuh Tempo (Tanggal berapa setiap bulan)</label><input id="tenantDue" type="number" min="1" max="31" placeholder="Contoh: 25" required></div>
+            <div class="form-group"><label>Jatuh Tempo Pembayaran Berikutnya</label><input id="tenantDue" type="date" required></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" onclick="closeModal('tenantModal')">Batal</button>
-                <button type="submit" class="btn btn-primary">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Simpan
-                </button>
+                <button type="submit" class="btn btn-success">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL PEMBAYARAN -->
+<!-- ================= MODAL PEMBAYARAN ================= -->
 <div class="modal" id="paymentModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h3>Catat Pembayaran</h3>
+            <h3 id="paymentModalTitle">Catat Pembayaran</h3>
             <button class="close" onclick="closeModal('paymentModal')">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
         <form onsubmit="savePayment(event)">
-            <div class="form-group"><label>Penghuni</label><select id="paymentTenant" required onchange="autoFillPaymentAmount()"></select></div>
+            <input type="hidden" id="paymentId">
+            <div class="form-group"><label>Penghuni</label><select id="paymentTenant" onchange="onPaymentTenantChange()" required></select></div>
             <div class="form-grid">
-                <div class="form-group"><label>Tanggal</label><input id="paymentDate" type="date" required></div>
-                <div class="form-group"><label>Periode</label><input id="paymentPeriod" type="month" required></div>
+                <div class="form-group"><label>Tanggal Bayar</label><input id="paymentDate" type="date" required></div>
+                <div class="form-group"><label>Periode</label><input id="paymentPeriod" placeholder="mis. Januari 2025" required></div>
             </div>
-            <div class="form-group"><label>Jumlah Pembayaran</label><input id="paymentAmount" type="number" required></div>
-            <div class="form-group">
-                <label>Status</label>
-                <select id="paymentStatus">
-                    <option value="lunas">Lunas</option>
-                    <option value="sebagian">Sebagian</option>
-                    <option value="belum">Belum Lunas</option>
-                </select>
+            <div class="form-grid">
+                <div class="form-group"><label>Jumlah (Rp)</label><input id="paymentAmount" type="number" min="0" required></div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="paymentStatus">
+                        <option value="Lunas">Lunas</option>
+                        <option value="Belum Lunas">Belum Lunas</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" onclick="closeModal('paymentModal')">Batal</button>
-                <button type="submit" class="btn btn-primary">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Simpan
-                </button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL PENGELUARAN -->
+<!-- ================= MODAL PENGELUARAN ================= -->
 <div class="modal" id="expenseModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h3>Tambah Pengeluaran</h3>
+            <h3 id="expenseModalTitle">Tambah Pengeluaran</h3>
             <button class="close" onclick="closeModal('expenseModal')">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
         <form onsubmit="saveExpense(event)">
             <input type="hidden" id="expenseId">
-            <div class="form-group"><label>Tanggal</label><input id="expenseDate" type="date" required></div>
-            <div class="form-group">
-                <label>Tipe Biaya (untuk Akuntansi)</label>
-                <select id="expenseCategoryType" onchange="updateExpenseCategories()">
-                    <option value="hpp">Biaya Langsung (HPP)</option>
-                    <option value="operasional">Biaya Operasional</option>
-                    <option value="lainnya">Biaya Lain-lain</option>
-                </select>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tipe Biaya</label>
+                    <select id="expenseCategoryType" required>
+                        <option value="hpp">Biaya Langsung (HPP)</option>
+                        <option value="operasional">Biaya Operasional</option>
+                        <option value="lainnya">Biaya Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="expenseCategory" required>
+                        <option>Listrik</option><option>Air</option><option>WiFi</option>
+                        <option>Kebersihan</option><option>Perawatan</option><option>Gaji</option><option>Lainnya</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Kategori</label>
-                <select id="expenseCategory"></select>
+            <div class="form-group"><label>Keterangan</label><input id="expenseDescription" placeholder="mis. Tagihan listrik bulan ini"></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Tanggal</label><input id="expenseDate" type="date" required></div>
+                <div class="form-group"><label>Jumlah (Rp)</label><input id="expenseAmount" type="number" min="0" required></div>
             </div>
-            <div class="form-group"><label>Keterangan</label><textarea id="expenseDescription" rows="3" placeholder="Keterangan pengeluaran"></textarea></div>
-            <div class="form-group"><label>Jumlah</label><input id="expenseAmount" type="number" required></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" onclick="closeModal('expenseModal')">Batal</button>
-                <button type="submit" class="btn btn-primary">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Simpan
-                </button>
+                <button type="submit" class="btn btn-danger">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL NOTIFIKASI -->
+<!-- ================= MODAL NOTIFIKASI ================= -->
 <div class="modal" id="notifModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h3>Notifikasi Tagihan Menunggak</h3>
+            <h3>Notifikasi Tunggakan</h3>
             <button class="close" onclick="closeModal('notifModal')">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <div id="notifContent"></div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" onclick="closeModal('notifModal')">Tutup</button>
-        </div>
+        <div id="notifList"></div>
     </div>
 </div>
 
-<div class="toast" id="toast">
-    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-    <span id="toastText">Berhasil!</span>
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-/* ===================================================================
- * KOSKU - SISTEM MANAJEMEN KOS
- * Style Awal (Clean Light) + Fitur Akuntansi Terbaru
- * ===================================================================*/
-
-let SPREADSHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyRiaQonK-spIJrD7mCh7UyyF8JMbvzHeh0ik9r_iRgb63Pb6zzJ9ih8kyT245aqp3T/exec";
-
-const EXPENSE_CATEGORIES = {
-  hpp: ["Listrik Kamar", "Air Kamar", "Kebersihan Kamar", "Perbaikan Kamar", "ATK Kamar", "Gas"],
-  operasional: ["Listrik Umum", "Air Umum", "WiFi/Internet", "Gaji Pegawai", "Kebersihan Umum", "Perbaikan Umum", "Renovasi", "Pajak", "Iuran RT/RW", "Promosi/Iklan", "Pulsa/Paket Data", "Perlengkapan Kantor"],
-  lainnya: ["Denda/Bunga", "Biaya Bank", "Kerugian", "Donasi/Sumbangan", "Biaya Hukum", "Lainnya"]
+/* =========================================================
+   KOSKU — Konfigurasi Spreadsheet
+   ========================================================= */
+const SPREADSHEET_ID = "1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10";
+const SHEET_LINKS = {
+    kamar:       "https://docs.google.com/spreadsheets/d/" + SPREADSHEET_ID + "/edit?gid=2036671382#gid=2036671382",
+    penghuni:    "https://docs.google.com/spreadsheets/d/" + SPREADSHEET_ID + "/edit?gid=414114963#gid=414114963",
+    pembayaran:  "https://docs.google.com/spreadsheets/d/" + SPREADSHEET_ID + "/edit?gid=1931011124#gid=1931011124",
+    pengeluaran: "https://docs.google.com/spreadsheets/d/" + SPREADSHEET_ID + "/edit?gid=745355797#gid=745355797"
 };
 
-// === DATA AWAL KOSONG ===
-let rooms = JSON.parse(localStorage.getItem("kos_rooms")) || [];
-let tenants = JSON.parse(localStorage.getItem("kos_tenants")) || [];
-let payments = JSON.parse(localStorage.getItem("kos_payments")) || [];
-let expenses = JSON.parse(localStorage.getItem("kos_expenses")) || [];
+/* ============ STATE ============ */
+function loadLS(key, def){
+    try{ const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? def : v; }catch(e){ return def; }
+}
+let rooms    = loadLS('kosku_rooms', []);
+let tenants  = loadLS('kosku_tenants', []);
+let payments = loadLS('kosku_payments', []);
+let expenses = loadLS('kosku_expenses', []);
+let settings = loadLS('kosku_settings', {});
+let API_URL  = settings.apiURL || "";
 
-const ICON_EDIT = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>';
-const ICON_WHATSAPP = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
-const ICON_DELETE = '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>';
+function saveAll(){
+    localStorage.setItem('kosku_rooms', JSON.stringify(rooms));
+    localStorage.setItem('kosku_tenants', JSON.stringify(tenants));
+    localStorage.setItem('kosku_payments', JSON.stringify(payments));
+    localStorage.setItem('kosku_expenses', JSON.stringify(expenses));
+    localStorage.setItem('kosku_settings', JSON.stringify(settings));
+}
+function genId(p){ return p + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,7); }
 
-function saveData() {
-  localStorage.setItem("kos_rooms", JSON.stringify(rooms));
-  localStorage.setItem("kos_tenants", JSON.stringify(tenants));
-  localStorage.setItem("kos_payments", JSON.stringify(payments));
-  localStorage.setItem("kos_expenses", JSON.stringify(expenses));
+/* ============ UTIL ============ */
+function rupiah(n){ return "Rp" + (Number(n)||0).toLocaleString("id-ID"); }
+function toISODate(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function todayISO(){ return toISODate(new Date()); }
+function fmtDate(v){
+    if(!v) return "-";
+    const d = new Date(v);
+    if(isNaN(d)) return String(v);
+    return d.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"});
+}
+function esc(s){ return String(s===null||s===undefined?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+let toastTimer;
+function toast(msg, type){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = "toast show " + (type||"success");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ t.className = "toast " + (type||"success"); }, 3200);
 }
 
-function rupiah(value) {
-  return new Intl.NumberFormat("id-ID", {style:"currency", currency:"IDR", maximumFractionDigits:0}).format(Number(value)||0);
+/* ============ SYNC GOOGLE SHEETS ============ */
+function setSyncStatus(state){
+    const el = document.getElementById('syncIndicator');
+    const tx = document.getElementById('syncText');
+    el.classList.remove('online','offline');
+    if(state === 'online'){ el.classList.add('online'); tx.textContent = 'Sync: Online'; }
+    else if(state === 'offline'){ el.classList.add('offline'); tx.textContent = 'Sync: Offline'; }
+    else if(state === 'syncing'){ tx.textContent = 'Sync...'; }
+    else { tx.textContent = API_URL ? 'Sync: Aktif' : 'Sync: Belum diatur'; }
 }
 
-function showToast(message, type = "success") {
-  const toast = document.getElementById("toast");
-  document.getElementById("toastText").textContent = message;
-  toast.className = "toast " + type;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 3000);
+async function syncToSheet(payload){
+    if(!API_URL) return;
+    try{
+        setSyncStatus('syncing');
+        const res = await fetch(API_URL, {
+            method:'POST',
+            headers:{'Content-Type':'text/plain;charset=utf-8'},
+            body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        setSyncStatus(json.status === 'success' ? 'online' : 'offline');
+    }catch(err){
+        setSyncStatus('offline');
+    }
 }
 
-function formatDate(date) {
-  if (!date) return "-";
-  return new Date(date).toLocaleDateString("id-ID", {day:"2-digit", month:"short", year:"numeric"});
+async function loadFromSheet(){
+    if(!API_URL){ toast('Isi URL Web App di menu Pengaturan dulu','error'); return; }
+    try{
+        setSyncStatus('syncing');
+        const res = await fetch(API_URL + "?action=getData");
+        const json = await res.json();
+        if(json.status === 'success' && json.data){
+            rooms = json.data.rooms || [];
+            tenants = json.data.tenants || [];
+            payments = json.data.payments || [];
+            expenses = json.data.expenses || [];
+            saveAll(); renderAll();
+            toast('Data dimuat dari Google Spreadsheet','success');
+        }
+        setSyncStatus('online');
+    }catch(err){
+        setSyncStatus('offline');
+        toast('Gagal memuat data dari Spreadsheet','error');
+    }
 }
 
-function formatShort(value) {
-  if (value >= 1000000000) return "Rp" + (value/1000000000).toFixed(1) + "M";
-  if (value >= 1000000) return "Rp" + (value/1000000).toFixed(1) + "jt";
-  if (value >= 1000) return "Rp" + (value/1000).toFixed(0) + "rb";
-  return "Rp" + value;
-}
+/* ============ NAVIGASI & MODAL ============ */
+const PAGE_TITLES = {dashboard:'Dashboard',kamar:'Data Kamar',penghuni:'Penghuni',pembayaran:'Pembayaran',pengeluaran:'Pengeluaran',laporan:'Laporan Keuangan',pengaturan:'Pengaturan'};
 
-function syncToSpreadsheet(data) {
-  if (!SPREADSHEET_WEBAPP_URL) return;
-  try {
-    fetch(SPREADSHEET_WEBAPP_URL, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {"Content-Type": "text/plain;charset=utf-8"},
-      mode: "no-cors"
+function showPage(name, el){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    const sec = document.getElementById(name); if(sec) sec.classList.add('active');
+    document.querySelectorAll('.menu').forEach(m=>m.classList.remove('active'));
+    if(el) el.classList.add('active');
+    document.getElementById('pageTitle').textContent = PAGE_TITLES[name]||'Dashboard';
+    document.getElementById('sidebar').classList.remove('open');
+}
+function showPageByName(name){
+    document.querySelectorAll('.menu').forEach(m=>{
+        if((m.getAttribute('onclick')||'').includes("'"+name+"'")) showPage(name, m);
     });
-  } catch (err) {
-    console.error("Sync error:", err);
-  }
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+function openModal(id){
+    document.getElementById(id).classList.add('show');
+    if(id==='roomModal') resetRoomForm();
+    if(id==='tenantModal') resetTenantForm();
+    if(id==='paymentModal') resetPaymentForm();
+    if(id==='expenseModal') resetExpenseForm();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+/* ============ LOGIKA STATUS ============ */
+function isOverdue(t){
+    if(!t.due) return false;
+    return new Date(t.due) < new Date(todayISO());
+}
+function roomRealStatus(r){
+    if(r.status !== 'occupied') return r.status || 'empty';
+    const t = tenants.find(x=>x.room===r.number);
+    if(t && isOverdue(t)) return 'overdue';
+    return 'occupied';
+}
+function roomStatusBadge(st){
+    const map = {empty:['Kosong','status-empty'],occupied:['Terisi','status-occupied'],overdue:['Menunggak','status-overdue']};
+    return map[st] || map.empty;
 }
 
-function updateSyncIndicator() {
-  const indicator = document.getElementById("syncIndicator");
-  const text = document.getElementById("syncText");
-  if (SPREADSHEET_WEBAPP_URL) {
-    indicator.className = "sync-indicator online";
-    text.textContent = "Sync: Aktif";
-  } else {
-    indicator.className = "sync-indicator offline";
-    text.textContent = "Sync: Off";
-  }
+/* ============ KAMAR (UNLIMITED) ============ */
+function resetRoomForm(){
+    document.getElementById('roomModalTitle').textContent = 'Tambah Kamar';
+    document.getElementById('roomId').value = '';
+    document.getElementById('roomNumber').value = '';
+    document.getElementById('roomPrice').value = '';
+    document.getElementById('roomStatus').value = 'empty';
+    document.getElementById('roomBulkCount').value = '';
+    document.getElementById('roomBulkStart').value = '1';
 }
 
-function showPage(page, element) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.getElementById(page).classList.add("active");
-  document.querySelectorAll(".menu").forEach(m => m.classList.remove("active"));
-  if (element) element.classList.add("active");
+function saveRoom(e){
+    e.preventDefault();
+    const id = document.getElementById('roomId').value;
+    const number = document.getElementById('roomNumber').value.trim();
+    const price = Number(document.getElementById('roomPrice').value)||0;
+    const status = document.getElementById('roomStatus').value;
 
-  const titles = {dashboard:"Dashboard", kamar:"Data Kamar", penghuni:"Data Penghuni", pembayaran:"Pembayaran", pengeluaran:"Pengeluaran", laporan:"Laporan Keuangan", pengaturan:"Pengaturan"};
-  document.getElementById("pageTitle").textContent = titles[page];
-  if (window.innerWidth <= 750) document.getElementById("sidebar").classList.remove("open");
-  renderAll();
-}
-
-function showPageByName(page) {
-  const menus = document.querySelectorAll(".menu");
-  let target = null;
-  menus.forEach(menu => {
-    if (menu.getAttribute("onclick") && menu.getAttribute("onclick").includes("'" + page + "'")) target = menu;
-  });
-  showPage(page, target);
-}
-
-function toggleSidebar() { document.getElementById("sidebar").classList.toggle("open"); }
-
-function openModal(id) {
-  if (id === "tenantModal") {
-    populateRoomSelect();
-    document.getElementById("tenantModalTitle").textContent = "Tambah Penghuni";
-  }
-  if (id === "paymentModal") {
-    populateTenantSelect();
-    const today = new Date().toISOString().split("T")[0];
-    document.getElementById("paymentDate").value = today;
-    document.getElementById("paymentPeriod").value = today.substring(0, 7);
-  }
-  if (id === "expenseModal") {
-    document.getElementById("expenseDate").value = new Date().toISOString().split("T")[0];
-    updateExpenseCategories();
-  }
-  if (id === "roomModal") {
-    document.getElementById("roomModalTitle").textContent = "Tambah Kamar";
-  }
-  document.getElementById(id).classList.add("show");
-}
-
-function closeModal(id) { 
-  document.getElementById(id).classList.remove("show");
-  if (id === "roomModal") document.getElementById("roomId").value = "";
-  if (id === "tenantModal") document.getElementById("tenantId").value = "";
-}
-
-function renderDashboard() {
-  const total = rooms.length;
-  const occupied = rooms.filter(r => r.status === "occupied").length;
-  const empty = rooms.filter(r => r.status === "empty").length;
-  const overdue = rooms.filter(r => r.status === "overdue").length;
-
-  document.getElementById("totalKamar").textContent = total;
-  document.getElementById("kamarTerisi").textContent = occupied;
-  document.getElementById("kamarKosong").textContent = empty;
-  document.getElementById("kamarTunggak").textContent = overdue;
-
-  let dashRoomsHTML = "";
-  if (rooms.length === 0) {
-    dashRoomsHTML = `<div class="empty">Belum ada kamar. Silakan tambahkan.</div>`;
-  } else {
-    dashRoomsHTML = rooms.slice(0, 6).map(roomHTML).join("") + 
-    (rooms.length > 6 ? `<div class="room" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;border:2px dashed var(--border);cursor:pointer;" onclick="showPageByName('kamar')"><strong style="color:var(--primary);">+${rooms.length - 6} kamar lainnya</strong></div>` : "");
-  }
-  document.getElementById("dashboardRooms").innerHTML = dashRoomsHTML;
-  
-  renderDashboardPayments();
-  renderMonthlySummary();
-}
-
-function roomHTML(room) {
-  const tenant = tenants.find(t => t.room === room.number);
-  let statusText = "Kosong", statusClass = "status-empty";
-  if (room.status === "occupied") { statusText = "Terisi"; statusClass = "status-occupied"; }
-  if (room.status === "overdue") { statusText = "Menunggak"; statusClass = "status-overdue"; }
-
-  return `
-    <div class="room" onclick="editRoom(event, ${room.id})">
-      <button class="room-edit" onclick="editRoom(event, ${room.id})">${ICON_EDIT}</button>
-      <div class="room-number">${room.number}</div>
-      <div class="room-name">${tenant ? tenant.name : "Belum ada penghuni"}</div>
-      <div class="room-price">${rupiah(room.price)} <span style="font-weight:400;color:var(--muted);font-size:11px;">/bulan</span></div>
-      <span class="room-status ${statusClass}">${statusText}</span>
-    </div>
-  `;
-}
-
-function renderRooms() {
-  const container = document.getElementById("allRooms");
-  if (!container) return;
-  const search = document.getElementById("roomSearch")?.value.toLowerCase() || "";
-  const filter = document.getElementById("roomFilter")?.value || "all";
-
-  const result = rooms.filter(room => {
-    const matchSearch = room.number.toLowerCase().includes(search);
-    const matchFilter = filter === "all" || room.status === filter;
-    return matchSearch && matchFilter;
-  });
-
-  if (result.length === 0) {
-    container.innerHTML = `<div class="empty">Belum ada kamar ditemukan. Silakan tambahkan kamar baru.</div>`;
-  } else {
-    container.innerHTML = result.map(roomHTML).join("");
-  }
-  document.getElementById("roomCountText").textContent = result.length + " kamar";
-}
-
-function editRoom(event, id) {
-  event.stopPropagation();
-  const room = rooms.find(r => r.id === id);
-  if (!room) return;
-  document.getElementById("roomId").value = room.id;
-  document.getElementById("roomNumber").value = room.number;
-  document.getElementById("roomPrice").value = room.price;
-  document.getElementById("roomStatus").value = room.status;
-  document.getElementById("roomModalTitle").textContent = "Edit Kamar";
-  openModal("roomModal");
-}
-
-function saveRoom(event) {
-  event.preventDefault();
-  const id = document.getElementById("roomId").value;
-  const data = {
-    number: document.getElementById("roomNumber").value,
-    price: Number(document.getElementById("roomPrice").value),
-    status: document.getElementById("roomStatus").value
-  };
-
-  if (id) {
-    const index = rooms.findIndex(r => r.id == id);
-    rooms[index] = {...rooms[index], ...data};
-    showToast("Kamar berhasil diperbarui!");
-    syncToSpreadsheet({...rooms[index], type: "room"});
-  } else {
-    if (rooms.some(r => r.number === data.number)) {
-      alert("Nomor kamar sudah ada! Gunakan nomor lain.");
-      return;
+    if(rooms.some(r=>r.number===number && r.id!==id)){
+        toast('Nomor kamar sudah ada','error'); return;
     }
-    const newRoom = {id: Date.now(), ...data};
-    rooms.push(newRoom);
-    showToast("Kamar baru berhasil ditambahkan!");
-    syncToSpreadsheet({...newRoom, type: "room"});
-  }
 
-  saveData();
-  closeModal("roomModal");
-  event.target.reset();
-  document.getElementById("roomId").value = "";
-  renderAll();
-}
-
-function populateRoomSelect() {
-  const select = document.getElementById("tenantRoom");
-  select.innerHTML = "";
-  const emptyRooms = rooms.filter(r => r.status === "empty");
-  emptyRooms.forEach(room => {
-    select.innerHTML += `<option value="${room.number}">${room.number} - ${rupiah(room.price)}</option>`;
-  });
-  if (emptyRooms.length === 0) select.innerHTML = `<option value="">Tidak ada kamar kosong</option>`;
-}
-
-function saveTenant(event) {
-  event.preventDefault();
-  const id = document.getElementById("tenantId").value;
-  const roomNumber = document.getElementById("tenantRoom").value;
-  if (!roomNumber) { 
-    alert("Tidak ada kamar kosong. Tambah kamar baru di menu Data Kamar."); 
-    return; 
-  }
-  
-  const tenantData = {
-    name: document.getElementById("tenantName").value,
-    phone: document.getElementById("tenantPhone").value,
-    room: roomNumber,
-    price: Number(document.getElementById("tenantPrice").value),
-    date: document.getElementById("tenantDate").value,
-    due: Number(document.getElementById("tenantDue").value)
-  };
-
-  if (id) {
-    const index = tenants.findIndex(t => t.id == id);
-    if (tenants[index].room !== tenantData.room) {
-      const oldRoom = rooms.find(r => r.number === tenants[index].room);
-      if (oldRoom) oldRoom.status = "empty";
-      const newRoom = rooms.find(r => r.number === tenantData.room);
-      if (newRoom) newRoom.status = "occupied";
+    if(id){
+        const r = rooms.find(x=>x.id===id);
+        if(r){
+            const old = r.number;
+            Object.assign(r,{number,price,status});
+            if(old !== number){
+                tenants.forEach(t=>{ if(t.room===old) t.room=number; });
+                payments.forEach(p=>{ if(p.room===old) p.room=number; });
+            }
+            syncToSheet({action:'updateRoom',id,number,price,status});
+            toast('Kamar diperbarui','success');
+        }
+    }else{
+        const room = {id:genId('KMR'),number,price,status};
+        rooms.push(room); // TANPA BATAS JUMLAH KAMAR
+        syncToSheet({action:'addRoom',id:room.id,number,price,status});
+        toast('Kamar "'+number+'" ditambahkan','success');
     }
-    tenants[index] = {...tenants[index], ...tenantData};
-    showToast("Data penghuni diperbarui!");
-    syncToSpreadsheet({...tenants[index], type: "tenant"});
-  } else {
-    const newTenant = {id: Date.now(), ...tenantData};
-    tenants.push(newTenant);
-    const room = rooms.find(r => r.number === roomNumber);
-    if (room) room.status = "occupied";
-    showToast("Penghuni baru berhasil ditambahkan!");
-    syncToSpreadsheet({...newTenant, type: "tenant"});
-  }
-
-  saveData();
-  closeModal("tenantModal");
-  event.target.reset();
-  renderAll();
+    saveAll(); closeModal('roomModal'); renderAll();
 }
 
-function renderTenants() {
-  const table = document.getElementById("tenantTable");
-  if (!table) return;
-  const search = document.getElementById("tenantSearch")?.value.toLowerCase() || "";
-  const result = tenants.filter(t => t.name.toLowerCase().includes(search) || t.phone.includes(search));
-
-  table.innerHTML = "";
-  if (result.length === 0) {
-    table.innerHTML = `<tr><td colspan="6" class="empty">Belum ada data penghuni.</td></tr>`;
-    return;
-  }
-
-  result.forEach(t => {
-    table.innerHTML += `
-      <tr>
-        <td><strong>${t.name}</strong></td>
-        <td>${t.room}</td>
-        <td>${t.phone}</td>
-        <td>${rupiah(t.price)}</td>
-        <td>Tanggal ${t.due}</td>
-        <td>
-          <button class="btn btn-success btn-small" onclick="sendReminder(${t.id})">${ICON_WHATSAPP} WA</button>
-          <button class="btn btn-light btn-small" onclick="editTenant(${t.id})">${ICON_EDIT} Edit</button>
-          <button class="btn btn-danger btn-small" onclick="deleteTenant(${t.id})">${ICON_DELETE} Hapus</button>
-        </td>
-      </tr>
-    `;
-  });
+function editRoom(id){
+    const r = rooms.find(x=>x.id===id); if(!r) return;
+    document.getElementById('roomModalTitle').textContent = 'Edit Kamar';
+    document.getElementById('roomId').value = r.id;
+    document.getElementById('roomNumber').value = r.number;
+    document.getElementById('roomPrice').value = r.price;
+    document.getElementById('roomStatus').value = r.status || 'empty';
+    document.getElementById('roomModal').classList.add('show');
 }
 
-function editTenant(id) {
-  const tenant = tenants.find(t => t.id === id);
-  if (!tenant) return;
-  document.getElementById("tenantId").value = tenant.id;
-  document.getElementById("tenantName").value = tenant.name;
-  document.getElementById("tenantPhone").value = tenant.phone;
-  document.getElementById("tenantPrice").value = tenant.price;
-  document.getElementById("tenantDate").value = tenant.date;
-  document.getElementById("tenantDue").value = tenant.due;
-  
-  const select = document.getElementById("tenantRoom");
-  select.innerHTML = `<option value="${tenant.room}">${tenant.room} (Sekarang)</option>`;
-  rooms.filter(r => r.status === "empty").forEach(room => {
-    select.innerHTML += `<option value="${room.number}">${room.number} - ${rupiah(room.price)}</option>`;
-  });
-  
-  document.getElementById("tenantModalTitle").textContent = "Edit Penghuni";
-  document.getElementById("tenantModal").classList.add("show");
+function deleteRoom(id){
+    const r = rooms.find(x=>x.id===id); if(!r) return;
+    const used = tenants.some(t=>t.room===r.number);
+    if(!confirm(used ? 'Kamar ini masih dihuni. Tetap hapus?' : 'Hapus kamar '+r.number+'?')) return;
+    rooms = rooms.filter(x=>x.id!==id);
+    syncToSheet({action:'deleteRoom',id});
+    saveAll(); renderAll(); toast('Kamar dihapus','success');
 }
 
-function deleteTenant(id) {
-  const tenant = tenants.find(t => t.id === id);
-  if (!tenant) return;
-  if (!confirm("Hapus penghuni " + tenant.name + "? Kamar akan menjadi kosong.")) return;
+/* Generate banyak kamar sekaligus — fitur unlimited */
+function bulkAddRooms(){
+    const count = Number(document.getElementById('roomBulkCount').value)||0;
+    let start = Number(document.getElementById('roomBulkStart').value)||1;
+    const priceInput = document.getElementById('roomPrice').value;
+    const price = Number(priceInput)||0;
+    const status = document.getElementById('roomStatus').value;
 
-  const room = rooms.find(r => r.number === tenant.room);
-  if (room) room.status = "empty";
+    if(!priceInput){ toast('Isi harga sewa terlebih dahulu','error'); return; }
+    if(count < 1){ toast('Isi jumlah kamar minimal 1','error'); return; }
+    if(count > 500){ toast('Maksimal 500 kamar sekali generate','error'); return; }
 
-  tenants = tenants.filter(t => t.id !== id);
-  saveData();
-  showToast("Penghuni dihapus, kamar dikosongkan.");
-  renderAll();
+    const existing = new Set(rooms.map(r=>String(r.number).toLowerCase()));
+    const added = [];
+    let n = start;
+    for(let i=0;i<count;i++){
+        let name;
+        do{ name = 'Kamar ' + String(n).padStart(2,'0'); n++; } while(existing.has(name.toLowerCase()));
+        existing.add(name.toLowerCase());
+        added.push({id:genId('KMR'),number:name,price,status});
+    }
+    rooms = rooms.concat(added);
+    syncToSheet({action:'bulkAddRooms',rooms:added});
+    saveAll(); closeModal('roomModal'); renderAll();
+    toast(added.length+' kamar dibuat (total '+rooms.length+' kamar)','success');
 }
 
-function sendReminder(tenantId) {
-  const tenant = tenants.find(t => t.id === tenantId);
-  if (!tenant) return;
-  
-  const settings = JSON.parse(localStorage.getItem("kos_settings")) || {name: "Kos"};
-  const kosName = settings.name || "Kos";
-  
-  const message = `Halo ${tenant.name},\n\nSemoga Anda dalam keadaan sehat dan lancar aktivitasnya. 😊\n\nKami dari pengelola ${kosName} ingin menyampaikan pengingat mengenai pembayaran sewa kamar Anda dengan rincian:\n\n- Kamar: ${tenant.room}\n- Jumlah Tagihan: ${rupiah(tenant.price)}\n- Jatuh Tempo: Tanggal ${tenant.due}\n\nKarena saat ini pembayaran belum kami terima, mohon kiranya dapat segera dilunasi. Jika sudah melakukan pembayaran, mohon abaikan pesan ini.\n\nTerima kasih atas perhatian dan kerja samanya. 🙏`;
-  
-  const number = tenant.phone.replace(/\D/g, "");
-  window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(message), "_blank");
+function resetDataRooms(){
+    if(!confirm('Hapus SEMUA data kamar? Baris di sheet "Kamar" juga akan dihapus.')) return;
+    rooms = [];
+    syncToSheet({action:'resetRooms'});
+    saveAll(); renderAll(); toast('Data kamar direset','success');
 }
 
-function populateTenantSelect() {
-  const select = document.getElementById("paymentTenant");
-  select.innerHTML = "";
-  tenants.forEach(t => {
-    select.innerHTML += `<option value="${t.id}" data-price="${t.price}">${t.name} - ${t.room}</option>`;
-  });
-  if (tenants.length === 0) select.innerHTML = `<option value="">Belum ada penghuni</option>`;
-  autoFillPaymentAmount();
+function roomCardHTML(r){
+    const st = roomRealStatus(r);
+    const [label, cls] = roomStatusBadge(st);
+    const t = tenants.find(x=>x.room===r.number);
+    return `<div class="room" title="Klik untuk edit" onclick="editRoom('${r.id}')">
+        <button class="room-edit" title="Edit" onclick="event.stopPropagation();editRoom('${r.id}')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </button>
+        <div class="room-number">${esc(r.number)}</div>
+        <div class="room-name">${t ? esc(t.name) : 'Belum ada penghuni'}</div>
+        <div class="room-price">${rupiah(r.price)} <span style="font-weight:400;color:var(--muted);font-size:11px;">/bulan</span></div>
+        <span class="room-status ${cls}">${label}</span>
+    </div>`;
 }
 
-function autoFillPaymentAmount() {
-  const select = document.getElementById("paymentTenant");
-  const selected = select.options[select.selectedIndex];
-  if (selected && selected.dataset.price) {
-    document.getElementById("paymentAmount").value = selected.dataset.price;
-  }
+function renderRooms(){
+    const q = (document.getElementById('roomSearch').value||'').toLowerCase();
+    const f = document.getElementById('roomFilter').value;
+    const list = rooms.filter(r=>{
+        if(f!=='all' && roomRealStatus(r)!==f) return false;
+        if(q && !String(r.number).toLowerCase().includes(q)) return false;
+        return true;
+    });
+    document.getElementById('roomCountText').textContent = rooms.length + ' kamar — tanpa batas';
+    document.getElementById('allRooms').innerHTML = list.length
+        ? list.map(roomCardHTML).join('')
+        : '<div class="empty" style="grid-column:1/-1;">Belum ada kamar.<br>Klik <strong>Tambah Kamar</strong> — jumlahnya tidak terbatas.</div>';
+    renderDashboardRooms();
 }
 
-function savePayment(event) {
-  event.preventDefault();
-  const tenantId = Number(document.getElementById("paymentTenant").value);
-  const tenant = tenants.find(t => t.id === tenantId);
-  if (!tenant) { alert("Pilih penghuni terlebih dahulu."); return; }
-
-  const payment = {
-    id: Date.now(),
-    date: document.getElementById("paymentDate").value,
-    tenant: tenant.name,
-    tenantId: tenant.id,
-    room: tenant.room,
-    period: document.getElementById("paymentPeriod").value,
-    amount: Number(document.getElementById("paymentAmount").value),
-    status: document.getElementById("paymentStatus").value
-  };
-
-  payments.push(payment);
-  
-  if (payment.status === "lunas") {
-    const room = rooms.find(r => r.number === tenant.room);
-    if (room && room.status === "overdue") room.status = "occupied";
-  }
-
-  syncToSpreadsheet({...payment, type: "payment"});
-  saveData();
-  closeModal("paymentModal");
-  event.target.reset();
-  showToast("Pembayaran berhasil dicatat!");
-  renderAll();
+function renderDashboardRooms(){
+    document.getElementById('dashboardRooms').innerHTML =
+        rooms.slice(0,6).map(roomCardHTML).join('') ||
+        '<div class="empty" style="grid-column:1/-1;">Belum ada kamar.</div>';
 }
 
-function renderPayments() {
-  const table = document.getElementById("paymentTable");
-  if (!table) return;
-  const search = document.getElementById("paymentSearch")?.value.toLowerCase() || "";
-  const result = payments.filter(p => p.tenant.toLowerCase().includes(search) || p.room.toLowerCase().includes(search));
+/* ============ PENGHUNI ============ */
+function resetTenantForm(){
+    document.getElementById('tenantModalTitle').textContent = 'Tambah Penghuni';
+    document.getElementById('tenantId').value = '';
+    document.getElementById('tenantName').value = '';
+    document.getElementById('tenantPhone').value = '';
+    document.getElementById('tenantPrice').value = '';
+    document.getElementById('tenantDate').value = todayISO();
+    document.getElementById('tenantDue').value = todayISO();
+    populateRoomSelect('', '');
+}
 
-  table.innerHTML = "";
-  
-  if (result.length === 0) {
-    table.innerHTML = `<tr><td colspan="7" class="empty">Belum ada data pembayaran.</td></tr>`;
-  } else {
-    result.slice().reverse().forEach(p => {
-      let badge = "badge-green";
-      if (p.status === "sebagian") badge = "badge-yellow";
-      if (p.status === "belum") badge = "badge-red";
+function populateRoomSelect(selectedRoom, editingTenantId){
+    const sel = document.getElementById('tenantRoom');
+    let html = '';
+    rooms.forEach(r=>{
+        const occ = tenants.find(t=>t.room===r.number && t.id!==editingTenantId);
+        if(occ) return;
+        html += `<option value="${esc(r.number)}"${r.number===selectedRoom?' selected':''}>${esc(r.number)} — ${rupiah(r.price)}</option>`;
+    });
+    sel.innerHTML = html || '<option value="">Belum ada kamar tersedia</option>';
+}
 
-      table.innerHTML += `
+function onTenantRoomChange(){
+    const r = rooms.find(x=>x.number===document.getElementById('tenantRoom').value);
+    if(r) document.getElementById('tenantPrice').value = r.price;
+}
+
+function saveTenant(e){
+    e.preventDefault();
+    const id = document.getElementById('tenantId').value;
+    const roomNumber = document.getElementById('tenantRoom').value;
+    if(!roomNumber){ toast(rooms.length ? 'Pilih kamar terlebih dahulu' : 'Tambahkan kamar dulu di menu Data Kamar','error'); return; }
+
+    const t = {
+        id: id || genId('PGH'),
+        name: document.getElementById('tenantName').value.trim(),
+        phone: document.getElementById('tenantPhone').value.trim(),
+        room: roomNumber,
+        price: Number(document.getElementById('tenantPrice').value)||0,
+        date: document.getElementById('tenantDate').value,
+        due: document.getElementById('tenantDue').value
+    };
+    if(id){
+        const i = tenants.findIndex(x=>x.id===id);
+        if(i>-1){
+            const oldRoom = tenants[i].room;
+            if(oldRoom !== t.room){
+                const old = rooms.find(r=>r.number===oldRoom);
+                if(old){ old.status='empty'; syncToSheet({action:'updateRoom',id:old.id,number:old.number,price:old.price,status:'empty'}); }
+            }
+            tenants[i]=t;
+        } else tenants.push(t);
+        syncToSheet({action:'updateTenant',...t});
+        toast('Data penghuni diperbarui','success');
+    }else{
+        tenants.push(t);
+        syncToSheet({action:'addTenant',...t});
+        toast('Penghuni "'+t.name+'" ditambahkan','success');
+    }
+    const r = rooms.find(x=>x.number===t.room);
+    if(r && r.status!=='occupied'){ r.status='occupied'; syncToSheet({action:'updateRoom',id:r.id,number:r.number,price:r.price,status:'occupied'}); }
+
+    saveAll(); closeModal('tenantModal'); renderAll();
+}
+
+function editTenant(id){
+    const t = tenants.find(x=>x.id===id); if(!t) return;
+    document.getElementById('tenantModalTitle').textContent='Edit Penghuni';
+    document.getElementById('tenantId').value=t.id;
+    document.getElementById('tenantName').value=t.name||'';
+    document.getElementById('tenantPhone').value=t.phone||'';
+    document.getElementById('tenantPrice').value=t.price||0;
+    document.getElementById('tenantDate').value=t.date||todayISO();
+    document.getElementById('tenantDue').value=t.due||todayISO();
+    populateRoomSelect(t.room, t.id);
+    document.getElementById('tenantModal').classList.add('show');
+}
+
+function deleteTenant(id){
+    const t = tenants.find(x=>x.id===id); if(!t) return;
+    if(!confirm('Hapus penghuni '+t.name+'?')) return;
+    tenants = tenants.filter(x=>x.id!==id);
+    const r = rooms.find(x=>x.number===t.room);
+    if(r){ r.status='empty'; syncToSheet({action:'updateRoom',id:r.id,number:r.number,price:r.price,status:'empty'}); }
+    syncToSheet({action:'deleteTenant',id});
+    saveAll(); renderAll(); toast('Penghuni dihapus','success');
+}
+
+function waTenant(phone, name, room, due){
+    let p = String(phone||'').replace(/[^0-9]/g,'');
+    if(p.startsWith('0')) p = '62'+p.slice(1);
+    if(!p){ toast('Nomor WhatsApp belum diisi','error'); return; }
+    const msg = `Halo ${name}, ini pengingat dari pengelola kos. Pembayaran sewa kamar ${room} jatuh tempo pada ${fmtDate(due)}. Mohon segera melakukan pembayaran. Terima kasih 🙏`;
+    window.open('https://wa.me/'+p+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function renderTenants(){
+    const q = (document.getElementById('tenantSearch').value||'').toLowerCase();
+    const list = tenants.filter(t=>!q || (t.name||'').toLowerCase().includes(q) || String(t.room||'').toLowerCase().includes(q));
+    document.getElementById('tenantTable').innerHTML = list.length ? list.map(t=>{
+        const late = isOverdue(t);
+        return `<tr>
+            <td><strong>${esc(t.name)}</strong></td>
+            <td>${esc(t.room)}</td>
+            <td>${esc(t.phone||'-')}</td>
+            <td>${rupiah(t.price)}</td>
+            <td>${fmtDate(t.due)} ${late?'<span class="badge badge-red">Terlambat</span>':''}</td>
+            <td style="white-space:nowrap;">
+                <button class="btn btn-success btn-small" onclick="waTenant('${esc(t.phone)}','${esc(t.name)}','${esc(t.room)}','${t.due||''}')">WA</button>
+                <button class="btn btn-light btn-small" onclick="editTenant('${t.id}')">Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deleteTenant('${t.id}')">Hapus</button>
+            </td>
+        </tr>`;
+    }).join('') : '<tr><td colspan="6" class="empty">Belum ada penghuni.</td></tr>';
+}
+
+function resetDataTenants(){
+    if(!confirm('Hapus SEMUA data penghuni? Status kamar akan dikosongkan.')) return;
+    rooms.forEach(r=>r.status='empty');
+    tenants = [];
+    syncToSheet({action:'resetTenants'});
+    saveAll(); renderAll(); toast('Data penghuni direset','success');
+}
+
+/* ============ PEMBAYARAN ============ */
+function currentPeriodLabel(){
+    return new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+}
+function resetPaymentForm(){
+    document.getElementById('paymentModalTitle').textContent='Catat Pembayaran';
+    document.getElementById('paymentId').value='';
+    document.getElementById('paymentDate').value=todayISO();
+    document.getElementById('paymentPeriod').value=currentPeriodLabel();
+    document.getElementById('paymentAmount').value='';
+    document.getElementById('paymentStatus').value='Lunas';
+    populateTenantSelect('');
+}
+function populateTenantSelect(selectedId){
+    const sel = document.getElementById('paymentTenant');
+    sel.innerHTML = tenants.length
+        ? tenants.map(t=>`<option value="${t.id}"${t.id===selectedId?' selected':''}>${esc(t.name)} — ${esc(t.room)}</option>`).join('')
+        : '<option value="">Belum ada penghuni</option>';
+    onPaymentTenantChange();
+}
+function onPaymentTenantChange(){
+    const t = tenants.find(x=>x.id===document.getElementById('paymentTenant').value);
+    if(t) document.getElementById('paymentAmount').value = t.price||0;
+}
+
+function savePayment(e){
+    e.preventDefault();
+    const t = tenants.find(x=>x.id===document.getElementById('paymentTenant').value);
+    if(!t){ toast('Pilih penghuni terlebih dahulu','error'); return; }
+    const id = document.getElementById('paymentId').value;
+    const p = {
+        id: id || genId('BYR'),
+        date: document.getElementById('paymentDate').value,
+        tenantId: t.id,
+        tenant: t.name,
+        room: t.room,
+        period: document.getElementById('paymentPeriod').value,
+        amount: Number(document.getElementById('paymentAmount').value)||0,
+        status: document.getElementById('paymentStatus').value
+    };
+    if(id){
+        const i = payments.findIndex(x=>x.id===id);
+        if(i>-1) payments[i]=p; else payments.push(p);
+        syncToSheet({action:'updatePayment',...p});
+        toast('Pembayaran diperbarui','success');
+    }else{
+        payments.push(p);
+        syncToSheet({action:'addPayment',...p});
+        toast('Pembayaran dicatat','success');
+        if(p.status==='Lunas' && t.due){
+            const d = new Date(t.due);
+            if(!isNaN(d)){
+                d.setMonth(d.getMonth()+1);
+                t.due = toISODate(d);
+                syncToSheet({action:'updateTenant',id:t.id,name:t.name,phone:t.phone,room:t.room,price:t.price,date:t.date,due:t.due});
+            }
+        }
+    }
+    saveAll(); closeModal('paymentModal'); renderAll();
+}
+
+function editPayment(id){
+    const p = payments.find(x=>x.id===id); if(!p) return;
+    document.getElementById('paymentModalTitle').textContent='Edit Pembayaran';
+    document.getElementById('paymentId').value=p.id;
+    populateTenantSelect(p.tenantId||'');
+    document.getElementById('paymentDate').value=p.date||todayISO();
+    document.getElementById('paymentPeriod').value=p.period||'';
+    document.getElementById('paymentAmount').value=p.amount||0;
+    document.getElementById('paymentStatus').value=p.status||'Lunas';
+    document.getElementById('paymentModal').classList.add('show');
+}
+
+function deletePayment(id){
+    if(!confirm('Hapus data pembayaran ini?')) return;
+    payments = payments.filter(x=>x.id!==id);
+    syncToSheet({action:'deletePayment',id});
+    saveAll(); renderAll(); toast('Pembayaran dihapus','success');
+}
+
+function markPaid(id){
+    const p = payments.find(x=>x.id===id); if(!p) return;
+    p.status='Lunas';
+    syncToSheet({action:'updatePayment',...p});
+    saveAll(); renderAll(); toast('Pembayaran ditandai Lunas','success');
+}
+
+function renderPayments(){
+    const q = (document.getElementById('paymentSearch').value||'').toLowerCase();
+    const list = payments.filter(p=>!q || [p.tenant,p.room,p.period,p.status].some(v=>String(v||'').toLowerCase().includes(q)))
+                         .slice().reverse();
+    document.getElementById('paymentTable').innerHTML = list.length ? list.map(p=>`
         <tr>
-          <td>${formatDate(p.date)}</td>
-          <td>${p.tenant}</td>
-          <td>${p.room}</td>
-          <td>${p.period}</td>
-          <td><strong>${rupiah(p.amount)}</strong></td>
-          <td><span class="badge ${badge}">${paymentStatusText(p.status)}</span></td>
-          <td><button class="btn btn-danger btn-small" onclick="deletePayment(${p.id})">${ICON_DELETE} Hapus</button></td>
-        </tr>
-      `;
-    });
-  }
+            <td>${fmtDate(p.date)}</td>
+            <td><strong>${esc(p.tenant)}</strong></td>
+            <td>${esc(p.room)}</td>
+            <td>${esc(p.period)}</td>
+            <td>${rupiah(p.amount)}</td>
+            <td><span class="badge ${p.status==='Lunas'?'badge-green':'badge-red'}">${esc(p.status)}</span></td>
+            <td style="white-space:nowrap;">
+                ${p.status!=='Lunas'?`<button class="btn btn-success btn-small" onclick="markPaid('${p.id}')">Lunas</button>`:''}
+                <button class="btn btn-light btn-small" onclick="editPayment('${p.id}')">Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deletePayment('${p.id}')">Hapus</button>
+            </td>
+        </tr>`).join('') : '<tr><td colspan="7" class="empty">Belum ada pembayaran.</td></tr>';
 
-  const total = payments.reduce((sum, p) => sum + p.amount, 0);
-  document.getElementById("paymentTotal").textContent = rupiah(total);
-  document.getElementById("paymentLunas").textContent = payments.filter(p => p.status === "lunas").length;
-  document.getElementById("paymentBelum").textContent = payments.filter(p => p.status !== "lunas").length;
+    const total = payments.filter(p=>p.status==='Lunas').reduce((a,b)=>a+(Number(b.amount)||0),0);
+    document.getElementById('paymentTotal').textContent = rupiah(total);
+    document.getElementById('paymentLunas').textContent = payments.filter(p=>p.status==='Lunas').length;
+    document.getElementById('paymentBelum').textContent = payments.filter(p=>p.status!=='Lunas').length;
+    renderDashboardPayments();
 }
 
-function paymentStatusText(status) {
-  if (status === "lunas") return "Lunas";
-  if (status === "sebagian") return "Sebagian";
-  return "Belum Lunas";
-}
-
-function renderDashboardPayments() {
-  const table = document.getElementById("dashboardPayments");
-  table.innerHTML = "";
-  if (payments.length === 0) {
-    table.innerHTML = `<tr><td colspan="5" class="empty">Belum ada pembayaran.</td></tr>`;
-    return;
-  }
-
-  payments.slice(-5).reverse().forEach(p => {
-    let badge = "badge-green";
-    if (p.status === "sebagian") badge = "badge-yellow";
-    if (p.status === "belum") badge = "badge-red";
-    table.innerHTML += `
-      <tr>
-        <td>${formatDate(p.date)}</td>
-        <td>${p.tenant}</td>
-        <td>${p.room}</td>
-        <td>${rupiah(p.amount)}</td>
-        <td><span class="badge ${badge}">${paymentStatusText(p.status)}</span></td>
-      </tr>
-    `;
-  });
-}
-
-function deletePayment(id) {
-  if (!confirm("Hapus pembayaran ini?")) return;
-  payments = payments.filter(p => p.id !== id);
-  saveData();
-  showToast("Pembayaran dihapus.");
-  renderAll();
-}
-
-function updateExpenseCategories() {
-  const type = document.getElementById("expenseCategoryType").value;
-  const select = document.getElementById("expenseCategory");
-  select.innerHTML = "";
-  EXPENSE_CATEGORIES[type].forEach(cat => {
-    select.innerHTML += `<option value="${cat}">${cat}</option>`;
-  });
-}
-
-function saveExpense(event) {
-  event.preventDefault();
-  const expense = {
-    id: Date.now(),
-    date: document.getElementById("expenseDate").value,
-    categoryType: document.getElementById("expenseCategoryType").value,
-    category: document.getElementById("expenseCategory").value,
-    description: document.getElementById("expenseDescription").value.trim(),
-    amount: Number(document.getElementById("expenseAmount").value)
-  };
-  expenses.push(expense);
-  syncToSpreadsheet({...expense, type: "expense"});
-  saveData();
-  closeModal("expenseModal");
-  event.target.reset();
-  updateExpenseCategories();
-  showToast("Pengeluaran berhasil dicatat!");
-  renderAll();
-}
-
-function renderExpenses() {
-  const table = document.getElementById("expenseTable");
-  if (!table) return;
-  table.innerHTML = "";
-
-  const filterType = document.getElementById("expenseFilterType")?.value || "all";
-  const filtered = filterType === "all" ? expenses : expenses.filter(e => e.categoryType === filterType);
-
-  if (filtered.length === 0) {
-    table.innerHTML = `<tr><td colspan="6" class="empty">Belum ada pengeluaran.</td></tr>`;
-  } else {
-    filtered.slice().reverse().forEach(e => {
-      let typeBadge = "badge-blue";
-      let typeText = "Operasional";
-      if (e.categoryType === "hpp") { typeBadge = "badge-yellow"; typeText = "HPP"; }
-      else if (e.categoryType === "lainnya") { typeBadge = "badge-purple"; typeText = "Lainnya"; }
-      
-      table.innerHTML += `
+function renderDashboardPayments(){
+    const list = payments.slice(-5).reverse();
+    document.getElementById('dashboardPayments').innerHTML = list.length ? list.map(p=>`
         <tr>
-          <td>${formatDate(e.date)}</td>
-          <td><span class="badge ${typeBadge}">${typeText}</span></td>
-          <td><span class="badge badge-blue">${e.category}</span></td>
-          <td>${e.description || "-"}</td>
-          <td><strong>${rupiah(e.amount)}</strong></td>
-          <td><button class="btn btn-danger btn-small" onclick="deleteExpense(${e.id})">${ICON_DELETE} Hapus</button></td>
-        </tr>
-      `;
+            <td>${fmtDate(p.date)}</td>
+            <td><strong>${esc(p.tenant)}</strong></td>
+            <td>${esc(p.room)}</td>
+            <td>${rupiah(p.amount)}</td>
+            <td><span class="badge ${p.status==='Lunas'?'badge-green':'badge-red'}">${esc(p.status)}</span></td>
+        </tr>`).join('') : '<tr><td colspan="5" class="empty">Belum ada pembayaran.</td></tr>';
+}
+
+function resetDataPayments(){
+    if(!confirm('Hapus SEMUA data pembayaran?')) return;
+    payments = [];
+    syncToSheet({action:'resetPayments'});
+    saveAll(); renderAll(); toast('Data pembayaran direset','success');
+}
+
+/* ============ PENGELUARAN ============ */
+const EXPENSE_TYPES = {hpp:'Biaya Langsung (HPP)', operasional:'Biaya Operasional', lainnya:'Biaya Lainnya'};
+
+function resetExpenseForm(){
+    document.getElementById('expenseModalTitle').textContent='Tambah Pengeluaran';
+    document.getElementById('expenseId').value='';
+    document.getElementById('expenseCategoryType').value='hpp';
+    document.getElementById('expenseCategory').value='Listrik';
+    document.getElementById('expenseDescription').value='';
+    document.getElementById('expenseDate').value=todayISO();
+    document.getElementById('expenseAmount').value='';
+}
+
+function saveExpense(e){
+    e.preventDefault();
+    const id = document.getElementById('expenseId').value;
+    const x = {
+        id: id || genId('OUT'),
+        date: document.getElementById('expenseDate').value,
+        categoryType: document.getElementById('expenseCategoryType').value,
+        category: document.getElementById('expenseCategory').value,
+        description: document.getElementById('expenseDescription').value.trim(),
+        amount: Number(document.getElementById('expenseAmount').value)||0
+    };
+    if(id){
+        const i = expenses.findIndex(v=>v.id===id);
+        if(i>-1) expenses[i]=x; else expenses.push(x);
+        syncToSheet({action:'updateExpense',...x});
+        toast('Pengeluaran diperbarui','success');
+    }else{
+        expenses.push(x);
+        syncToSheet({action:'addExpense',...x});
+        toast('Pengeluaran dicatat','success');
+    }
+    saveAll(); closeModal('expenseModal'); renderAll();
+}
+
+function editExpense(id){
+    const x = expenses.find(v=>v.id===id); if(!x) return;
+    document.getElementById('expenseModalTitle').textContent='Edit Pengeluaran';
+    document.getElementById('expenseId').value=x.id;
+    document.getElementById('expenseCategoryType').value=x.categoryType||'hpp';
+    document.getElementById('expenseCategory').value=x.category||'Lainnya';
+    document.getElementById('expenseDescription').value=x.description||'';
+    document.getElementById('expenseDate').value=x.date||todayISO();
+    document.getElementById('expenseAmount').value=x.amount||0;
+    document.getElementById('expenseModal').classList.add('show');
+}
+
+function deleteExpense(id){
+    if(!confirm('Hapus pengeluaran ini?')) return;
+    expenses = expenses.filter(v=>v.id!==id);
+    syncToSheet({action:'deleteExpense',id});
+    saveAll(); renderAll(); toast('Pengeluaran dihapus','success');
+}
+
+function renderExpenses(){
+    const f = document.getElementById('expenseFilterType').value;
+    const list = expenses.filter(x=>f==='all'||x.categoryType===f).slice().reverse();
+    document.getElementById('expenseTable').innerHTML = list.length ? list.map(x=>`
+        <tr>
+            <td>${fmtDate(x.date)}</td>
+            <td><span class="badge ${x.categoryType==='hpp'?'badge-yellow':(x.categoryType==='operasional'?'badge-blue':'badge-purple')}">${esc(EXPENSE_TYPES[x.categoryType]||x.categoryType)}</span></td>
+            <td>${esc(x.category)}</td>
+            <td>${esc(x.description||'-')}</td>
+            <td><strong>${rupiah(x.amount)}</strong></td>
+            <td style="white-space:nowrap;">
+                <button class="btn btn-light btn-small" onclick="editExpense('${x.id}')">Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deleteExpense('${x.id}')">Hapus</button>
+            </td>
+        </tr>`).join('') : '<tr><td colspan="6" class="empty">Belum ada pengeluaran.</td></tr>';
+
+    const sum = t => expenses.filter(x=>x.categoryType===t).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    document.getElementById('expenseTotal').textContent = rupiah(expenses.reduce((a,b)=>a+(Number(b.amount)||0),0));
+    document.getElementById('expenseHPP').textContent = rupiah(sum('hpp'));
+    document.getElementById('expenseOps').textContent = rupiah(sum('operasional'));
+    document.getElementById('expenseOther').textContent = rupiah(sum('lainnya'));
+}
+
+function resetDataExpenses(){
+    if(!confirm('Hapus SEMUA data pengeluaran?')) return;
+    expenses = [];
+    syncToSheet({action:'resetExpenses'});
+    saveAll(); renderAll(); toast('Data pengeluaran direset','success');
+}
+
+/* ============ DASHBOARD ============ */
+function renderDashboard(){
+    document.getElementById('totalKamar').textContent = rooms.length;
+    let terisi=0, kosong=0, tunggak=0;
+    rooms.forEach(r=>{
+        const st = roomRealStatus(r);
+        if(st==='empty') kosong++;
+        else if(st==='overdue'){ tunggak++; terisi++; }
+        else terisi++;
     });
-  }
+    document.getElementById('kamarTerisi').textContent = terisi;
+    document.getElementById('kamarKosong').textContent = kosong;
+    document.getElementById('kamarTunggak').textContent = tunggak;
 
-  const totalAll = expenses.reduce((sum, e) => sum + e.amount, 0);
-  const totalHPP = expenses.filter(e => e.categoryType === "hpp").reduce((sum, e) => sum + e.amount, 0);
-  const totalOps = expenses.filter(e => e.categoryType === "operasional").reduce((sum, e) => sum + e.amount, 0);
-  const totalOther = expenses.filter(e => e.categoryType === "lainnya").reduce((sum, e) => sum + e.amount, 0);
-  
-  document.getElementById("expenseTotal").textContent = rupiah(totalAll);
-  document.getElementById("expenseHPP").textContent = rupiah(totalHPP);
-  document.getElementById("expenseOps").textContent = rupiah(totalOps);
-  document.getElementById("expenseOther").textContent = rupiah(totalOther);
+    const m = todayISO().slice(0,7);
+    const inc = payments.filter(p=>p.status==='Lunas'&&(p.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const exp = expenses.filter(x=>(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const hpp = expenses.filter(x=>x.categoryType==='hpp'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const gross = inc - hpp;
+    const net = gross - (exp - hpp);
+    document.getElementById('monthIncome').textContent = rupiah(inc);
+    document.getElementById('monthExpense').textContent = rupiah(exp);
+    document.getElementById('monthGross').textContent = rupiah(gross);
+    document.getElementById('monthNet').textContent = rupiah(net);
+
+    updateNotifications();
 }
 
-function deleteExpense(id) {
-  if (!confirm("Hapus pengeluaran ini?")) return;
-  expenses = expenses.filter(e => e.id !== id);
-  saveData();
-  showToast("Pengeluaran dihapus.");
-  renderAll();
+function renderAll(){
+    renderRooms();
+    renderTenants();
+    renderPayments();
+    renderExpenses();
+    renderDashboard();
+    renderReport();
 }
 
-function calculateAccounting(monthFilter = null) {
-  let filteredPayments = payments;
-  let filteredExpenses = expenses;
-  
-  if (monthFilter && monthFilter !== "all") {
-    filteredPayments = payments.filter(p => p.period === monthFilter);
-    filteredExpenses = expenses.filter(e => e.date && e.date.startsWith(monthFilter));
-  }
-  
-  const pendapatan = filteredPayments.reduce((sum, p) => sum + p.amount, 0);
-  const hpp = filteredExpenses.filter(e => e.categoryType === "hpp").reduce((sum, e) => sum + e.amount, 0);
-  const biayaOperasional = filteredExpenses.filter(e => e.categoryType === "operasional").reduce((sum, e) => sum + e.amount, 0);
-  const biayaLainnya = filteredExpenses.filter(e => e.categoryType === "lainnya").reduce((sum, e) => sum + e.amount, 0);
-  
-  const labaKotor = pendapatan - hpp;
-  const totalBiaya = hpp + biayaOperasional + biayaLainnya;
-  const labaBersih = pendapatan - totalBiaya;
-  
-  const hppDetail = {};
-  filteredExpenses.filter(e => e.categoryType === "hpp").forEach(e => {
-    hppDetail[e.category] = (hppDetail[e.category] || 0) + e.amount;
-  });
-  
-  const opsDetail = {};
-  filteredExpenses.filter(e => e.categoryType === "operasional").forEach(e => {
-    opsDetail[e.category] = (opsDetail[e.category] || 0) + e.amount;
-  });
-  
-  const otherDetail = {};
-  filteredExpenses.filter(e => e.categoryType === "lainnya").forEach(e => {
-    otherDetail[e.category] = (otherDetail[e.category] || 0) + e.amount;
-  });
-  
-  return {
-    pendapatan, hpp, biayaOperasional, biayaLainnya,
-    labaKotor, labaBersih, totalBiaya,
-    hppDetail, opsDetail, otherDetail
-  };
+/* ============ NOTIFIKASI ============ */
+function updateNotifications(){
+    const late = tenants.filter(t=>isOverdue(t));
+    const badge = document.getElementById('notifCount');
+    badge.textContent = late.length;
+    badge.style.display = late.length ? 'flex' : 'none';
+    return late;
+}
+function showNotifications(){
+    const late = updateNotifications();
+    document.getElementById('notifList').innerHTML = !late.length
+        ? '<div class="empty">Tidak ada tunggakan. Semua lancar 👍</div>'
+        : late.map(t=>`
+            <div class="notif-item">
+                <div class="info">
+                    <strong>${esc(t.name)} — ${esc(t.room)}</strong>
+                    <small>Jatuh tempo ${fmtDate(t.due)} · ${rupiah(t.price)}</small>
+                </div>
+                <button class="btn btn-success btn-small" onclick="waTenant('${esc(t.phone)}','${esc(t.name)}','${esc(t.room)}','${t.due||''}')">Ingatkan</button>
+            </div>`).join('');
+    document.getElementById('notifModal').classList.add('show');
 }
 
-function renderReport() {
-  const monthFilter = document.getElementById("reportMonth")?.value || "all";
-  const acc = calculateAccounting(monthFilter);
-  
-  document.getElementById("reportIncome").textContent = rupiah(acc.pendapatan);
-  document.getElementById("reportExpense").textContent = rupiah(acc.hpp + acc.biayaOperasional + acc.biayaLainnya);
-  document.getElementById("reportGross").textContent = rupiah(acc.labaKotor);
-  document.getElementById("reportNet").textContent = rupiah(acc.labaBersih);
-  
-  const statement = document.getElementById("incomeStatement");
-  let html = "";
-  
-  html += `<div class="is-section-title">Pendapatan</div>`;
-  html += `<div class="is-row"><span class="is-label">Pendapatan Sewa Kamar</span><strong>${rupiah(acc.pendapatan)}</strong></div>`;
-  html += `<div class="is-row total"><span>Total Pendapatan</span><strong>${rupiah(acc.pendapatan)}</strong></div>`;
-  
-  html += `<div class="is-section-title">Harga Pokok Pendapatan (HPP) / Biaya Langsung</div>`;
-  if (Object.keys(acc.hppDetail).length === 0) {
-    html += `<div class="is-row sub"><span>Tidak ada biaya langsung</span><span>Rp0</span></div>`;
-  } else {
-    for (const [cat, amt] of Object.entries(acc.hppDetail)) {
-      html += `<div class="is-row sub"><span>${cat}</span><span>${rupiah(amt)}</span></div>`;
+/* ============ LAPORAN ============ */
+const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function monthLabel(ym){
+    const parts = String(ym).split('-');
+    return MONTH_NAMES[Number(parts[1])-1] + ' ' + parts[0];
+}
+function monthsList(){
+    const set = new Set();
+    payments.forEach(p=>{ if(p.date) set.add(p.date.slice(0,7)); });
+    expenses.forEach(x=>{ if(x.date) set.add(x.date.slice(0,7)); });
+    set.add(todayISO().slice(0,7));
+    return Array.from(set).sort().reverse();
+}
+
+function renderReport(){
+    const sel = document.getElementById('reportMonth');
+    const months = monthsList();
+    const sig = months.join(',');
+    if(sel.dataset.sig !== sig){
+        const prev = sel.value;
+        sel.innerHTML = months.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join('');
+        sel.value = months.includes(prev) ? prev : months[0];
+        sel.dataset.sig = sig;
     }
-  }
-  html += `<div class="is-row total"><span>Total HPP</span><strong>-${rupiah(acc.hpp)}</strong></div>`;
-  
-  html += `<div class="is-row gross"><span>LABA KOTOR (Gross Profit)</span><strong>${rupiah(acc.labaKotor)}</strong></div>`;
-  html += `<p style="font-size:11px;color:#b45309;margin:5px 0;font-style:italic;">* Laba Kotor = Pendapatan - HPP</p>`;
-  
-  html += `<div class="is-section-title">Biaya Operasional</div>`;
-  if (Object.keys(acc.opsDetail).length === 0) {
-    html += `<div class="is-row sub"><span>Tidak ada biaya operasional</span><span>Rp0</span></div>`;
-  } else {
-    for (const [cat, amt] of Object.entries(acc.opsDetail)) {
-      html += `<div class="is-row sub"><span>${cat}</span><span>${rupiah(amt)}</span></div>`;
+    const m = sel.value || months[0];
+
+    const inc = payments.filter(p=>p.status==='Lunas'&&(p.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const hpp = expenses.filter(x=>x.categoryType==='hpp'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const ops = expenses.filter(x=>x.categoryType==='operasional'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const oth = expenses.filter(x=>x.categoryType==='lainnya'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const exp = hpp+ops+oth;
+    const gross = inc-hpp;
+    const net = gross-ops-oth;
+
+    document.getElementById('reportIncome').textContent = rupiah(inc);
+    document.getElementById('reportExpense').textContent = rupiah(exp);
+    document.getElementById('reportGross').textContent = rupiah(gross);
+    document.getElementById('reportNet').textContent = rupiah(net);
+
+    document.getElementById('incomeStatement').innerHTML = `
+        <div class="is-section-title">Pendapatan</div>
+        <div class="is-row"><span class="is-label">Pendapatan Sewa</span><span>${rupiah(inc)}</span></div>
+        <div class="is-section-title">Harga Pokok Pendapatan (HPP)</div>
+        <div class="is-row sub"><span>Biaya Langsung</span><span style="color:var(--danger);">(${rupiah(hpp)})</span></div>
+        <div class="is-row gross"><span class="is-label">LABA KOTOR</span><span>${rupiah(gross)}</span></div>
+        <div class="is-section-title">Biaya Operasional &amp; Lainnya</div>
+        <div class="is-row sub"><span>Biaya Operasional</span><span style="color:var(--danger);">(${rupiah(ops)})</span></div>
+        <div class="is-row sub"><span>Biaya Lainnya</span><span style="color:var(--danger);">(${rupiah(oth)})</span></div>
+        <div class="is-row net ${net<0?'loss':''}"><span class="is-label">LABA BERSIH</span><span>${rupiah(net)}</span></div>`;
+
+    renderChart();
+}
+
+function renderChart(){
+    const el = document.getElementById('incomeChart');
+    const now = new Date();
+    const months = [];
+    for(let i=5;i>=0;i--){
+        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+        months.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"));
     }
-  }
-  html += `<div class="is-row total"><span>Total Biaya Operasional</span><strong>-${rupiah(acc.biayaOperasional)}</strong></div>`;
-  
-  html += `<div class="is-section-title">Biaya Lain-lain (Non-Operasional)</div>`;
-  if (Object.keys(acc.otherDetail).length === 0) {
-    html += `<div class="is-row sub"><span>Tidak ada biaya lainnya</span><span>Rp0</span></div>`;
-  } else {
-    for (const [cat, amt] of Object.entries(acc.otherDetail)) {
-      html += `<div class="is-row sub"><span>${cat}</span><span>${rupiah(amt)}</span></div>`;
-    }
-  }
-  html += `<div class="is-row total"><span>Total Biaya Lain-lain</span><strong>-${rupiah(acc.biayaLainnya)}</strong></div>`;
-  
-  const lossClass = acc.labaBersih < 0 ? "loss" : "";
-  html += `<div class="is-row net ${lossClass}"><span>LABA BERSIH (Net Profit)</span><strong>${rupiah(acc.labaBersih)}</strong></div>`;
-  html += `<p style="font-size:11px;color:${acc.labaBersih < 0 ? '#b91c1c' : '#15803d'};margin:5px 0;font-style:italic;">* Laba Bersih = Laba Kotor - Biaya Operasional - Biaya Lain-lain</p>`;
-  
-  statement.innerHTML = html;
-  renderChart();
-}
-
-function renderChart() {
-  const chart = document.getElementById("incomeChart");
-  if (!chart) return;
-
-  const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-  const currentYear = new Date().getFullYear();
-  
-  const incomeValues = months.map((_, index) => {
-    const month = String(index + 1).padStart(2, "0");
-    return payments.filter(p => p.period && p.period === currentYear + "-" + month).reduce((sum, p) => sum + p.amount, 0);
-  });
-  
-  const expenseValues = months.map((_, index) => {
-    const month = String(index + 1).padStart(2, "0");
-    return expenses.filter(e => e.date && e.date.startsWith(currentYear + "-" + month)).reduce((sum, e) => sum + e.amount, 0);
-  });
-
-  const max = Math.max(...incomeValues, ...expenseValues, 1);
-  chart.innerHTML = "";
-
-  months.forEach((month, index) => {
-    const incomeHeight = Math.max((incomeValues[index] / max) * 100, incomeValues[index] > 0 ? 5 : 2);
-    const expenseHeight = Math.max((expenseValues[index] / max) * 100, expenseValues[index] > 0 ? 5 : 2);
-    
-    chart.innerHTML += `
-      <div class="bar-wrap">
-        <div class="chart-bars" style="height:180px;">
-          <div class="bar" style="height:${incomeHeight}%;" title="Pendapatan: ${rupiah(incomeValues[index])}"></div>
-          <div class="bar expense" style="height:${expenseHeight}%;" title="Pengeluaran: ${rupiah(expenseValues[index])}"></div>
-        </div>
-        <div class="bar-label">${month}</div>
-      </div>
-    `;
-  });
-}
-
-function renderMonthlySummary() {
-  const now = new Date();
-  const currentMonth = now.toISOString().substring(0, 7);
-  const acc = calculateAccounting(currentMonth);
-  
-  document.getElementById("monthIncome").textContent = rupiah(acc.pendapatan);
-  document.getElementById("monthExpense").textContent = rupiah(acc.hpp + acc.biayaOperasional + acc.biayaLainnya);
-  document.getElementById("monthGross").textContent = rupiah(acc.labaKotor);
-  document.getElementById("monthNet").textContent = rupiah(acc.labaBersih);
-}
-
-function populateReportMonth() {
-  const select = document.getElementById("reportMonth");
-  if (!select) return;
-  
-  const months = new Set();
-  payments.forEach(p => { if (p.period) months.add(p.period); });
-  expenses.forEach(e => { if (e.date) months.add(e.date.substring(0, 7)); });
-  
-  months.add(new Date().toISOString().substring(0, 7));
-  
-  const sortedMonths = Array.from(months).sort().reverse();
-  
-  select.innerHTML = `<option value="all">Semua Periode</option>`;
-  sortedMonths.forEach(month => {
-    const [year, monthNum] = month.split("-");
-    const monthName = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][parseInt(monthNum) - 1];
-    select.innerHTML += `<option value="${month}">${monthName} ${year}</option>`;
-  });
-}
-
-function saveSettings() {
-  const settings = {
-    name: document.getElementById("settingName").value,
-    owner: document.getElementById("settingOwner").value,
-    phone: document.getElementById("settingPhone").value,
-    address: document.getElementById("settingAddress").value,
-    sheetURL: document.getElementById("settingSheetURL").value
-  };
-  localStorage.setItem("kos_settings", JSON.stringify(settings));
-  SPREADSHEET_WEBAPP_URL = settings.sheetURL;
-  
-  // Update UI directly
-  document.getElementById("logoNameDisplay").textContent = settings.name;
-  document.getElementById("ownerNameDisplay").textContent = settings.owner;
-  document.getElementById("avatarDisplay").textContent = settings.owner.charAt(0).toUpperCase();
-  document.getElementById("welcomeOwnerName").textContent = settings.owner;
-  
-  updateSyncIndicator();
-  showToast("Pengaturan berhasil disimpan!");
-}
-
-function loadSettings() {
-  const settings = JSON.parse(localStorage.getItem("kos_settings")) || { name: "KOSKU", owner: "Owner", phone: "", address: "", sheetURL: SPREADSHEET_WEBAPP_URL };
-  
-  document.getElementById("settingName").value = settings.name || "KOSKU";
-  document.getElementById("settingOwner").value = settings.owner || "Owner";
-  document.getElementById("settingPhone").value = settings.phone || "";
-  document.getElementById("settingAddress").value = settings.address || "";
-  document.getElementById("settingSheetURL").value = settings.sheetURL || SPREADSHEET_WEBAPP_URL;
-  SPREADSHEET_WEBAPP_URL = settings.sheetURL || SPREADSHEET_WEBAPP_URL;
-  
-  // Apply to UI
-  document.getElementById("logoNameDisplay").textContent = settings.name || "KOSKU";
-  document.getElementById("ownerNameDisplay").textContent = settings.owner || "Owner";
-  document.getElementById("avatarDisplay").textContent = (settings.owner || "O").charAt(0).toUpperCase();
-  document.getElementById("welcomeOwnerName").textContent = settings.owner || "Owner";
-  
-  updateSyncIndicator();
-}
-
-function exportData() {
-  const data = { rooms, tenants, payments, expenses, exportDate: new Date().toISOString() };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "kosku-backup-" + new Date().toISOString().split("T")[0] + ".json";
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast("Data diexport!");
-}
-
-// Reset Specific Data Functions
-function resetDataRooms() {
-  if (!confirm("Hapus SEMUA data kamar? Data penghuni yang terhubung juga akan dihapus.")) return;
-  rooms = [];
-  tenants = [];
-  saveData();
-  showToast("Data kamar dan penghuni berhasil direset.");
-  renderAll();
-}
-
-function resetDataTenants() {
-  if (!confirm("Hapus SEMUA data penghuni? Status kamar akan dikembalikan menjadi 'Kosong'.")) return;
-  tenants = [];
-  rooms.forEach(room => room.status = "empty");
-  saveData();
-  showToast("Data penghuni berhasil direset.");
-  renderAll();
-}
-
-function resetDataPayments() {
-  if (!confirm("Hapus SEMUA data pembayaran?")) return;
-  payments = [];
-  saveData();
-  showToast("Data pembayaran berhasil direset.");
-  renderAll();
-}
-
-function resetDataExpenses() {
-  if (!confirm("Hapus SEMUA data pengeluaran?")) return;
-  expenses = [];
-  saveData();
-  showToast("Data pengeluaran berhasil direset.");
-  renderAll();
-}
-
-function resetData() {
-  if (!confirm("⚠️ Semua data (Kamar, Penghuni, Pembayaran, Pengeluaran) akan dihapus. Lanjutkan?")) return;
-  localStorage.removeItem("kos_rooms");
-  localStorage.removeItem("kos_tenants");
-  localStorage.removeItem("kos_payments");
-  localStorage.removeItem("kos_expenses");
-  rooms = [];
-  tenants = [];
-  payments = [];
-  expenses = [];
-  saveData();
-  renderAll();
-  showToast("Semua data berhasil direset total.");
-}
-
-function updateNotifications() {
-  const count = rooms.filter(r => r.status === "overdue").length;
-  document.getElementById("notifCount").textContent = count;
-}
-
-function showNotifications() {
-  const overdue = rooms.filter(r => r.status === "overdue");
-  const contentDiv = document.getElementById("notifContent");
-  
-  if (overdue.length === 0) {
-    contentDiv.innerHTML = `<div class="empty" style="padding: 30px;">✅ Tidak ada kamar yang menunggak. Semua aman!</div>`;
-  } else {
-    let html = `<p style="margin-bottom:15px; color:var(--text);">Ada <strong style="color:var(--danger);">${overdue.length} kamar</strong> yang menunggak. Silakan kirimkan pengingat tagihan ke penghuni:</p><div style="display:flex; flex-direction:column; gap:10px;">`;
-    overdue.forEach(r => {
-      const tenant = tenants.find(t => t.room === r.number);
-      if (tenant) {
-        html += `
-          <div class="notif-item">
-            <div class="info">
-              <strong>${tenant.name}</strong>
-              <small>${r.number} • Jatuh tempo tgl ${tenant.due} • ${rupiah(tenant.price)}</small>
+    const data = months.map(m=>({
+        inc: payments.filter(p=>p.status==='Lunas'&&(p.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0),
+        exp: expenses.filter(x=>(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0)
+    }));
+    const max = Math.max(1, ...data.flatMap(d=>[d.inc,d.exp]));
+    el.innerHTML = months.map((m,i)=>`
+        <div class="bar-wrap">
+            <div class="chart-bars">
+                <div class="bar" style="height:${Math.max(2,(data[i].inc/max)*100)}%"></div>
+                <div class="bar expense" style="height:${Math.max(2,(data[i].exp/max)*100)}%"></div>
             </div>
-            <button class="btn btn-success btn-small" onclick="sendReminder(${tenant.id})">
-              ${ICON_WHATSAPP} Tagih
-            </button>
-          </div>
-        `;
-      } else {
-        html += `
-          <div class="notif-item">
-            <div class="info">
-              <strong>${r.number}</strong>
-              <small>Belum ada penghuni terdaftar</small>
-            </div>
-          </div>
-        `;
-      }
+            <div class="bar-label">${monthLabel(m).split(' ')[0].slice(0,3)}</div>
+        </div>`).join('');
+}
+
+/* ============ PENGATURAN ============ */
+function saveSettings(){
+    const url = document.getElementById('settingSheetURL').value.trim();
+    if(url && !url.startsWith("https://script.google.com")){
+        toast('URL harus Web App Apps Script (https://script.google.com/...)','error');
+        return;
+    }
+    settings.name = document.getElementById('settingName').value.trim() || 'KOSKU';
+    settings.owner = document.getElementById('settingOwner').value.trim() || 'Owner';
+    settings.phone = document.getElementById('settingPhone').value.trim();
+    settings.address = document.getElementById('settingAddress').value.trim();
+    settings.apiURL = url;
+    API_URL = url;
+    saveAll(); applySettings();
+    toast('Pengaturan disimpan','success');
+    if(API_URL) loadFromSheet();
+}
+
+function applySettings(){
+    document.getElementById('logoNameDisplay').textContent = settings.name || 'KOSKU';
+    document.getElementById('welcomeOwnerName').textContent = settings.owner || 'Owner';
+    document.getElementById('ownerNameDisplay').textContent = settings.owner || 'Owner';
+    document.getElementById('avatarDisplay').textContent = (settings.owner||'O').charAt(0).toUpperCase();
+    document.getElementById('settingName').value = settings.name || 'KOSKU';
+    document.getElementById('settingOwner').value = settings.owner || 'Owner';
+    document.getElementById('settingPhone').value = settings.phone || '';
+    document.getElementById('settingAddress').value = settings.address || '';
+    document.getElementById('settingSheetURL').value = settings.apiURL || '';
+    setSyncStatus('idle');
+}
+
+function resetData(){
+    if(!confirm('Hapus SEMUA data aplikasi DAN seluruh baris data di Google Sheet?')) return;
+    rooms=[];tenants=[];payments=[];expenses=[];
+    syncToSheet({action:'resetAll'});
+    saveAll(); renderAll(); toast('Semua data direset','success');
+}
+
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded', function(){
+    applySettings();
+    renderAll();
+    document.querySelectorAll('.modal').forEach(m=>{
+        m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('show'); });
     });
-    html += `</div>`;
-    contentDiv.innerHTML = html;
-  }
-  openModal('notifModal');
-}
-
-function renderAll() {
-  renderDashboard();
-  renderRooms();
-  renderTenants();
-  renderPayments();
-  renderExpenses();
-  populateReportMonth();
-  renderReport();
-  updateNotifications();
-}
-
-document.querySelectorAll(".modal").forEach(modal => {
-  modal.addEventListener("click", event => {
-    if (event.target === modal) {
-      modal.classList.remove("show");
-      if (modal.id === "roomModal") document.getElementById("roomId").value = "";
-      if (modal.id === "tenantModal") document.getElementById("tenantId").value = "";
-    }
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadSettings();
-  updateExpenseCategories();
-  renderAll();
+    document.addEventListener('keydown', e=>{
+        if(e.key==='Escape') document.querySelectorAll('.modal.show').forEach(m=>m.classList.remove('show'));
+    });
+    if(API_URL) loadFromSheet();
 });
 </script>
 </body>
