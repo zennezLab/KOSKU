@@ -1312,7 +1312,7 @@ select:focus, input:focus, textarea:focus{
         <div class="modal-header">
             <h3>Notifikasi Tunggakan</h3>
             <button class="close" onclick="closeModal('notifModal')">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <svg widtenantRoomth="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
         <div id="notifList"></div>
@@ -1653,17 +1653,31 @@ function resetTenantForm(){
     populateRoomSelect('', '');
 }
 
-function populateRoomSelect(selectedRoom, editingTenantId){
+function updateRoomSelect(){
     const sel = document.getElementById('tenantRoom');
-    let html = '';
-    rooms.forEach(r=>{
-        const occ = tenants.find(t=>t.room===r.number && t.id!==editingTenantId);
-        if(occ) return;
-        html += `<option value="${esc(r.number)}"${r.number===selectedRoom?' selected':''}>${esc(r.number)} — ${rupiah(r.price)}</option>`;
-    });
-    sel.innerHTML = html || '<option value="">Belum ada kamar tersedia</option>';
-}
+    if(!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">-- Pilih Kamar --</option>';
 
+    // Hitung kamar mana saja yang sudah ada penghuninya (case-insensitive)
+    const occupied = {};
+    tenants.forEach(t => {
+        if(t.room) occupied[String(t.room).trim().toUpperCase()] = true;
+    });
+
+    rooms.forEach(r => {
+        const isFilled = !!occupied[String(r.number || '').trim().toUpperCase()];
+        const opt = document.createElement('option');
+        opt.value = r.number;
+        opt.textContent = r.number + ' — Rp' + Number(r.price || 0).toLocaleString('id-ID')
+                        + (isFilled ? ' (Terisi)' : '');
+        // Kalau tidak ingin kamar terisi bisa dipilih lagi, aktifkan baris bawah:
+        // if(isFilled) opt.disabled = true;
+        sel.appendChild(opt);
+    });
+
+    if(current) sel.value = current;
+}
 function onTenantRoomChange(){
     const r = rooms.find(x=>x.number===document.getElementById('tenantRoom').value);
     if(r) document.getElementById('tenantPrice').value = r.price;
