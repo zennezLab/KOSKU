@@ -8,7 +8,2186 @@
 *{
     margin:0;
     padding:0;
+    box-sizing:border-box;<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOSKU - Manajemen Kos</title>
+<style>
+*{
+    margin:0;
+    padding:0;
     box-sizing:border-box;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+
+:root{
+    --primary:#3b82f6;
+    --primary-dark:#2563eb;
+    --primary-darker:#1d4ed8;
+    --success:#10b981;
+    --success-dark:#059669;
+    --warning:#f59e0b;
+    --warning-dark:#d97706;
+    --danger:#ef4444;
+    --danger-dark:#dc2626;
+    --purple:#8b5cf6;
+    --purple-dark:#7c3aed;
+    --dark:#0f172a;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+}
+
+body{
+    background: linear-gradient(rgba(241, 245, 249, 0.85), rgba(241, 245, 249, 0.9)), url('gambarhut.png') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    min-height: 100vh;
+}
+
+svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:260px;
+    height:100vh;
+    background:linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    color:white;
+    padding:24px 16px;
+    z-index:1000;
+    transition:.3s;
+    border-right:1px solid rgba(255,255,255,0.05);
+    box-shadow:4px 0 15px rgba(0,0,0,0.1);
+    overflow-y:auto;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    margin-bottom:28px;
+    background:rgba(255,255,255,0.03);
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+.logo-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    background:linear-gradient(135deg, #3b82f6, #8b5cf6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    box-shadow:0 4px 10px rgba(59,130,246,0.3);
+}
+
+.logo h2{
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:-0.5px;
+}
+
+.logo small{
+    color:#94a3b8;
+    font-size:11px;
+    font-weight:500;
+}
+
+.menu-title{
+    color:#64748b;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-weight:700;
+    padding:12px;
+    margin-top:10px;
+}
+
+.menu{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:13px;
+    border-radius:10px;
+    color:#cbd5e1;
+    cursor:pointer;
+    margin-bottom:4px;
+    transition:all .2s ease;
+    font-weight:500;
+    font-size:14px;
+    position:relative;
+}
+
+.menu:hover{
+    background:rgba(255,255,255,0.05);
+    color:white;
+    transform:translateX(4px);
+}
+
+.menu.active{
+    background:linear-gradient(90deg, rgba(59,130,246,0.2), transparent);
+    color:white;
+    border-left:3px solid var(--primary);
+    padding-left:10px;
+}
+
+.menu-icon{
+    width:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* ================= MAIN ================= */
+.main{
+    margin-left:260px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.topbar-left{ display:flex; align-items:center; gap:15px; }
+.page-title{ font-size:22px; font-weight:700; letter-spacing:-0.5px; }
+
+.menu-toggle{
+    display:none;
+    border:0;
+    background:#eff6ff;
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+    color:var(--primary);
+}
+
+.user-area{ display:flex; align-items:center; gap:15px; }
+
+.sync-indicator{
+    display:flex; align-items:center; gap:8px;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:11px; font-weight:600;
+    background: #eff6ff;
+    color: var(--primary-dark);
+    border: 1px solid #dbeafe;
+    cursor:pointer;
+}
+.sync-indicator.online{ background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.sync-indicator.offline{ background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+.notification{
+    position:relative;
+    cursor:pointer;
+    padding:8px;
+    border-radius:50%;
+    background:#f1f5f9;
+    color:#64748b;
+    transition: .2s;
+}
+.notification:hover{ background:#e2e8f0; color:#1e293b; }
+
+.notification-badge{
+    position:absolute;
+    right:-2px;
+    top:-2px;
+    background:var(--danger);
+    color:white;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:10px;
+    font-weight:bold;
+    border:2px solid white;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    background:linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color:white;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    box-shadow:0 4px 10px rgba(59,130,246,0.3);
+}
+
+/* ================= CONTENT ================= */
+.content{ padding:30px; }
+.section{ display:none; animation: fadeIn 0.3s ease-in-out; }
+.section.active{ display:block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= WELCOME ================= */
+.welcome{
+    background:linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+    color:white;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 10px 20px rgba(37,99,235,0.25);
+    position:relative;
+    overflow:hidden;
+}
+
+.welcome::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+}
+
+.welcome h1{ font-size:26px; margin-bottom:8px; font-weight:800; }
+.welcome p{ color:#e0e7ff; font-weight:500; }
+.welcome-icon{ font-size:80px; opacity:.2; z-index:1; }
+
+/* ================= STATS ================= */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:rgba(255, 255, 255, 0.9);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.stat-info small{ color:var(--muted); font-weight:500; text-transform:uppercase; font-size:11px; }
+.stat-info h2{ font-size:28px; margin-top:6px; font-weight:800; }
+
+.stat-icon{
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.blue{ background:linear-gradient(135deg,#60a5fa,#3b82f6); color:white; }
+.green{ background:linear-gradient(135deg,#34d399,#10b981); color:white; }
+.orange{ background:linear-gradient(135deg,#fbbf24,#f59e0b); color:white; }
+.red{ background:linear-gradient(135deg,#f87171,#ef4444); color:white; }
+.purple{ background:linear-gradient(135deg,#a78bfa,#8b5cf6); color:white; }
+
+/* ================= CARD ================= */
+.card{
+    background:rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:24px;
+    margin-bottom:20px;
+    box-shadow:0 4px 6px -1px rgba(0,0,0,0.02);
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+.card-header h3{ font-size:18px; font-weight:700; }
+
+/* ================= 3D BUTTON ================= */
+.btn{
+    border:0;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-size:14px;
+    transition: all .15s ease;
+    position:relative;
+    color:white;
+    text-decoration:none;
+}
+
+.btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2) !important;
+}
+
+.btn svg { width: 16px; height: 16px; }
+
+.btn-primary{
+    background:linear-gradient(to bottom, #3b82f6, #2563eb);
+    box-shadow:0 4px 0 #1e40af, 0 6px 10px rgba(37,99,235,0.3);
+}
+.btn-primary:hover { background:linear-gradient(to bottom, #60a5fa, #3b82f6); }
+
+.btn-success{
+    background:linear-gradient(to bottom, #10b981, #059669);
+    box-shadow:0 4px 0 #047857, 0 6px 10px rgba(16,185,129,0.3);
+}
+.btn-success:hover { background:linear-gradient(to bottom, #34d399, #10b981); }
+
+.btn-danger{
+    background:linear-gradient(to bottom, #ef4444, #dc2626);
+    box-shadow:0 4px 0 #b91c1c, 0 6px 10px rgba(239,68,68,0.3);
+}
+.btn-danger:hover { background:linear-gradient(to bottom, #f87171, #ef4444); }
+
+.btn-light{
+    background:linear-gradient(to bottom, #ffffff, #f1f5f9);
+    color:#334155;
+    border:1px solid #e2e8f0;
+    box-shadow:0 4px 0 #cbd5e1, 0 6px 10px rgba(0,0,0,0.05);
+}
+.btn-light:hover { background:linear-gradient(to bottom, #f8fafc, #e2e8f0); }
+
+.btn-small{ padding:8px 12px; font-size:12px; }
+.btn-small svg { width: 14px; height: 14px; }
+
+/* ================= GRID ================= */
+.grid-2{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:20px;
+}
+
+/* ================= KAMAR ================= */
+.room-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.room{
+    background:rgba(255, 255, 255, 0.95);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    cursor:pointer;
+    transition:.2s;
+    position:relative;
+    box-shadow:0 2px 4px rgba(0,0,0,0.02);
+}
+
+.room:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 24px rgba(0,0,0,0.08);
+}
+
+.room-number{ font-size:18px; font-weight:800; margin-bottom:6px; }
+.room-name{ font-size:12px; color:var(--muted); min-height:18px; }
+.room-price{ font-size:13px; margin-top:10px; font-weight:bold; color:#1e293b; }
+
+.room-status{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:5px 10px;
+    border-radius:6px;
+    font-size:10px;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin-top:12px;
+}
+
+.status-empty{ background:#dcfce7; color:#15803d; }
+.status-occupied{ background:#dbeafe; color:#1d4ed8; }
+.status-overdue{ background:#fee2e2; color:#b91c1c; }
+
+.room-edit{
+    position:absolute;
+    top:12px;
+    right:12px;
+    border:0;
+    background:#f8fafc;
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#64748b;
+    transition: all .2s;
+    border:1px solid #e2e8f0;
+}
+.room-edit:hover { background:white; color:#3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+/* ================= QUICK ACTIONS ================= */
+.quick-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.quick{
+    background:rgba(248, 250, 252, 0.9);
+    border:1px solid #e2e8f0;
+    padding:18px;
+    border-radius:12px;
+    cursor:pointer;
+    transition: all .2s;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.quick:hover{
+    background:white;
+    transform:translateY(-2px);
+    box-shadow:0 8px 15px rgba(0,0,0,0.05);
+}
+
+.quick-icon{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+}
+
+/* ================= TABLE ================= */
+.table-container{ overflow-x:auto; }
+
+table{ width:100%; border-collapse:collapse; }
+
+th{
+    background:#f8fafc;
+    color:#64748b;
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    padding:14px;
+    border-bottom:1px solid var(--border);
+    font-weight:700;
+}
+
+td{ padding:14px; border-bottom:1px solid var(--border); font-size:13px; }
+
+.badge{
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:10px;
+    font-weight:bold;
+    text-transform:uppercase;
+    display:inline-block;
+}
+.badge-green{ background:#dcfce7; color:#15803d; }
+.badge-red{ background:#fee2e2; color:#b91c1c; }
+.badge-yellow{ background:#fef3c7; color:#a16207; }
+.badge-blue{ background:#dbeafe; color:#1d4ed8; }
+.badge-purple{ background:#f3e8ff; color:#7c3aed; }
+
+/* ================= TOOLBAR ================= */
+.toolbar{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; align-items:center; }
+
+.search{ flex:1; min-width:200px; position:relative; }
+.search input{ padding-left:40px; }
+
+.search-icon{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#94a3b8;
+}
+
+select, input, textarea{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    outline:none;
+    background:rgba(255, 255, 255, 0.9);
+    font-family:inherit;
+    font-size:14px;
+    transition: all .2s;
+}
+
+select:focus, input:focus, textarea:focus{
+    border-color:#3b82f6;
+    box-shadow:0 0 0 3px rgba(59,130,246,0.2);
+}
+
+.toolbar select{ width:auto; min-width:180px; }
+
+/* ================= FORM ================= */
+.form-group{ margin-bottom:16px; }
+.form-group label{ display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:#334155; }
+.form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+/* ================= MODAL ================= */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,0.7);
+    backdrop-filter:blur(4px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:3000;
+    padding:20px;
+}
+
+.modal.show{ display:flex; animation: fadeIn 0.2s ease; }
+
+.modal-box{
+    width:100%;
+    max-width:550px;
+    max-height:90vh;
+    overflow-y:auto;
+    background:white;
+    border-radius:20px;
+    padding:28px;
+    box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+
+.modal-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+.modal-header h3 { font-size:20px; font-weight:800; }
+
+.close{
+    border:0;
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    cursor:pointer;
+    background:#f1f5f9;
+    color:#64748b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: all .2s;
+}
+.close:hover { background:#e2e8f0; color:#ef4444; }
+
+.modal-footer{ display:flex; justify-content:flex-end; gap:12px; margin-top:24px; }
+
+/* ================= CHART ================= */
+.chart{
+    height:240px;
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    border-bottom:2px solid var(--border);
+    padding:10px 0;
+}
+
+.bar-wrap{ flex:1; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; }
+.chart-bars { display:flex; gap:4px; width:100%; justify-content:center; align-items:flex-end; height:100%; }
+
+.bar{
+    width:45%;
+    min-height:4px;
+    background:linear-gradient(to top, #2563eb, #60a5fa);
+    border-radius:6px 6px 0 0;
+    position:relative;
+    transition: height 0.5s ease;
+    box-shadow: 0 4px 6px -1px rgba(59,130,246,0.2);
+}
+.bar.expense{ background:linear-gradient(to top, #ef4444, #f87171); box-shadow: 0 4px 6px -1px rgba(239,68,68,0.2); }
+
+.bar-label{ font-size:11px; color:#64748b; margin-top:8px; font-weight:600; }
+
+.empty{ text-align:center; padding:40px; color:#94a3b8; }
+
+/* ================= INCOME STATEMENT ================= */
+.income-statement{ background:#f8fafc; border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:15px; }
+.is-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--border); font-size:14px; color:var(--text); }
+.is-row.sub{ padding-left:20px; color:var(--muted); font-size:13px; }
+.is-row.total{ font-weight:800; border-top:2px solid var(--border); margin-top:8px; padding-top:12px; font-size:16px; color:var(--text); }
+.is-row.gross{ background:#fffbeb; padding:12px; border-radius:8px; margin:8px 0; font-weight:700; color:#b45309; border:1px solid #fde68a; }
+.is-row.net{ background:#f0fdf4; padding:12px; border-radius:8px; margin-top:8px; font-weight:800; color:#15803d; border:1px solid #bbf7d0; font-size:18px; }
+.is-row.net.loss{ background:#fef2f2; color:#b91c1c; border-color:#fecaca; }
+.is-label{ font-weight:600; }
+.is-section-title{ font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--primary-dark); margin:15px 0 5px; padding-bottom:5px; border-bottom:2px solid var(--primary); }
+
+/* ================= NOTIFICATION LIST ================= */
+.notif-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px; border:1px solid var(--border); border-radius:10px;
+    margin-bottom:10px; background:#fff5f5;
+}
+.notif-item .info strong { display:block; color:var(--text); font-size:14px; }
+.notif-item .info small { color:var(--muted); font-size:12px; }
+
+/* ================= SYNC INFO ================= */
+.sync-info-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed var(--border); font-size:14px; }
+.sync-info-row:last-child{ border-bottom:none; }
+.sync-info-row .label{ color:var(--muted); font-weight:600; }
+.sync-info-row .value{ font-weight:700; }
+
+/* ================= TOAST ================= */
+.toast{ position:fixed; bottom:30px; right:30px; background:white; color:var(--text); padding:14px 20px; border-radius:10px; box-shadow:0 10px 25px rgba(0,0,0,0.1); z-index:5000; display:flex; align-items:center; gap:10px; transform:translateX(400px); transition:transform .3s ease; border:1px solid var(--border); max-width:360px; }
+.toast.show{ transform:translateX(0); }
+.toast.success{ border-left:4px solid var(--success); }
+.toast.error{ border-left:4px solid var(--danger); }
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:1000px){
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .grid-2{ grid-template-columns:1fr; }
+}
+
+@media(max-width:750px){
+    .sidebar{ transform:translateX(-100%); box-shadow: 10px 0 30px rgba(0,0,0,0.3); }
+    .sidebar.open{ transform:translateX(0); }
+    .main{ margin-left:0; }
+    .menu-toggle{ display:flex; }
+    .content{ padding:20px; }
+    .topbar{ padding:0 20px; }
+    .room-grid{ grid-template-columns:repeat(2,1fr); }
+    .welcome-icon{ display:none; }
+}
+
+@media(max-width:480px){
+    .stats{ grid-template-columns:1fr; }
+    .room-grid{ grid-template-columns:1fr; }
+    .form-grid{ grid-template-columns:1fr; }
+    .user-area strong, .user-area small{ display:none; }
+}
+
+@media print{
+    .sidebar, .topbar, .toolbar, .btn, .toast{ display:none!important; }
+    .main{ margin:0; }
+    .content{ padding:0; }
+    .section{ display:block!important; }
+    body { background: none; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+    <div class="logo">
+        <div class="logo-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <div>
+            <h2 id="logoNameDisplay">KOSKU</h2>
+            <small>Manajemen Kos</small>
+        </div>
+    </div>
+
+    <div class="menu-title">Menu Utama</div>
+    <div class="menu active" onclick="showPage('dashboard',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></span>
+        Dashboard
+    </div>
+    <div class="menu" onclick="showPage('kamar',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></span>
+        Data Kamar
+    </div>
+    <div class="menu" onclick="showPage('penghuni',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span>
+        Penghuni
+    </div>
+    <div class="menu" onclick="showPage('pembayaran',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></span>
+        Pembayaran
+    </div>
+    <div class="menu" onclick="showPage('pengeluaran',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span>
+        Pengeluaran
+    </div>
+
+    <div class="menu-title">Laporan</div>
+    <div class="menu" onclick="showPage('laporan',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></span>
+        Laporan Keuangan
+    </div>
+    <div class="menu" onclick="showPage('pengaturan',this)">
+        <span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span>
+        Pengaturan
+    </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <div class="page-title" id="pageTitle">Dashboard</div>
+    </div>
+    <div class="user-area">
+        <span class="sync-indicator" id="syncIndicator" onclick="loadFromSheet()" title="Klik untuk sinkron ulang dari Google Sheet">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span id="syncText">Sync: Menghubungkan...</span>
+        </span>
+        <div class="notification" onclick="showNotifications()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="notification-badge" id="notifCount">0</span>
+        </div>
+        <div class="avatar" id="avatarDisplay">O</div>
+        <div>
+            <strong id="ownerNameDisplay">Owner</strong>
+            <small style="display:block;color:#64748b;font-size:12px;">Pemilik Kos</small>
+        </div>
+    </div>
+</header>
+
+<div class="content">
+
+<!-- ================= DASHBOARD ================= -->
+<section id="dashboard" class="section active">
+    <div class="welcome">
+        <div>
+            <h1>Selamat Datang, <span id="welcomeOwnerName">Owner</span> 👋</h1>
+            <p>Kelola kos Anda dengan lebih mudah — data tersimpan otomatis di Google Spreadsheet.</p>
+        </div>
+        <div class="welcome-icon">
+            <svg width="100" height="100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-info">
+                <small>Total Kamar</small>
+                <h2 id="totalKamar">0</h2>
+            </div>
+            <div class="stat-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <small>Kamar Terisi</small>
+                <h2 id="kamarTerisi">0</h2>
+            </div>
+            <div class="stat-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <small>Kamar Kosong</small>
+                <h2 id="kamarKosong">0</h2>
+            </div>
+            <div class="stat-icon orange"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-4.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info">
+                <small>Menunggak</small>
+                <h2 id="kamarTunggak">0</h2>
+            </div>
+            <div class="stat-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>Status Kamar</h3>
+                <button class="btn btn-light btn-small" onclick="showPageByName('kamar')">
+                    Kelola <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+            <div class="room-grid" id="dashboardRooms"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3>Aksi Cepat</h3></div>
+            <div class="quick-actions">
+                <div class="quick" onclick="openModal('roomModal')">
+                    <div class="quick-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
+                    <strong>Tambah Kamar</strong>
+                    <small style="color:var(--muted);">Kamar baru tak terbatas</small>
+                </div>
+                <div class="quick" onclick="openModal('tenantModal')">
+                    <div class="quick-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg></div>
+                    <strong>Penghuni Baru</strong>
+                    <small style="color:var(--muted);">Daftarkan penghuni</small>
+                </div>
+                <div class="quick" onclick="openModal('paymentModal')">
+                    <div class="quick-icon purple"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
+                    <strong>Pembayaran</strong>
+                    <small style="color:var(--muted);">Catat pembayaran</small>
+                </div>
+                <div class="quick" onclick="openModal('expenseModal')">
+                    <div class="quick-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+                    <strong>Pengeluaran</strong>
+                    <small style="color:var(--muted);">Catat biaya operasional</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Ringkas Keuangan Bulan Ini</h3>
+            <button class="btn btn-light btn-small" onclick="showPageByName('laporan')">
+                Detail <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-info"><small>Pendapatan</small><h2 id="monthIncome" style="font-size:20px;">Rp0</h2></div>
+                <div class="stat-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><small>Pengeluaran</small><h2 id="monthExpense" style="font-size:20px;">Rp0</h2></div>
+                <div class="stat-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><small>Laba Kotor</small><h2 id="monthGross" style="font-size:20px;">Rp0</h2></div>
+                <div class="stat-icon orange"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M12 21a9 9 0 110-18 9 9 0 010 18z"/></svg></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><small>Laba Bersih</small><h2 id="monthNet" style="font-size:20px;">Rp0</h2></div>
+                <div class="stat-icon purple"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Pembayaran Terbaru</h3>
+            <button class="btn btn-light btn-small" onclick="showPageByName('pembayaran')">
+                Lihat Semua <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Tanggal</th><th>Penghuni</th><th>Kamar</th><th>Jumlah</th><th>Status</th></tr></thead>
+                <tbody id="dashboardPayments"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ================= KAMAR ================= -->
+<section id="kamar" class="section">
+    <div class="toolbar">
+        <div class="search">
+            <span class="search-icon"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+            <input id="roomSearch" placeholder="Cari kamar..." oninput="renderRooms()">
+        </div>
+        <select id="roomFilter" onchange="renderRooms()">
+            <option value="all">Semua Status</option>
+            <option value="empty">Kosong</option>
+            <option value="occupied">Terisi</option>
+            <option value="overdue">Menunggak</option>
+        </select>
+        <button class="btn btn-primary" onclick="openModal('roomModal')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Tambah Kamar
+        </button>
+        <button class="btn btn-danger" onclick="resetDataRooms()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Reset Kamar
+        </button>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3>Daftar Kamar</h3>
+            <span id="roomCountText" style="font-size:14px;color:var(--muted);font-weight:600;">0 kamar</span>
+        </div>
+        <div class="room-grid" id="allRooms"></div>
+    </div>
+</section>
+
+<!-- ================= PENGHUNI ================= -->
+<section id="penghuni" class="section">
+    <div class="toolbar">
+        <div class="search">
+            <span class="search-icon"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+            <input id="tenantSearch" placeholder="Cari nama penghuni..." oninput="renderTenants()">
+        </div>
+        <button class="btn btn-primary" onclick="openModal('tenantModal')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg> Tambah Penghuni
+        </button>
+        <button class="btn btn-danger" onclick="resetDataTenants()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Reset Penghuni
+        </button>
+    </div>
+    <div class="card">
+        <div class="card-header"><h3>Data Penghuni</h3></div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Nama</th><th>Kamar</th><th>WhatsApp</th><th>Harga</th><th>Jatuh Tempo</th><th>Aksi</th></tr></thead>
+                <tbody id="tenantTable"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ================= PEMBAYARAN ================= -->
+<section id="pembayaran" class="section">
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-info"><small>Total Pembayaran</small><h2 id="paymentTotal">Rp0</h2></div>
+            <div class="stat-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Sudah Lunas</small><h2 id="paymentLunas">0</h2></div>
+            <div class="stat-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Belum Lunas</small><h2 id="paymentBelum">0</h2></div>
+            <div class="stat-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        </div>
+    </div>
+    <div class="toolbar">
+        <div class="search">
+            <span class="search-icon"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></span>
+            <input id="paymentSearch" placeholder="Cari pembayaran..." oninput="renderPayments()">
+        </div>
+        <button class="btn btn-primary" onclick="openModal('paymentModal')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Catat Pembayaran
+        </button>
+        <button class="btn btn-danger" onclick="resetDataPayments()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Reset Pembayaran
+        </button>
+    </div>
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Tanggal</th><th>Penghuni</th><th>Kamar</th><th>Periode</th><th>Jumlah</th><th>Status</th><th>Aksi</th></tr></thead>
+                <tbody id="paymentTable"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ================= PENGELUARAN ================= -->
+<section id="pengeluaran" class="section">
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-info"><small>Total Pengeluaran</small><h2 id="expenseTotal">Rp0</h2></div>
+            <div class="stat-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Biaya Langsung (HPP)</small><h2 id="expenseHPP" style="font-size:20px;">Rp0</h2></div>
+            <div class="stat-icon orange"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Biaya Operasional</small><h2 id="expenseOps" style="font-size:20px;">Rp0</h2></div>
+            <div class="stat-icon blue"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Biaya Lainnya</small><h2 id="expenseOther" style="font-size:20px;">Rp0</h2></div>
+            <div class="stat-icon purple"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg></div>
+        </div>
+    </div>
+    <div class="toolbar">
+        <select id="expenseFilterType" onchange="renderExpenses()">
+            <option value="all">Semua Tipe Biaya</option>
+            <option value="hpp">Biaya Langsung (HPP)</option>
+            <option value="operasional">Biaya Operasional</option>
+            <option value="lainnya">Biaya Lainnya</option>
+        </select>
+        <button class="btn btn-primary" onclick="openModal('expenseModal')">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Tambah Pengeluaran
+        </button>
+        <button class="btn btn-danger" onclick="resetDataExpenses()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Reset Pengeluaran
+        </button>
+    </div>
+    <div class="card">
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Tanggal</th><th>Tipe Biaya</th><th>Kategori</th><th>Keterangan</th><th>Jumlah</th><th>Aksi</th></tr></thead>
+                <tbody id="expenseTable"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ================= LAPORAN ================= -->
+<section id="laporan" class="section">
+    <div class="toolbar">
+        <select id="reportMonth" onchange="renderReport()"></select>
+        <button class="btn btn-primary" onclick="window.print()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg> Cetak Laporan
+        </button>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-info"><small>Pendapatan</small><h2 id="reportIncome">Rp0</h2></div>
+            <div class="stat-icon green"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Pengeluaran</small><h2 id="reportExpense">Rp0</h2></div>
+            <div class="stat-icon red"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Laba Kotor</small><h2 id="reportGross">Rp0</h2></div>
+            <div class="stat-icon orange"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M12 21a9 9 0 110-18 9 9 0 010 18z"/></svg></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-info"><small>Laba Bersih</small><h2 id="reportNet">Rp0</h2></div>
+            <div class="stat-icon purple"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/></svg></div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header"><h3>Laporan Laba Rugi (Income Statement)</h3></div>
+            <div class="income-statement" id="incomeStatement"></div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h3>Grafik Keuangan</h3></div>
+            <div class="chart" id="incomeChart"></div>
+            <p style="color:var(--muted);font-size:12px;margin-top:15px;text-align:center;">Grafik Pendapatan (Biru) vs Pengeluaran (Merah) per Bulan</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3>Ringkasan Periode</h3></div>
+        <p style="color:var(--muted);font-size:14px;line-height:1.6;">Laporan ini menggunakan standar akuntansi sederhana. Laba Kotor dihitung dari Pendapatan dikurangi Harga Pokok Pendapatan (HPP) yaitu biaya langsung yang terkait dengan penyediaan layanan kamar. Laba Bersih dihitung dari Laba Kotor dikurangi Biaya Operasional dan Biaya Lain-lain. Cetak laporan untuk arsip fisik Anda.</p>
+    </div>
+</section>
+
+<!-- ================= PENGATURAN ================= -->
+<section id="pengaturan" class="section">
+    <div class="card">
+        <div class="card-header"><h3>Pengaturan Kos</h3></div>
+        <div class="form-grid">
+            <div class="form-group"><label>Nama Kos</label><input id="settingName" value="KOSKU"></div>
+            <div class="form-group"><label>Nama Pemilik</label><input id="settingOwner" value="Owner"></div>
+            <div class="form-group"><label>WhatsApp Pemilik</label><input id="settingPhone" placeholder="628xxxxxxxxxx"></div>
+            <div class="form-group"><label>Alamat Kos</label><input id="settingAddress" placeholder="Alamat kos"></div>
+        </div>
+        <button class="btn btn-primary" onclick="saveSettings()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Simpan Pengaturan
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Status Koneksi Google Spreadsheet</h3>
+            <button class="btn btn-light btn-small" onclick="loadFromSheet()">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Sinkron Sekarang
+            </button>
+        </div>
+        <div class="sync-info-row">
+            <span class="label">Status</span>
+            <span class="value" id="settingSyncStatus">Menghubungkan...</span>
+        </div>
+        <div class="sync-info-row">
+            <span class="label">Sinkron Terakhir</span>
+            <span class="value" id="settingLastSync">-</span>
+        </div>
+        <div class="sync-info-row">
+            <span class="label">Auto Refresh</span>
+            <span class="value">Setiap 30 detik</span>
+        </div>
+        <div class="sync-info-row">
+            <span class="label">Spreadsheet ID</span>
+            <span class="value" style="font-size:11px;word-break:break-all;">1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3>Link Google Spreadsheet</h3></div>
+        <div class="form-grid">
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=2036671382#gid=2036671382">🏠 Sheet Kamar</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=414114963#gid=414114963">👥 Sheet Penghuni</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=1931011124#gid=1931011124">💳 Sheet Pembayaran</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit?gid=745355797#gid=745355797">💸 Sheet Pengeluaran</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3>Reset Semua Data</h3></div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">Hapus SEMUA data aplikasi (Kamar, Penghuni, Pembayaran, Pengeluaran) sekaligus — termasuk baris data di Google Sheet.</p>
+        <button class="btn btn-danger" onclick="resetData()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Reset Total
+        </button>
+    </div>
+</section>
+
+</div>
+</main>
+
+<!-- ================= MODAL KAMAR ================= -->
+<div class="modal" id="roomModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="roomModalTitle">Tambah Kamar</h3>
+            <button class="close" onclick="closeModal('roomModal')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form onsubmit="saveRoom(event)">
+            <input type="hidden" id="roomId">
+            <div class="form-group"><label>Nomor/Nama Kamar</label><input id="roomNumber" placeholder="Contoh: Kamar 01 / A-101" required></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Harga Sewa / Bulan (Rp)</label><input id="roomPrice" type="number" min="0" required></div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="roomStatus">
+                        <option value="empty">Kosong</option>
+                        <option value="occupied">Terisi</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- FITUR UNLIMITED: tambah massal -->
+            <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:16px;margin:8px 0;">
+                <label style="font-size:13px;font-weight:700;color:var(--primary-dark);">⚡ Tambah Massal — Tanpa Batas</label>
+                <small style="display:block;color:var(--muted);margin:4px 0 12px;">Buat banyak kamar sekaligus memakai harga &amp; status di atas.</small>
+                <div class="form-grid">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px;">Jumlah Kamar</label>
+                        <input id="roomBulkCount" type="number" min="1" max="500" placeholder="mis. 20">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px;">Nomor Awal</label>
+                        <input id="roomBulkStart" type="number" min="1" value="1">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-light btn-small" style="margin-top:12px;" onclick="bulkAddRooms()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Generate Kamar
+                </button>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" onclick="closeModal('roomModal')">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan Kamar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL PENGHUNI ================= -->
+<div class="modal" id="tenantModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="tenantModalTitle">Tambah Penghuni</h3>
+            <button class="close" onclick="closeModal('tenantModal')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form onsubmit="saveTenant(event)">
+            <input type="hidden" id="tenantId">
+            <div class="form-group"><label>Nama Lengkap</label><input id="tenantName" placeholder="Nama penghuni" required></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Nomor WhatsApp</label><input id="tenantPhone" placeholder="628xxxxxxxxxx"></div>
+                <div class="form-group"><label>Kamar</label><select id="tenantRoom" onchange="onTenantRoomChange()" required></select></div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group"><label>Harga Sewa / Bulan (Rp)</label><input id="tenantPrice" type="number" min="0" required></div>
+                <div class="form-group"><label>Tanggal Masuk</label><input id="tenantDate" type="date" required></div>
+            </div>
+            <div class="form-group"><label>Jatuh Tempo Pembayaran Berikutnya</label><input id="tenantDue" type="date" required></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" onclick="closeModal('tenantModal')">Batal</button>
+                <button type="submit" class="btn btn-success">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL PEMBAYARAN ================= -->
+<div class="modal" id="paymentModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="paymentModalTitle">Catat Pembayaran</h3>
+            <button class="close" onclick="closeModal('paymentModal')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form onsubmit="savePayment(event)">
+            <input type="hidden" id="paymentId">
+            <div class="form-group"><label>Penghuni</label><select id="paymentTenant" onchange="onPaymentTenantChange()" required></select></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Tanggal Bayar</label><input id="paymentDate" type="date" required></div>
+                <div class="form-group"><label>Periode</label><input id="paymentPeriod" placeholder="mis. Januari 2025" required></div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group"><label>Jumlah (Rp)</label><input id="paymentAmount" type="number" min="0" required></div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="paymentStatus">
+                        <option value="Lunas">Lunas</option>
+                        <option value="Belum Lunas">Belum Lunas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" onclick="closeModal('paymentModal')">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL PENGELUARAN ================= -->
+<div class="modal" id="expenseModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="expenseModalTitle">Tambah Pengeluaran</h3>
+            <button class="close" onclick="closeModal('expenseModal')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <form onsubmit="saveExpense(event)">
+            <input type="hidden" id="expenseId">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tipe Biaya</label>
+                    <select id="expenseCategoryType" required>
+                        <option value="hpp">Biaya Langsung (HPP)</option>
+                        <option value="operasional">Biaya Operasional</option>
+                        <option value="lainnya">Biaya Lainnya</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="expenseCategory" required>
+                        <option>Listrik</option><option>Air</option><option>WiFi</option>
+                        <option>Kebersihan</option><option>Perawatan</option><option>Gaji</option><option>Lainnya</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Keterangan</label><input id="expenseDescription" placeholder="mis. Tagihan listrik bulan ini"></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Tanggal</label><input id="expenseDate" type="date" required></div>
+                <div class="form-group"><label>Jumlah (Rp)</label><input id="expenseAmount" type="number" min="0" required></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" onclick="closeModal('expenseModal')">Batal</button>
+                <button type="submit" class="btn btn-danger">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= MODAL NOTIFIKASI ================= -->
+<div class="modal" id="notifModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Notifikasi Tunggakan</h3>
+            <button class="close" onclick="closeModal('notifModal')">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="notifList"></div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+/* =========================================================
+   ★★★ KONFIGURASI — CUKUP GANTI 1 BARIS INI SAJA ★★★
+   Ganti dengan URL Web App Apps Script Anda:
+   Deploy → Manage deployments → Copy URL yang berakhiran /exec
+   Contoh: "https://script.google.com/macros/s/AKfycbxXXXX.../exec"
+   ========================================================= */
+const API_URL = "GANTI_DENGAN_URL_WEB_APP_ANDA";
+const API_READY = API_URL.startsWith("https://script.google.com/macros/");
+
+/* =========================================================
+   STATE (cache lokal — sumber utama data: Google Sheet)
+   ========================================================= */
+function loadLS(key, def){
+    try{ const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? def : v; }catch(e){ return def; }
+}
+let rooms    = loadLS('kosku_rooms', []);
+let tenants  = loadLS('kosku_tenants', []);
+let payments = loadLS('kosku_payments', []);
+let expenses = loadLS('kosku_expenses', []);
+let settings = loadLS('kosku_settings', {});
+let lastSync = null;
+let syncing = false;
+
+function saveCache(){
+    localStorage.setItem('kosku_rooms', JSON.stringify(rooms));
+    localStorage.setItem('kosku_tenants', JSON.stringify(tenants));
+    localStorage.setItem('kosku_payments', JSON.stringify(payments));
+    localStorage.setItem('kosku_expenses', JSON.stringify(expenses));
+    localStorage.setItem('kosku_settings', JSON.stringify(settings));
+}
+function genId(p){ return p + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,7); }
+
+/* ============ UTIL ============ */
+function rupiah(n){ return "Rp" + (Number(n)||0).toLocaleString("id-ID"); }
+function toISODate(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function todayISO(){ return toISODate(new Date()); }
+function fmtDate(v){
+    if(!v) return "-";
+    const d = new Date(v);
+    if(isNaN(d)) return String(v);
+    return d.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"});
+}
+function esc(s){ return String(s===null||s===undefined?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function timeNow(){ return new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit"}); }
+
+let toastTimer;
+function toast(msg, type){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = "toast show " + (type||"success");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>{ t.className = "toast " + (type||"success"); }, 3200);
+}
+
+/* =========================================================
+   KONEKSI OTOMATIS KE GOOGLE SHEET
+   ========================================================= */
+function setSyncStatus(state){
+    const el = document.getElementById('syncIndicator');
+    const tx = document.getElementById('syncText');
+    el.classList.remove('online','offline');
+    const st = document.getElementById('settingSyncStatus');
+    if(state === 'online'){
+        el.classList.add('online'); tx.textContent = 'Sync: Online';
+        if(st) st.innerHTML = '<span class="badge badge-green">Online</span>';
+    } else if(state === 'offline'){
+        el.classList.add('offline'); tx.textContent = 'Sync: Offline';
+        if(st) st.innerHTML = '<span class="badge badge-red">Offline</span>';
+    } else if(state === 'syncing'){
+        tx.textContent = 'Sync...';
+        if(st) st.innerHTML = '<span class="badge badge-blue">Sinkronisasi...</span>';
+    } else {
+        tx.textContent = 'Sync: Belum diatur';
+        if(st) st.innerHTML = '<span class="badge badge-yellow">URL belum diatur</span>';
+    }
+}
+
+/* Kirim perubahan ke Google Sheet (POST) */
+async function syncToSheet(payload){
+    if(!API_READY){ setSyncStatus('idle'); return null; }
+    try{
+        setSyncStatus('syncing');
+        const res = await fetch(API_URL, {
+            method:'POST',
+            headers:{'Content-Type':'text/plain;charset=utf-8'},
+            body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if(json.status === 'success'){
+            setSyncStatus('online');
+            markSynced();
+            return json;
+        }else{
+            setSyncStatus('offline');
+            toast('Gagal sinkron: ' + (json.message||''), 'error');
+            return null;
+        }
+    }catch(err){
+        setSyncStatus('offline');
+        toast('Koneksi ke Google Sheet gagal — data disimpan lokal sementara','error');
+        return null;
+    }
+}
+
+function markSynced(){
+    lastSync = new Date();
+    const el = document.getElementById('settingLastSync');
+    if(el) el.textContent = timeNow();
+}
+
+/* Ambil semua data dari Google Sheet (GET) */
+async function loadFromSheet(silent){
+    if(!API_READY){
+        setSyncStatus('idle');
+        toast('URL Web App belum diatur! Buka file HTML dan ganti nilai API_URL.','error');
+        return;
+    }
+    if(syncing) return;
+    syncing = true;
+    try{
+        setSyncStatus('syncing');
+        const res = await fetch(API_URL + "?action=getData");
+        const json = await res.json();
+        if(json.status === 'success' && json.data){
+            rooms = json.data.rooms || [];
+            tenants = json.data.tenants || [];
+            payments = json.data.payments || [];
+            expenses = json.data.expenses || [];
+            saveCache(); renderAll();
+            setSyncStatus('online');
+            markSynced();
+            if(!silent) toast('Data tersinkron dengan Google Spreadsheet ✓','success');
+        }else{
+            setSyncStatus('offline');
+            if(!silent) toast('Data dari Sheet tidak valid','error');
+        }
+    }catch(err){
+        setSyncStatus('offline');
+        if(!silent) toast('Gagal terhubung ke Google Sheet','error');
+    }
+    syncing = false;
+}
+
+/* ============ NAVIGASI & MODAL ============ */
+const PAGE_TITLES = {dashboard:'Dashboard',kamar:'Data Kamar',penghuni:'Penghuni',pembayaran:'Pembayaran',pengeluaran:'Pengeluaran',laporan:'Laporan Keuangan',pengaturan:'Pengaturan'};
+
+function showPage(name, el){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    const sec = document.getElementById(name); if(sec) sec.classList.add('active');
+    document.querySelectorAll('.menu').forEach(m=>m.classList.remove('active'));
+    if(el) el.classList.add('active');
+    document.getElementById('pageTitle').textContent = PAGE_TITLES[name]||'Dashboard';
+    document.getElementById('sidebar').classList.remove('open');
+}
+function showPageByName(name){
+    document.querySelectorAll('.menu').forEach(m=>{
+        if((m.getAttribute('onclick')||'').includes("'"+name+"'")) showPage(name, m);
+    });
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+
+function openModal(id){
+    document.getElementById(id).classList.add('show');
+    if(id==='roomModal') resetRoomForm();
+    if(id==='tenantModal') resetTenantForm();
+    if(id==='paymentModal') resetPaymentForm();
+    if(id==='expenseModal') resetExpenseForm();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+/* ============ LOGIKA STATUS ============ */
+function isOverdue(t){
+    if(!t.due) return false;
+    return new Date(t.due) < new Date(todayISO());
+}
+function roomRealStatus(r){
+    if(r.status !== 'occupied') return r.status || 'empty';
+    const t = tenants.find(x=>x.room===r.number);
+    if(t && isOverdue(t)) return 'overdue';
+    return 'occupied';
+}
+function roomStatusBadge(st){
+    const map = {empty:['Kosong','status-empty'],occupied:['Terisi','status-occupied'],overdue:['Menunggak','status-overdue']};
+    return map[st] || map.empty;
+}
+
+/* ============ KAMAR (UNLIMITED) ============ */
+function resetRoomForm(){
+    document.getElementById('roomModalTitle').textContent = 'Tambah Kamar';
+    document.getElementById('roomId').value = '';
+    document.getElementById('roomNumber').value = '';
+    document.getElementById('roomPrice').value = '';
+    document.getElementById('roomStatus').value = 'empty';
+    document.getElementById('roomBulkCount').value = '';
+    document.getElementById('roomBulkStart').value = '1';
+}
+
+function saveRoom(e){
+    e.preventDefault();
+    const id = document.getElementById('roomId').value;
+    const number = document.getElementById('roomNumber').value.trim();
+    const price = Number(document.getElementById('roomPrice').value)||0;
+    const status = document.getElementById('roomStatus').value;
+
+    if(rooms.some(r=>r.number===number && r.id!==id)){
+        toast('Nomor kamar sudah ada','error'); return;
+    }
+
+    if(id){
+        const r = rooms.find(x=>x.id===id);
+        if(r){
+            const old = r.number;
+            Object.assign(r,{number,price,status});
+            if(old !== number){
+                tenants.forEach(t=>{ if(t.room===old) t.room=number; });
+                payments.forEach(p=>{ if(p.room===old) p.room=number; });
+            }
+            syncToSheet({action:'updateRoom',id,number,price,status});
+            toast('Kamar diperbarui & tersinkron','success');
+        }
+    }else{
+        const room = {id:genId('KMR'),number,price,status};
+        rooms.push(room); // TANPA BATAS JUMLAH KAMAR
+        syncToSheet({action:'addRoom',id:room.id,number,price,status});
+        toast('Kamar "'+number+'" tersimpan di Google Sheet','success');
+    }
+    saveCache(); closeModal('roomModal'); renderAll();
+}
+
+function editRoom(id){
+    const r = rooms.find(x=>x.id===id); if(!r) return;
+    document.getElementById('roomModalTitle').textContent = 'Edit Kamar';
+    document.getElementById('roomId').value = r.id;
+    document.getElementById('roomNumber').value = r.number;
+    document.getElementById('roomPrice').value = r.price;
+    document.getElementById('roomStatus').value = r.status || 'empty';
+    document.getElementById('roomModal').classList.add('show');
+}
+
+function deleteRoom(id){
+    const r = rooms.find(x=>x.id===id); if(!r) return;
+    const used = tenants.some(t=>t.room===r.number);
+    if(!confirm(used ? 'Kamar ini masih dihuni. Tetap hapus?' : 'Hapus kamar '+r.number+'?')) return;
+    rooms = rooms.filter(x=>x.id!==id);
+    syncToSheet({action:'deleteRoom',id});
+    saveCache(); renderAll(); toast('Kamar dihapus','success');
+}
+
+/* Generate banyak kamar sekaligus — fitur unlimited */
+function bulkAddRooms(){
+    const count = Number(document.getElementById('roomBulkCount').value)||0;
+    let start = Number(document.getElementById('roomBulkStart').value)||1;
+    const priceInput = document.getElementById('roomPrice').value;
+    const price = Number(priceInput)||0;
+    const status = document.getElementById('roomStatus').value;
+
+    if(!priceInput){ toast('Isi harga sewa terlebih dahulu','error'); return; }
+    if(count < 1){ toast('Isi jumlah kamar minimal 1','error'); return; }
+    if(count > 500){ toast('Maksimal 500 kamar sekali generate','error'); return; }
+
+    const existing = new Set(rooms.map(r=>String(r.number).toLowerCase()));
+    const added = [];
+    let n = start;
+    for(let i=0;i<count;i++){
+        let name;
+        do{ name = 'Kamar ' + String(n).padStart(2,'0'); n++; } while(existing.has(name.toLowerCase()));
+        existing.add(name.toLowerCase());
+        added.push({id:genId('KMR'),number:name,price,status});
+    }
+    rooms = rooms.concat(added);
+    syncToSheet({action:'bulkAddRooms',rooms:added});
+    saveCache(); closeModal('roomModal'); renderAll();
+    toast(added.length+' kamar dibuat (total '+rooms.length+' kamar)','success');
+}
+
+function resetDataRooms(){
+    if(!confirm('Hapus SEMUA data kamar? Baris di sheet "Kamar" juga akan dihapus.')) return;
+    rooms = [];
+    syncToSheet({action:'resetRooms'});
+    saveCache(); renderAll(); toast('Data kamar direset','success');
+}
+
+function roomCardHTML(r){
+    const st = roomRealStatus(r);
+    const [label, cls] = roomStatusBadge(st);
+    const t = tenants.find(x=>x.room===r.number);
+    return `<div class="room" title="Klik untuk edit" onclick="editRoom('${r.id}')">
+        <button class="room-edit" title="Edit" onclick="event.stopPropagation();editRoom('${r.id}')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </button>
+        <div class="room-number">${esc(r.number)}</div>
+        <div class="room-name">${t ? esc(t.name) : 'Belum ada penghuni'}</div>
+        <div class="room-price">${rupiah(r.price)} <span style="font-weight:400;color:var(--muted);font-size:11px;">/bulan</span></div>
+        <span class="room-status ${cls}">${label}</span>
+    </div>`;
+}
+
+function renderRooms(){
+    const q = (document.getElementById('roomSearch').value||'').toLowerCase();
+    const f = document.getElementById('roomFilter').value;
+    const list = rooms.filter(r=>{
+        if(f!=='all' && roomRealStatus(r)!==f) return false;
+        if(q && !String(r.number).toLowerCase().includes(q)) return false;
+        return true;
+    });
+    document.getElementById('roomCountText').textContent = rooms.length + ' kamar — tanpa batas';
+    document.getElementById('allRooms').innerHTML = list.length
+        ? list.map(roomCardHTML).join('')
+        : '<div class="empty" style="grid-column:1/-1;">Belum ada kamar.<br>Klik <strong>Tambah Kamar</strong> — jumlahnya tidak terbatas.</div>';
+    renderDashboardRooms();
+}
+
+function renderDashboardRooms(){
+    document.getElementById('dashboardRooms').innerHTML =
+        rooms.slice(0,6).map(roomCardHTML).join('') ||
+        '<div class="empty" style="grid-column:1/-1;">Belum ada kamar.</div>';
+}
+
+/* ============ PENGHUNI ============ */
+function resetTenantForm(){
+    document.getElementById('tenantModalTitle').textContent = 'Tambah Penghuni';
+    document.getElementById('tenantId').value = '';
+    document.getElementById('tenantName').value = '';
+    document.getElementById('tenantPhone').value = '';
+    document.getElementById('tenantPrice').value = '';
+    document.getElementById('tenantDate').value = todayISO();
+    document.getElementById('tenantDue').value = todayISO();
+    populateRoomSelect('', '');
+}
+
+function populateRoomSelect(selectedRoom, editingTenantId){
+    const sel = document.getElementById('tenantRoom');
+    let html = '';
+    rooms.forEach(r=>{
+        const occ = tenants.find(t=>t.room===r.number && t.id!==editingTenantId);
+        if(occ) return;
+        html += `<option value="${esc(r.number)}"${r.number===selectedRoom?' selected':''}>${esc(r.number)} — ${rupiah(r.price)}</option>`;
+    });
+    sel.innerHTML = html || '<option value="">Belum ada kamar tersedia</option>';
+}
+
+function onTenantRoomChange(){
+    const r = rooms.find(x=>x.number===document.getElementById('tenantRoom').value);
+    if(r) document.getElementById('tenantPrice').value = r.price;
+}
+
+function saveTenant(e){
+    e.preventDefault();
+    const id = document.getElementById('tenantId').value;
+    const roomNumber = document.getElementById('tenantRoom').value;
+    if(!roomNumber){ toast(rooms.length ? 'Pilih kamar terlebih dahulu' : 'Tambahkan kamar dulu di menu Data Kamar','error'); return; }
+
+    const t = {
+        id: id || genId('PGH'),
+        name: document.getElementById('tenantName').value.trim(),
+        phone: document.getElementById('tenantPhone').value.trim(),
+        room: roomNumber,
+        price: Number(document.getElementById('tenantPrice').value)||0,
+        date: document.getElementById('tenantDate').value,
+        due: document.getElementById('tenantDue').value
+    };
+    if(id){
+        const i = tenants.findIndex(x=>x.id===id);
+        if(i>-1){
+            const oldRoom = tenants[i].room;
+            if(oldRoom !== t.room){
+                const old = rooms.find(r=>r.number===oldRoom);
+                if(old){ old.status='empty'; syncToSheet({action:'updateRoom',id:old.id,number:old.number,price:old.price,status:'empty'}); }
+            }
+            tenants[i]=t;
+        } else tenants.push(t);
+        syncToSheet({action:'updateTenant',...t});
+        toast('Data penghuni diperbarui','success');
+    }else{
+        tenants.push(t);
+        syncToSheet({action:'addTenant',...t});
+        toast('Penghuni tersimpan di Google Sheet','success');
+    }
+    const r = rooms.find(x=>x.number===t.room);
+    if(r && r.status!=='occupied'){ r.status='occupied'; syncToSheet({action:'updateRoom',id:r.id,number:r.number,price:r.price,status:'occupied'}); }
+
+    saveCache(); closeModal('tenantModal'); renderAll();
+}
+
+function editTenant(id){
+    const t = tenants.find(x=>x.id===id); if(!t) return;
+    document.getElementById('tenantModalTitle').textContent='Edit Penghuni';
+    document.getElementById('tenantId').value=t.id;
+    document.getElementById('tenantName').value=t.name||'';
+    document.getElementById('tenantPhone').value=t.phone||'';
+    document.getElementById('tenantPrice').value=t.price||0;
+    document.getElementById('tenantDate').value=t.date||todayISO();
+    document.getElementById('tenantDue').value=t.due||todayISO();
+    populateRoomSelect(t.room, t.id);
+    document.getElementById('tenantModal').classList.add('show');
+}
+
+function deleteTenant(id){
+    const t = tenants.find(x=>x.id===id); if(!t) return;
+    if(!confirm('Hapus penghuni '+t.name+'?')) return;
+    tenants = tenants.filter(x=>x.id!==id);
+    const r = rooms.find(x=>x.number===t.room);
+    if(r){ r.status='empty'; syncToSheet({action:'updateRoom',id:r.id,number:r.number,price:r.price,status:'empty'}); }
+    syncToSheet({action:'deleteTenant',id});
+    saveCache(); renderAll(); toast('Penghuni dihapus','success');
+}
+
+function waTenant(phone, name, room, due){
+    let p = String(phone||'').replace(/[^0-9]/g,'');
+    if(p.startsWith('0')) p = '62'+p.slice(1);
+    if(!p){ toast('Nomor WhatsApp belum diisi','error'); return; }
+    const msg = `Halo ${name}, ini pengingat dari pengelola kos. Pembayaran sewa kamar ${room} jatuh tempo pada ${fmtDate(due)}. Mohon segera melakukan pembayaran. Terima kasih 🙏`;
+    window.open('https://wa.me/'+p+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function renderTenants(){
+    const q = (document.getElementById('tenantSearch').value||'').toLowerCase();
+    const list = tenants.filter(t=>!q || (t.name||'').toLowerCase().includes(q) || String(t.room||'').toLowerCase().includes(q));
+    document.getElementById('tenantTable').innerHTML = list.length ? list.map(t=>{
+        const late = isOverdue(t);
+        return `<tr>
+            <td><strong>${esc(t.name)}</strong></td>
+            <td>${esc(t.room)}</td>
+            <td>${esc(t.phone||'-')}</td>
+            <td>${rupiah(t.price)}</td>
+            <td>${fmtDate(t.due)} ${late?'<span class="badge badge-red">Terlambat</span>':''}</td>
+            <td style="white-space:nowrap;">
+                <button class="btn btn-success btn-small" onclick="waTenant('${esc(t.phone)}','${esc(t.name)}','${esc(t.room)}','${t.due||''}')">WA</button>
+                <button class="btn btn-light btn-small" onclick="editTenant('${t.id}')">Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deleteTenant('${t.id}')">Hapus</button>
+            </td>
+        </tr>`;
+    }).join('') : '<tr><td colspan="6" class="empty">Belum ada penghuni.</td></tr>';
+}
+
+function resetDataTenants(){
+    if(!confirm('Hapus SEMUA data penghuni? Status kamar akan dikosongkan.')) return;
+    rooms.forEach(r=>r.status='empty');
+    tenants = [];
+    syncToSheet({action:'resetTenants'});
+    saveCache(); renderAll(); toast('Data penghuni direset','success');
+}
+
+/* ============ PEMBAYARAN ============ */
+function currentPeriodLabel(){
+    return new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+}
+function resetPaymentForm(){
+    document.getElementById('paymentModalTitle').textContent='Catat Pembayaran';
+    document.getElementById('paymentId').value='';
+    document.getElementById('paymentDate').value=todayISO();
+    document.getElementById('paymentPeriod').value=currentPeriodLabel();
+    document.getElementById('paymentAmount').value='';
+    document.getElementById('paymentStatus').value='Lunas';
+    populateTenantSelect('');
+}
+function populateTenantSelect(selectedId){
+    const sel = document.getElementById('paymentTenant');
+    sel.innerHTML = tenants.length
+        ? tenants.map(t=>`<option value="${t.id}"${t.id===selectedId?' selected':''}>${esc(t.name)} — ${esc(t.room)}</option>`).join('')
+        : '<option value="">Belum ada penghuni</option>';
+    onPaymentTenantChange();
+}
+function onPaymentTenantChange(){
+    const t = tenants.find(x=>x.id===document.getElementById('paymentTenant').value);
+    if(t) document.getElementById('paymentAmount').value = t.price||0;
+}
+
+function savePayment(e){
+    e.preventDefault();
+    const t = tenants.find(x=>x.id===document.getElementById('paymentTenant').value);
+    if(!t){ toast('Pilih penghuni terlebih dahulu','error'); return; }
+    const id = document.getElementById('paymentId').value;
+    const p = {
+        id: id || genId('BYR'),
+        date: document.getElementById('paymentDate').value,
+        tenantId: t.id,
+        tenant: t.name,
+        room: t.room,
+        period: document.getElementById('paymentPeriod').value,
+        amount: Number(document.getElementById('paymentAmount').value)||0,
+        status: document.getElementById('paymentStatus').value
+    };
+    if(id){
+        const i = payments.findIndex(x=>x.id===id);
+        if(i>-1) payments[i]=p; else payments.push(p);
+        syncToSheet({action:'updatePayment',...p});
+        toast('Pembayaran diperbarui','success');
+    }else{
+        payments.push(p);
+        syncToSheet({action:'addPayment',...p});
+        toast('Pembayaran tersimpan di Google Sheet','success');
+        if(p.status==='Lunas' && t.due){
+            const d = new Date(t.due);
+            if(!isNaN(d)){
+                d.setMonth(d.getMonth()+1);
+                t.due = toISODate(d);
+                syncToSheet({action:'updateTenant',id:t.id,name:t.name,phone:t.phone,room:t.room,price:t.price,date:t.date,due:t.due});
+            }
+        }
+    }
+    saveCache(); closeModal('paymentModal'); renderAll();
+}
+
+function editPayment(id){
+    const p = payments.find(x=>x.id===id); if(!p) return;
+    document.getElementById('paymentModalTitle').textContent='Edit Pembayaran';
+    document.getElementById('paymentId').value=p.id;
+    populateTenantSelect(p.tenantId||'');
+    document.getElementById('paymentDate').value=p.date||todayISO();
+    document.getElementById('paymentPeriod').value=p.period||'';
+    document.getElementById('paymentAmount').value=p.amount||0;
+    document.getElementById('paymentStatus').value=p.status||'Lunas';
+    document.getElementById('paymentModal').classList.add('show');
+}
+
+function deletePayment(id){
+    if(!confirm('Hapus data pembayaran ini?')) return;
+    payments = payments.filter(x=>x.id!==id);
+    syncToSheet({action:'deletePayment',id});
+    saveCache(); renderAll(); toast('Pembayaran dihapus','success');
+}
+
+function markPaid(id){
+    const p = payments.find(x=>x.id===id); if(!p) return;
+    p.status='Lunas';
+    syncToSheet({action:'updatePayment',...p});
+    saveCache(); renderAll(); toast('Pembayaran ditandai Lunas','success');
+}
+
+function renderPayments(){
+    const q = (document.getElementById('paymentSearch').value||'').toLowerCase();
+    const list = payments.filter(p=>!q || [p.tenant,p.room,p.period,p.status].some(v=>String(v||'').toLowerCase().includes(q)))
+                         .slice().reverse();
+    document.getElementById('paymentTable').innerHTML = list.length ? list.map(p=>`
+        <tr>
+            <td>${fmtDate(p.date)}</td>
+            <td><strong>${esc(p.tenant)}</strong></td>
+            <td>${esc(p.room)}</td>
+            <td>${esc(p.period)}</td>
+            <td>${rupiah(p.amount)}</td>
+            <td><span class="badge ${p.status==='Lunas'?'badge-green':'badge-red'}">${esc(p.status)}</span></td>
+            <td style="white-space:nowrap;">
+                ${p.status!=='Lunas'?`<button class="btn btn-success btn-small" onclick="markPaid('${p.id}')">Lunas</button>`:''}
+                <button class="btn btn-light btn-small" onclick="editPayment('${p.id}')">Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deletePayment('${p.id}')">Hapus</button>
+            </td>
+        </tr>`).join('') : '<tr><td colspan="7" class="empty">Belum ada pembayaran.</td></tr>';
+
+    const total = payments.filter(p=>p.status==='Lunas').reduce((a,b)=>a+(Number(b.amount)||0),0);
+    document.getElementById('paymentTotal').textContent = rupiah(total);
+    document.getElementById('paymentLunas').textContent = payments.filter(p=>p.status==='Lunas').length;
+    document.getElementById('paymentBelum').textContent = payments.filter(p=>p.status!=='Lunas').length;
+    renderDashboardPayments();
+}
+
+function renderDashboardPayments(){
+    const list = payments.slice(-5).reverse();
+    document.getElementById('dashboardPayments').innerHTML = list.length ? list.map(p=>`
+        <tr>
+            <td>${fmtDate(p.date)}</td>
+            <td><strong>${esc(p.tenant)}</strong></td>
+            <td>${esc(p.room)}</td>
+            <td>${rupiah(p.amount)}</td>
+            <td><span class="badge ${p.status==='Lunas'?'badge-green':'badge-red'}">${esc(p.status)}</span></td>
+        </tr>`).join('') : '<tr><td colspan="5" class="empty">Belum ada pembayaran.</td></tr>';
+}
+
+function resetDataPayments(){
+    if(!confirm('Hapus SEMUA data pembayaran?')) return;
+    payments = [];
+    syncToSheet({action:'resetPayments'});
+    saveCache(); renderAll(); toast('Data pembayaran direset','success');
+}
+
+/* ============ PENGELUARAN ============ */
+const EXPENSE_TYPES = {hpp:'Biaya Langsung (HPP)', operasional:'Biaya Operasional', lainnya:'Biaya Lainnya'};
+
+function resetExpenseForm(){
+    document.getElementById('expenseModalTitle').textContent='Tambah Pengeluaran';
+    document.getElementById('expenseId').value='';
+    document.getElementById('expenseCategoryType').value='hpp';
+    document.getElementById('expenseCategory').value='Listrik';
+    document.getElementById('expenseDescription').value='';
+    document.getElementById('expenseDate').value=todayISO();
+    document.getElementById('expenseAmount').value='';
+}
+
+function saveExpense(e){
+    e.preventDefault();
+    const id = document.getElementById('expenseId').value;
+    const x = {
+        id: id || genId('OUT'),
+        date: document.getElementById('expenseDate').value,
+        categoryType: document.getElementById('expenseCategoryType').value,
+        category: document.getElementById('expenseCategory').value,
+        description: document.getElementById('expenseDescription').value.trim(),
+        amount: Number(document.getElementById('expenseAmount').value)||0
+    };
+    if(id){
+        const i = expenses.findIndex(v=>v.id===id);
+        if(i>-1) expenses[i]=x; else expenses.push(x);
+        syncToSheet({action:'updateExpense',...x});
+        toast('Pengeluaran diperbarui','success');
+    }else{
+        expenses.push(x);
+        syncToSheet({action:'addExpense',...x});
+        toast('Pengeluaran tersimpan di Google Sheet','success');
+    }
+    saveCache(); closeModal('expenseModal'); renderAll();
+}
+
+function editExpense(id){
+    const x = expenses.find(v=>v.id===id); if(!x) return;
+    document.getElementById('expenseModalTitle').textContent='Edit Pengeluaran';
+    document.getElementById('expenseId').value=x.id;
+    document.getElementById('expenseCategoryType').value=x.categoryType||'hpp';
+    document.getElementById('expenseCategory').value=x.category||'Lainnya';
+    document.getElementById('expenseDescription').value=x.description||'';
+    document.getElementById('expenseDate').value=x.date||todayISO();
+    document.getElementById('expenseAmount').value=x.amount||0;
+    document.getElementById('expenseModal').classList.add('show');
+}
+
+function deleteExpense(id){
+    if(!confirm('Hapus pengeluaran ini?')) return;
+    expenses = expenses.filter(v=>v.id!==id);
+    syncToSheet({action:'deleteExpense',id});
+    saveCache(); renderAll(); toast('Pengeluaran dihapus','success');
+}
+
+function renderExpenses(){
+    const f = document.getElementById('expenseFilterType').value;
+    const list = expenses.filter(x=>f==='all'||x.categoryType===f).slice().reverse();
+    document.getElementById('expenseTable').innerHTML = list.length ? list.map(x=>`
+        <tr>
+            <td>${fmtDate(x.date)}</td>
+            <td><span class="badge ${x.categoryType==='hpp'?'badge-yellow':(x.categoryType==='operasional'?'badge-blue':'badge-purple')}">${esc(EXPENSE_TYPES[x.categoryType]||x.categoryType)}</span></td>
+            <td>${esc(x.category)}</td>
+            <td>${esc(x.description||'-')}</td>
+            <td><strong>${rupiah(x.amount)}</strong></td>
+            <td style="white-space:nowrap;">
+                <button class="btn btn-light btn-small" onclick="editExpense('${x.id}')">Edit</button>
+                <button class="btn btn-danger btn-small" onclick="deleteExpense('${x.id}')">Hapus</button>
+            </td>
+        </tr>`).join('') : '<tr><td colspan="6" class="empty">Belum ada pengeluaran.</td></tr>';
+
+    const sum = t => expenses.filter(x=>x.categoryType===t).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    document.getElementById('expenseTotal').textContent = rupiah(expenses.reduce((a,b)=>a+(Number(b.amount)||0),0));
+    document.getElementById('expenseHPP').textContent = rupiah(sum('hpp'));
+    document.getElementById('expenseOps').textContent = rupiah(sum('operasional'));
+    document.getElementById('expenseOther').textContent = rupiah(sum('lainnya'));
+}
+
+function resetDataExpenses(){
+    if(!confirm('Hapus SEMUA data pengeluaran?')) return;
+    expenses = [];
+    syncToSheet({action:'resetExpenses'});
+    saveCache(); renderAll(); toast('Data pengeluaran direset','success');
+}
+
+/* ============ DASHBOARD ============ */
+function renderDashboard(){
+    document.getElementById('totalKamar').textContent = rooms.length;
+    let terisi=0, kosong=0, tunggak=0;
+    rooms.forEach(r=>{
+        const st = roomRealStatus(r);
+        if(st==='empty') kosong++;
+        else if(st==='overdue'){ tunggak++; terisi++; }
+        else terisi++;
+    });
+    document.getElementById('kamarTerisi').textContent = terisi;
+    document.getElementById('kamarKosong').textContent = kosong;
+    document.getElementById('kamarTunggak').textContent = tunggak;
+
+    const m = todayISO().slice(0,7);
+    const inc = payments.filter(p=>p.status==='Lunas'&&(p.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const exp = expenses.filter(x=>(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const hpp = expenses.filter(x=>x.categoryType==='hpp'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const gross = inc - hpp;
+    const net = gross - (exp - hpp);
+    document.getElementById('monthIncome').textContent = rupiah(inc);
+    document.getElementById('monthExpense').textContent = rupiah(exp);
+    document.getElementById('monthGross').textContent = rupiah(gross);
+    document.getElementById('monthNet').textContent = rupiah(net);
+
+    updateNotifications();
+}
+
+function renderAll(){
+    renderRooms();
+    renderTenants();
+    renderPayments();
+    renderExpenses();
+    renderDashboard();
+    renderReport();
+}
+
+/* ============ NOTIFIKASI ============ */
+function updateNotifications(){
+    const late = tenants.filter(t=>isOverdue(t));
+    const badge = document.getElementById('notifCount');
+    badge.textContent = late.length;
+    badge.style.display = late.length ? 'flex' : 'none';
+    return late;
+}
+function showNotifications(){
+    const late = updateNotifications();
+    document.getElementById('notifList').innerHTML = !late.length
+        ? '<div class="empty">Tidak ada tunggakan. Semua lancar 👍</div>'
+        : late.map(t=>`
+            <div class="notif-item">
+                <div class="info">
+                    <strong>${esc(t.name)} — ${esc(t.room)}</strong>
+                    <small>Jatuh tempo ${fmtDate(t.due)} · ${rupiah(t.price)}</small>
+                </div>
+                <button class="btn btn-success btn-small" onclick="waTenant('${esc(t.phone)}','${esc(t.name)}','${esc(t.room)}','${t.due||''}')">Ingatkan</button>
+            </div>`).join('');
+    document.getElementById('notifModal').classList.add('show');
+}
+
+/* ============ LAPORAN ============ */
+const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function monthLabel(ym){
+    const parts = String(ym).split('-');
+    return MONTH_NAMES[Number(parts[1])-1] + ' ' + parts[0];
+}
+function monthsList(){
+    const set = new Set();
+    payments.forEach(p=>{ if(p.date) set.add(p.date.slice(0,7)); });
+    expenses.forEach(x=>{ if(x.date) set.add(x.date.slice(0,7)); });
+    set.add(todayISO().slice(0,7));
+    return Array.from(set).sort().reverse();
+}
+
+function renderReport(){
+    const sel = document.getElementById('reportMonth');
+    const months = monthsList();
+    const sig = months.join(',');
+    if(sel.dataset.sig !== sig){
+        const prev = sel.value;
+        sel.innerHTML = months.map(m=>`<option value="${m}">${monthLabel(m)}</option>`).join('');
+        sel.value = months.includes(prev) ? prev : months[0];
+        sel.dataset.sig = sig;
+    }
+    const m = sel.value || months[0];
+
+    const inc = payments.filter(p=>p.status==='Lunas'&&(p.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const hpp = expenses.filter(x=>x.categoryType==='hpp'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const ops = expenses.filter(x=>x.categoryType==='operasional'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const oth = expenses.filter(x=>x.categoryType==='lainnya'&&(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0);
+    const exp = hpp+ops+oth;
+    const gross = inc-hpp;
+    const net = gross-ops-oth;
+
+    document.getElementById('reportIncome').textContent = rupiah(inc);
+    document.getElementById('reportExpense').textContent = rupiah(exp);
+    document.getElementById('reportGross').textContent = rupiah(gross);
+    document.getElementById('reportNet').textContent = rupiah(net);
+
+    document.getElementById('incomeStatement').innerHTML = `
+        <div class="is-section-title">Pendapatan</div>
+        <div class="is-row"><span class="is-label">Pendapatan Sewa</span><span>${rupiah(inc)}</span></div>
+        <div class="is-section-title">Harga Pokok Pendapatan (HPP)</div>
+        <div class="is-row sub"><span>Biaya Langsung</span><span style="color:var(--danger);">(${rupiah(hpp)})</span></div>
+        <div class="is-row gross"><span class="is-label">LABA KOTOR</span><span>${rupiah(gross)}</span></div>
+        <div class="is-section-title">Biaya Operasional &amp; Lainnya</div>
+        <div class="is-row sub"><span>Biaya Operasional</span><span style="color:var(--danger);">(${rupiah(ops)})</span></div>
+        <div class="is-row sub"><span>Biaya Lainnya</span><span style="color:var(--danger);">(${rupiah(oth)})</span></div>
+        <div class="is-row net ${net<0?'loss':''}"><span class="is-label">LABA BERSIH</span><span>${rupiah(net)}</span></div>`;
+
+    renderChart();
+}
+
+function renderChart(){
+    const el = document.getElementById('incomeChart');
+    const now = new Date();
+    const months = [];
+    for(let i=5;i>=0;i--){
+        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+        months.push(d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"));
+    }
+    const data = months.map(m=>({
+        inc: payments.filter(p=>p.status==='Lunas'&&(p.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0),
+        exp: expenses.filter(x=>(x.date||'').startsWith(m)).reduce((a,b)=>a+(Number(b.amount)||0),0)
+    }));
+    const max = Math.max(1, ...data.flatMap(d=>[d.inc,d.exp]));
+    el.innerHTML = months.map((m,i)=>`
+        <div class="bar-wrap">
+            <div class="chart-bars">
+                <div class="bar" style="height:${Math.max(2,(data[i].inc/max)*100)}%"></div>
+                <div class="bar expense" style="height:${Math.max(2,(data[i].exp/max)*100)}%"></div>
+            </div>
+            <div class="bar-label">${monthLabel(m).split(' ')[0].slice(0,3)}</div>
+        </div>`).join('');
+}
+
+/* ============ PENGATURAN ============ */
+function saveSettings(){
+    settings.name = document.getElementById('settingName').value.trim() || 'KOSKU';
+    settings.owner = document.getElementById('settingOwner').value.trim() || 'Owner';
+    settings.phone = document.getElementById('settingPhone').value.trim();
+    settings.address = document.getElementById('settingAddress').value.trim();
+    saveCache(); applySettings();
+    toast('Pengaturan disimpan','success');
+}
+
+function applySettings(){
+    document.getElementById('logoNameDisplay').textContent = settings.name || 'KOSKU';
+    document.getElementById('welcomeOwnerName').textContent = settings.owner || 'Owner';
+    document.getElementById('ownerNameDisplay').textContent = settings.owner || 'Owner';
+    document.getElementById('avatarDisplay').textContent = (settings.owner||'O').charAt(0).toUpperCase();
+    document.getElementById('settingName').value = settings.name || 'KOSKU';
+    document.getElementById('settingOwner').value = settings.owner || 'Owner';
+    document.getElementById('settingPhone').value = settings.phone || '';
+    document.getElementById('settingAddress').value = settings.address || '';
+}
+
+function resetData(){
+    if(!confirm('Hapus SEMUA data aplikasi DAN seluruh baris data di Google Sheet?')) return;
+    rooms=[];tenants=[];payments=[];expenses=[];
+    syncToSheet({action:'resetAll'});
+    saveCache(); renderAll(); toast('Semua data direset','success');
+}
+
+/* =========================================================
+   INIT — KONEKSI OTOMATIS
+   ========================================================= */
+document.addEventListener('DOMContentLoaded', function(){
+    applySettings();
+    renderAll();
+    document.querySelectorAll('.modal').forEach(m=>{
+        m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('show'); });
+    });
+    document.addEventListener('keydown', e=>{
+        if(e.key==='Escape') document.querySelectorAll('.modal.show').forEach(m=>m.classList.remove('show'));
+    });
+
+    if(API_READY){
+        /* Langsung ambil data dari Google Sheet saat halaman dibuka */
+        loadFromSheet();
+        /* Auto-refresh data tiap 30 detik (silent) */
+        setInterval(()=>loadFromSheet(true), 30000);
+        /* Refresh saat tab kembali aktif */
+        document.addEventListener('visibilitychange', ()=>{
+            if(!document.hidden) loadFromSheet(true);
+        });
+    }else{
+        setSyncStatus('idle');
+        toast('⚠ Ganti API_URL di file HTML dengan URL Web App Anda!','error');
+    }
+});
+</script>
+</body>
+</html>
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 }
 
