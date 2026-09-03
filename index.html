@@ -12,10 +12,14 @@ svg{width:20px;height:20px;stroke-width:2;stroke-linecap:round;stroke-linejoin:r
 
 /* SIDEBAR */
 .sidebar{position:fixed;left:0;top:0;width:260px;height:100vh;background:linear-gradient(180deg,#0f172a 0%,#1e293b 100%);color:white;padding:24px 16px;z-index:1000;transition:.3s;border-right:1px solid rgba(255,255,255,0.05);box-shadow:4px 0 15px rgba(0,0,0,0.1);overflow-y:auto;}
-.logo{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:28px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);}
+.logo{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:28px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.05);position:relative;}
 .logo-icon{width:45px;height:45px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 4px 10px rgba(59,130,246,0.3);}
 .logo h2{font-size:18px;font-weight:800;letter-spacing:-0.5px;}
 .logo small{color:#94a3b8;font-size:11px;font-weight:500;}
+.sidebar-close{position:absolute;top:10px;right:10px;border:0;background:rgba(255,255,255,0.1);width:30px;height:30px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#cbd5e1;transition:all .2s;}
+.sidebar-close:hover{background:#ef4444;color:white;}
+.sidebar-close svg{width:18px;height:18px;}
+
 .menu-title{color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:12px;margin-top:10px;}
 .menu{display:flex;align-items:center;gap:14px;padding:13px;border-radius:10px;color:#cbd5e1;cursor:pointer;margin-bottom:4px;transition:all .2s ease;font-weight:500;font-size:14px;position:relative;}
 .menu:hover{background:rgba(255,255,255,0.05);color:white;transform:translateX(4px);}
@@ -82,6 +86,8 @@ svg{width:20px;height:20px;stroke-width:2;stroke-linecap:round;stroke-linejoin:r
 .btn-warning:hover{background:linear-gradient(to bottom,#fbbf24,#f59e0b);}
 .btn-light{background:linear-gradient(to bottom,#ffffff,#f1f5f9);color:#334155;border:1px solid #e2e8f0;box-shadow:0 4px 0 #cbd5e1,0 6px 10px rgba(0,0,0,0.05);}
 .btn-light:hover{background:linear-gradient(to bottom,#f8fafc,#e2e8f0);}
+.btn-wa{background:linear-gradient(to bottom,#25d366,#1eb858);box-shadow:0 4px 0 #128c47,0 6px 10px rgba(37,211,102,0.3);color:white;}
+.btn-wa:hover{background:linear-gradient(to bottom,#34e075,#25d366);}
 .btn-small{padding:8px 12px;font-size:12px;}
 .btn-small svg{width:14px;height:14px;}
 
@@ -100,13 +106,17 @@ svg{width:20px;height:20px;stroke-width:2;stroke-linecap:round;stroke-linejoin:r
 .status-empty{background:#dcfce7;color:#15803d;}
 .status-occupied{background:#dbeafe;color:#1d4ed8;}
 .status-overdue{background:#fee2e2;color:#b91c1c;}
-.room-edit{position:absolute;top:12px;right:12px;border:0;background:#f8fafc;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;transition:all .2s;border:1px solid #e2e8f0;}
+.room-edit,.room-wa{position:absolute;top:12px;border:0;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;border:1px solid #e2e8f0;}
+.room-edit{right:12px;background:#f8fafc;color:#64748b;}
 .room-edit:hover{background:white;color:#3b82f6;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
+.room-wa{right:52px;background:#f0fdf4;color:#16a34a;}
+.room-wa:hover{background:#dcfce7;color:#15803d;}
+.room-wa svg,.room-edit svg{width:16px;height:16px;}
 .room-tenant-info{display:flex;align-items:center;gap:6px;margin-top:6px;padding:6px 8px;background:#eff6ff;border-radius:8px;border:1px solid #dbeafe;}
 .room-tenant-info .tenant-avatar{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
-.room-tenant-info .tenant-detail{font-size:11px;line-height:1.3;}
+.room-tenant-info .tenant-detail{font-size:11px;line-height:1.3;flex:1;min-width:0;}
 .room-tenant-info .tenant-detail strong{display:block;color:#1e293b;font-size:12px;}
-.room-tenant-info .tenant-detail small{color:#64748b;}
+.room-tenant-info .tenant-detail small{color:#64748b;word-break:break-all;}
 
 /* QUICK ACTIONS */
 .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
@@ -126,6 +136,8 @@ td{padding:14px;border-bottom:1px solid var(--border);font-size:13px;}
 .badge-blue{background:#dbeafe;color:#1d4ed8;}
 .badge-purple{background:#f3e8ff;color:#7c3aed;}
 .badge-orange{background:#ffedd5;color:#c2410c;}
+.wa-link{color:#16a34a;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.wa-link:hover{text-decoration:underline;color:#15803d;}
 
 /* TOOLBAR */
 .toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
@@ -152,6 +164,15 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 .close:hover{background:#e2e8f0;color:#ef4444;}
 .modal-footer{display:flex;justify-content:flex-end;gap:12px;margin-top:24px;}
 
+/* WA MODAL */
+.wa-modal-box{max-width:500px;}
+.wa-info-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.wa-info-box .wa-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#25d366,#128c47);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;}
+.wa-info-box .wa-info strong{display:block;color:#1e293b;font-size:15px;}
+.wa-info-box .wa-info small{color:#64748b;font-size:12px;}
+.wa-message-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:12px;}
+.wa-message-box textarea{background:white;min-height:160px;resize:vertical;line-height:1.6;font-size:13px;}
+
 /* CHART */
 .chart{height:240px;display:flex;align-items:flex-end;gap:12px;border-bottom:2px solid var(--border);padding:10px 0;}
 .bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;}
@@ -173,9 +194,12 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 .is-section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--primary-dark);margin:15px 0 5px;padding-bottom:5px;border-bottom:2px solid var(--primary);}
 
 /* NOTIF */
-.notif-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;background:#fff5f5;}
-.notif-item .info strong{display:block;color:var(--text);font-size:14px;}
-.notif-item .info small{color:var(--muted);font-size:12px;}
+.notif-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;background:#fff5f5;}
+.notif-item.warning{background:#fffbeb;}
+.notif-item .info{flex:1;min-width:0;}
+.notif-item .info strong{display:block;color:var(--text);font-size:14px;margin-bottom:4px;}
+.notif-item .info small{color:var(--muted);font-size:12px;display:block;line-height:1.5;}
+.notif-item .actions{display:flex;gap:6px;flex-shrink:0;}
 
 /* SYNC INFO */
 .sync-info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--border);font-size:14px;}
@@ -184,8 +208,9 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 .sync-info-row .value{font-weight:700;}
 
 /* TOAST */
-.toast{position:fixed;bottom:30px;right:30px;background:white;color:var(--text);padding:14px 20px;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,0.1);z-index:5000;display:flex;align-items:center;gap:10px;transform:translateX(400px);transition:transform .3s ease;border:1px solid var(--border);max-width:360px;}
-.toast.show{transform:translateX(0);}
+.toast{position:fixed;bottom:30px;right:30px;background:white;color:var(--text);padding:14px 20px;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,0.1);z-index:5000;display:none;align-items:center;gap:10px;transform:translateX(400px);transition:transform .3s ease;border:1px solid var(--border);max-width:360px;}
+.toast.show{display:flex;animation:slideIn 0.3s forwards;}
+@keyframes slideIn{to{transform:translateX(0);}}
 .toast.success{border-left:4px solid var(--success);}
 .toast.error{border-left:4px solid var(--danger);}
 
@@ -211,6 +236,9 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
     <div class="logo">
         <div class="logo-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
         <div><h2 id="logoNameDisplay">KOSKU</h2><small>Manajemen Kos</small></div>
+        <button type="button" class="sidebar-close" onclick="closeSidebar()" title="Tutup Menu">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
     </div>
     <div class="menu-title">Menu Utama</div>
     <div class="menu active" onclick="showPage('dashboard',this)"><span class="menu-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></span>Dashboard</div>
@@ -398,7 +426,7 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
         <div class="card-header"><h3>Link Google Spreadsheet</h3></div>
         <div class="form-grid">
             <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit">Sheet Kamar</a>
-            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit">Sheet Penghuni</a>
+            <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit#gid=414114963">Sheet Penghuni</a>
             <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit">Sheet Pembayaran</a>
             <a class="btn btn-light" target="_blank" href="https://docs.google.com/spreadsheets/d/1DCiQ-Iydy7q0_dqccEbcv_UhHqok9IMRqamTactJf10/edit">Sheet Pengeluaran</a>
         </div>
@@ -418,12 +446,12 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
     </div>
 </div>
 
-<!-- ===== MODAL: PENGHUNI (kamar = input teks manual) ===== -->
+<!-- ===== MODAL: PENGHUNI ===== -->
 <div class="modal" id="tenantModal">
     <div class="modal-box">
         <div class="modal-header"><h3 id="tenantModalTitle">Tambah Penghuni</h3><button class="close" onclick="closeModal('tenantModal')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
         <div class="form-group"><label>Nama Lengkap</label><input type="text" id="tenantName" placeholder="Nama lengkap penghuni"></div>
-        <div class="form-group"><label>Nomor WhatsApp</label><input type="text" id="tenantPhone" placeholder="628xxxxxxxxxx"></div>
+        <div class="form-group"><label>Nomor WhatsApp (Kolom D)</label><input type="text" id="tenantPhone" placeholder="628xxxxxxxxxx"><div class="form-hint">Format: 6281234567890 (tanpa tanda + atau spasi). Data ini diambil dari Kolom D Spreadsheet.</div></div>
         <div class="form-group"><label>Kamar</label><input type="text" id="tenantRoom" placeholder="Ketik nomor kamar manual, contoh: Kamar 01"><div class="form-hint">Ketik langsung nomor kamar sesuai data kamar yang sudah terdaftar.</div></div>
         <div class="form-group"><label>Harga Sewa / Bulan</label><input type="number" id="tenantPrice" placeholder="Contoh: 650000"></div>
         <div class="form-grid">
@@ -467,10 +495,35 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
     </div>
 </div>
 
+<!-- ===== MODAL: WHATSAPP ===== -->
+<div class="modal" id="waModal">
+    <div class="modal-box wa-modal-box">
+        <div class="modal-header"><h3>Kirim Pesan WhatsApp</h3><button class="close" onclick="closeModal('waModal')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+        <div class="wa-info-box">
+            <div class="wa-avatar" id="waAvatar">?</div>
+            <div class="wa-info">
+                <strong id="waName">Nama Penghuni</strong>
+                <small id="waPhone">No. WhatsApp</small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Pesan yang akan dikirim</label>
+            <div class="wa-message-box">
+                <textarea id="waMessage" rows="7"></textarea>
+            </div>
+            <div class="form-hint">Anda dapat mengedit pesan sebelum dikirim. Pesan akan terbuka di aplikasi WhatsApp.</div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-light" onclick="closeModal('waModal')">Batal</button>
+            <button class="btn btn-wa" onclick="sendWhatsApp()"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h6m2 6H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v8l-4 4z"/></svg> Kirim via WhatsApp</button>
+        </div>
+    </div>
+</div>
+
 <!-- ===== MODAL: NOTIFIKASI ===== -->
 <div class="modal" id="notifModal">
     <div class="modal-box">
-        <div class="modal-header"><h3>Notifikasi</h3><button class="close" onclick="closeModal('notifModal')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
+        <div class="modal-header"><h3>Notifikasi Penghuni</h3><button class="close" onclick="closeModal('notifModal')"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div>
         <div id="notifList"><div class="empty">Tidak ada notifikasi</div></div>
     </div>
 </div>
@@ -493,13 +546,9 @@ select:focus,input:focus,textarea:focus{border-color:#3b82f6;box-shadow:0 0 0 3p
 <script>
 /* ============================================================
    KOSKU - Frontend JavaScript Lengkap
-   Perbaikan:
-   1. Kartu kamar menampilkan nama penghuni saat terisi
-   2. Form penghuni: kamar diubah jadi input teks manual
    ============================================================ */
 
 // ================= KONFIGURASI =================
-// GANTI URL ini dengan URL deployment Google Apps Script Anda
 var APP_URL = 'https://script.google.com/macros/s/AKfycbyRiaQonK-spIJrD7mCh7UyyF8JMbvzHeh0ik9r_iRgb63Pb6zzJ9ih8kyT245aqp3T/exec';
 
 // ================= DATA STORE =================
@@ -507,6 +556,8 @@ var DB = { rooms: [], tenants: [], payments: [], expenses: [] };
 var editingId = null;
 var isOnline = false;
 var lastSyncTime = '-';
+var currentWAPhone = '';
+var currentWAName = '';
 
 // ================= SETTINGS =================
 var settings = {
@@ -571,7 +622,7 @@ function showPage(id, el) {
     if(id==='penghuni') renderTenants();
     if(id==='pembayaran') renderPayments();
     if(id==='pengeluaran') renderExpenses();
-    if(id==='laporan') { buildReportMonths(); renderReport(); }
+    if(id==='laporan') { buildReportMonthsl(); renderReport(); }
 }
 
 function showPageByName(id) {
@@ -585,6 +636,7 @@ function showPageByName(id) {
 }
 
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
 
 // ================= MODAL =================
 function openModal(id) {
@@ -607,8 +659,11 @@ function toast(msg, type) {
     var icon = type==='success' ? 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' : 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z';
     var clr = type==='success' ? '#10b981' : '#ef4444';
     t.innerHTML = '<svg width="20" height="20" fill="none" stroke="'+clr+'" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="'+icon+'"/></svg>' + msg;
-    setTimeout(function(){ t.classList.remove('show'); }, 3000);
-    setTimeout(function(){ t.classList.add('show'); }, 10);
+    clearTimeout(t.timer);
+    t.classList.remove('show');
+    void t.offsetWidth; // trigger reflow
+    t.classList.add('show');
+    t.timer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
 // ================= CONFIRM =================
@@ -625,13 +680,125 @@ function closeConfirm() { document.getElementById('confirmDialog').classList.rem
 // ================= HELPER =================
 function uid() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
 function rp(n) { return 'Rp' + Number(n||0).toLocaleString('id-ID'); }
-function esc(s) { if(!s) return ''; var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function esc(s) { if(s===null||s===undefined) return ''; var d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
 function today() { return new Date().toISOString().slice(0,10); }
 function getMonthKey(ds) { if(!ds) return ''; return ds.slice(0,7); }
 function getMonthLabel(k) {
     if(!k||k.length<7) return '-';
     var ms=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     return ms[parseInt(k.slice(5,7))-1] + ' ' + k.slice(0,4);
+}
+
+// ================= FORMAT NOMOR WA =================
+function formatWA(phone) {
+    if(!phone) return '';
+    var p = String(phone).replace(/[^0-9]/g, '');
+    if(p.charAt(0)==='0') p = '62' + p.slice(1);
+    return p;
+}
+
+function formatDateID(ds) {
+    if(!ds) return '-';
+    try {
+        var d = new Date(ds);
+        var ms=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        return d.getDate() + ' ' + ms[d.getMonth()] + ' ' + d.getFullYear();
+    } catch(e) { return ds; }
+}
+
+// ================= TEMPLATE PESAN WA SOPAN =================
+function generateGreetingMessage(tenant) {
+    var ownerName = settings.owner || 'Pemilik Kos';
+    var kosName = settings.name || 'Kos';
+    return 'Assalamualaikum / Selamat pagi, Yth. Bapak/Ibu ' + (tenant.name||'') + ',\n\n' +
+        'Semoga Bapak/Ibu dalam keadaan sehat dan aktivitas sehari-hari berjalan lancar.\n\n' +
+        'Perkenalkan, saya ' + ownerName + ' dari ' + kosName + '. Saya ingin menyampaikan informasi terkait sewa kamar Bapak/Ibu:\n\n' +
+        'Nomor Kamar : ' + (tenant.room||'-') + '\n' +
+        'Harga Sewa : ' + rp(tenant.price) + ' / bulan\n' +
+        'Jatuh Tempo : ' + formatDateID(tenant.due) + '\n\n' +
+        'Mohon kesediaan Bapak/Ibu untuk dapat melakukan pembayaran sewa tepat waktu. ' +
+        'Apabila ada kendala atau pertanyaan, jangan ragu untuk menghubungi saya.\n\n' +
+        'Terima kasih atas perhatian dan kerja sama Bapak/Ibu. Semoga hubungan baik kita dapat terus terjaga.\n\n' +
+        'Hormat saya,\n' + ownerName + '\n' + kosName;
+}
+
+function generateOverdueMessage(tenant, daysOverdue) {
+    var ownerName = settings.owner || 'Pemilik Kos';
+    var kosName = settings.name || 'Kos';
+    return 'Assalamualaikum / Selamat pagi, Yth. Bapak/Ibu ' + (tenant.name||'') + ',\n\n' +
+        'Semoga Bapak/Ibu dalam keadaan sehat dan aktivitas berjalan lancar.\n\n' +
+        'Saya ' + ownerName + ' dari ' + kosName + ' ingin menyampaikan dengan hormat bahwa pembayaran sewa kamar Bapak/Ibu telah melewati jatuh tempo.\n\n' +
+        'Detail sewa:\n' +
+        'Nomor Kamar : ' + (tenant.room||'-') + '\n' +
+        'Harga Sewa : ' + rp(tenant.price) + ' / bulan\n' +
+        'Jatuh Tempo : ' + formatDateID(tenant.due) + '\n' +
+        'Terlambat : ' + daysOverdue + ' hari\n\n' +
+        'Saya memohon maaf yang sebesar-besarnya apabila pesan ini mengganggu waktu Bapak/Ibu. ' +
+        'Dengan hormat, mohon kesediaan Bapak/Ibu untuk segera melakukan pembayaran sewa. ' +
+        'Apabila ada kendala atau halangan, saya sangat terbuka untuk berdiskusi.\n\n' +
+        'Bagi Bapak/Ibu yang sudah melakukan pembayaran, mohon abaikan pesan ini. ' +
+        'Terima kasih atas perhatian dan kerja sama Bapak/Ibu yang baik.\n\n' +
+        'Hormat saya,\n' + ownerName + '\n' + kosName;
+}
+
+function generateDueSoonMessage(tenant, daysLeft) {
+    var ownerName = settings.owner || 'Pemilik Kos';
+    var kosName = settings.name || 'Kos';
+    return 'Assalamualaikum / Selamat pagi, Yth. Bapak/Ibu ' + (tenant.name||'') + ',\n\n' +
+        'Semoga Bapak/Ibu dalam keadaan sehat dan aktivitas sehari-hari berjalan lancar.\n\n' +
+        'Saya ' + ownerName + ' dari ' + kosName + ' ingin menginformasikan dengan hormat bahwa jatuh tempo pembayaran sewa kamar Bapak/Ibu akan jatuh tempo dalam ' + daysLeft + ' hari lagi.\n\n' +
+        'Detail sewa:\n' +
+        'Nomor Kamar : ' + (tenant.room||'-') + '\n' +
+        'Harga Sewa : ' + rp(tenant.price) + ' / bulan\n' +
+        'Jatuh Tempo : ' + formatDateID(tenant.due) + '\n\n' +
+        'Saya mohon maaf apabila pesan ini mengganggu. ' +
+        'Mohon kesediaan Bapak/Ibu untuk dapat mempersiapkan pembayaran tepat waktu. ' +
+        'Apabila ada hal yang ingin ditanyakan atau didiskusikan, saya dengan senang hati akan membantu.\n\n' +
+        'Terima kasih atas perhatian dan kerja sama Bapak/Ibu. Semoga hubungan baik kita terus terjaga dengan baik.\n\n' +
+        'Hormat saya,\n' + ownerName + '\n' + kosName;
+}
+
+function generateReminderMessage(tenant) {
+    var ownerName = settings.owner || 'Pemilik Kos';
+    var kosName = settings.name || 'Kos';
+    return 'Assalamualaikum / Selamat pagi, Yth. Bapak/Ibu ' + (tenant.name||'') + ',\n\n' +
+        'Semoga Bapak/Ibu selalu dalam keadaan sehat dan aktivitas berjalan lancar.\n\n' +
+        'Saya ' + ownerName + ' dari ' + kosName + ' ingin mengingatkan dengan hormat terkait pembayaran sewa kamar Bapak/Ibu:\n\n' +
+        'Nomor Kamar : ' + (tenant.room||'-') + '\n' +
+        'Harga Sewa : ' + rp(tenant.price) + ' / bulan\n' +
+        'Jatuh Tempo : ' + formatDateID(tenant.due) + '\n\n' +
+        'Mohon kesediaan Bapak/Ibu untuk dapat melakukan pembayaran sewa. ' +
+        'Apabila ada kendala atau hal yang ingin didiskusikan, saya sangat terbuka untuk berkomunikasi.\n\n' +
+        'Terima kasih atas perhatian dan kerja sama Bapak/Ibu dengan baik.\n\n' +
+        'Hormat saya,\n' + ownerName + '\n' + kosName;
+}
+
+// ================= BUKA POPUP WA =================
+function openWAPopup(phone, name, message, avatarText) {
+    if(!phone) { toast('Nomor WhatsApp penghuni ini belum terdaftar','error'); return; }
+    currentWAPhone = formatWA(phone);
+    currentWAName = name || 'Penghuni';
+    document.getElementById('waName').textContent = name || 'Penghuni';
+    document.getElementById('waPhone').textContent = '+' + currentWAPhone;
+    document.getElementById('waAvatar').textContent = (name||'?').charAt(0).toUpperCase();
+    document.getElementById('waMessage').value = message || generateGreetingMessage({name:name,room:'',price:0,due:''});
+    document.getElementById('waModal').classList.add('show');
+}
+
+function sendWhatsApp() {
+    if(!currentWAPhone) { toast('Nomor WhatsApp tidak valid','error'); return; }
+    var msg = document.getElementById('waMessage').value;
+    var url = 'https://wa.me/' + currentWAPhone + '?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank');
+    closeModal('waModal');
+    toast('Membuka WhatsApp...','success');
+}
+
+function waTenant(tenantId) {
+    var t = DB.tenants.find(function(x){return x.id===tenantId;});
+    if(!t) { toast('Data penghuni tidak ditemukan','error'); return; }
+    if(!t.phone) { toast('Nomor WhatsApp belum terdaftar','error'); return; }
+    openWAPopup(t.phone, t.name, generateReminderMessage(t), t.name);
 }
 
 // ================= CARI PENGHUNI BERDASARKAN KAMAR =================
@@ -667,7 +834,6 @@ function loadFromSheet() {
                 DB.payments = res.data.payments || [];
                 DB.expenses = res.data.expenses || [];
 
-                // Re-calculate occupied dari data penghuni
                 var occMap = {};
                 DB.tenants.forEach(function(t) { if(t.room) occMap[String(t.room).trim().toUpperCase()] = true; });
                 DB.rooms.forEach(function(r) {
@@ -730,7 +896,6 @@ function renderDashboard() {
     if(!DB.rooms.length) html = '<div class="empty" style="grid-column:1/-1;">Belum ada kamar</div>';
     document.getElementById('dashboardRooms').innerHTML = html;
 
-    // Keuangan bulan ini
     var mk = getMonthKey(today()), inc=0, exp=0, hpp=0;
     DB.payments.forEach(function(p){ if(getMonthKey(p.date)===mk && p.status==='Lunas') inc+=Number(p.amount)||0; });
     DB.expenses.forEach(function(e){ if(getMonthKey(e.date)===mk){ var a=Number(e.amount)||0; exp+=a; if(e.categoryType==='hpp') hpp+=a; }});
@@ -739,7 +904,6 @@ function renderDashboard() {
     document.getElementById('monthGross').textContent = rp(inc-hpp);
     document.getElementById('monthNet').textContent = rp(inc-exp);
 
-    // Pembayaran terbaru
     var phtml = '';
     var recent = DB.payments.slice().reverse().slice(0,5);
     if(!recent.length) { phtml = '<tr><td colspan="5" class="empty">Belum ada pembayaran</td></tr>'; }
@@ -747,12 +911,13 @@ function renderDashboard() {
     document.getElementById('dashboardPayments').innerHTML = phtml;
 }
 
-// ================= BUILD ROOM CARD (PERBAIKAN UTAMA) =================
+// ================= BUILD ROOM CARD =================
 function buildRoomCard(room) {
     var tenant = getTenantByRoom(room.number);
     var isOverdue = room.occupied && isRoomOverdue(room.number);
     var statusClass = 'status-empty', statusText = 'Kosong';
     var tenantHtml = '';
+    var waButton = '';
 
     if(room.occupied) {
         if(isOverdue) { statusClass='status-overdue'; statusText='Menunggak'; }
@@ -760,19 +925,26 @@ function buildRoomCard(room) {
 
         if(tenant) {
             var initials = tenant.name ? tenant.name.charAt(0).toUpperCase() : '?';
+            var phoneDisplay = tenant.phone ? esc(tenant.phone) : '-';
             tenantHtml = '<div class="room-tenant-info">' +
                 '<div class="tenant-avatar">' + esc(initials) + '</div>' +
                 '<div class="tenant-detail">' +
                     '<strong>' + esc(tenant.name) + '</strong>' +
-                    '<small>' + (tenant.phone ? esc(tenant.phone) : '-') + '</small>' +
+                    '<small>' + phoneDisplay + '</small>' +
                 '</div></div>';
+            if(tenant.phone) {
+                waButton = '<button class="room-wa" onclick="event.stopPropagation();waTenant(\'' + esc(tenant.id) + '\')" title="Kirim WhatsApp ke ' + esc(tenant.name) + '">' +
+                    '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>' +
+                '</button>';
+            }
         }
     }
 
-    return '<div class="room">' +
+    return '<div class="room" onclick="editRoom(\'' + esc(room.id) + '\')">' +
         '<button class="room-edit" onclick="event.stopPropagation();editRoom(\'' + esc(room.id) + '\')" title="Edit kamar">' +
             '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>' +
         '</button>' +
+        waButton +
         '<div class="room-number">' + esc(room.number) + '</div>' +
         tenantHtml +
         '<div class="room-price">' + rp(room.price) + ' / bln</div>' +
@@ -809,7 +981,21 @@ function renderTenants() {
     if(!filtered.length) { html = '<tr><td colspan="6" class="empty">Belum ada data penghuni</td></tr>'; }
     else {
         filtered.forEach(function(t) {
-            html += '<tr><td><strong>'+esc(t.name)+'</strong></td><td>'+esc(t.room)+'</td><td>'+esc(t.phone)+'</td><td>'+rp(t.price)+'</td><td>'+esc(t.due)+'</td><td><button class="btn btn-warning btn-small" onclick="editTenant(\''+esc(t.id)+'\')" style="margin-right:4px;">Edit</button><button class="btn btn-danger btn-small" onclick="deleteTenant(\''+esc(t.id)+'\')">Hapus</button></td></tr>';
+            var waPhone = formatWA(t.phone);
+            var phoneCell = t.phone 
+                ? '<a class="wa-link" href="https://wa.me/' + esc(waPhone) + '" target="_blank" title="Klik untuk chat WhatsApp"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg> ' + esc(t.phone) + '</a>'
+                : '<span style="color:#94a3b8;">Belum ada</span>';
+            html += '<tr>' +
+                '<td><strong>'+esc(t.name)+'</strong></td>' +
+                '<td>'+esc(t.room)+'</td>' +
+                '<td>'+phoneCell+'</td>' +
+                '<td>'+rp(t.price)+'</td>' +
+                '<td>'+esc(t.due)+'</td>' +
+                '<td>' +
+                    (t.phone ? '<button class="btn btn-wa btn-small" onclick="waTenant(\''+esc(t.id)+'\')" style="margin-right:4px;" title="Kirim pesan WhatsApp"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h6m2 6H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v8l-4 4z"/></svg></button>' : '') +
+                    '<button class="btn btn-warning btn-small" onclick="editTenant(\''+esc(t.id)+'\')" style="margin-right:4px;">Edit</button>' +
+                    '<button class="btn btn-danger btn-small" onclick="deleteTenant(\''+esc(t.id)+'\')">Hapus</button>' +
+                '</td></tr>';
         });
     }
     document.getElementById('tenantTable').innerHTML = html;
@@ -833,7 +1019,11 @@ function renderPayments() {
     else {
         filtered.slice().reverse().forEach(function(p) {
             var bc = p.status==='Lunas'?'badge-green':'badge-red';
-            html += '<tr><td>'+esc(p.date)+'</td><td>'+esc(p.tenant)+'</td><td>'+esc(p.room)+'</td><td>'+esc(p.period)+'</td><td>'+rp(p.amount)+'</td><td><span class="badge '+bc+'">'+esc(p.status)+'</span></td><td><button class="btn btn-warning btn-small" onclick="editPayment(\''+esc(p.id)+'\')" style="margin-right:4px;">Edit</button><button class="btn btn-danger btn-small" onclick="deletePayment(\''+esc(p.id)+'\')">Hapus</button></td></tr>';
+            var tenant = DB.tenants.find(function(t){return t.name===p.tenant;});
+            var waBtn = (tenant && tenant.phone)
+                ? '<button class="btn btn-wa btn-small" onclick="waTenant(\''+esc(tenant.id)+'\')" title="Chat WhatsApp"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h6m2 6H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v8l-4 4z"/></svg></button>'
+                : '';
+            html += '<tr><td>'+esc(p.date)+'</td><td>'+esc(p.tenant)+'</td><td>'+esc(p.room)+'</td><td>'+esc(p.period)+'</td><td>'+rp(p.amount)+'</td><td><span class="badge '+bc+'">'+esc(p.status)+'</span></td><td>'+waBtn+' <button class="btn btn-warning btn-small" onclick="editPayment(\''+esc(p.id)+'\')" style="margin-right:4px;">Edit</button><button class="btn btn-danger btn-small" onclick="deletePayment(\''+esc(p.id)+'\')">Hapus</button></td></tr>';
         });
     }
     document.getElementById('paymentTable').innerHTML = html;
@@ -925,23 +1115,66 @@ function renderChart(currentMk) {
     document.getElementById('incomeChart').innerHTML = html || '<div class="empty" style="width:100%;">Belum ada data</div>';
 }
 
-// ================= NOTIFIKASI =================
+// ================= NOTIFIKASI (dengan tombol Kirim WA) =================
 function updateNotifications() {
     var notifs = [];
     DB.tenants.forEach(function(t) {
         if(t.due) {
             var due=new Date(t.due), now=new Date(); now.setHours(0,0,0,0);
             var diff = Math.ceil((due-now)/(1000*60*60*24));
-            if(diff<0) notifs.push({text:t.name+' ('+t.room+') menunggak '+Math.abs(diff)+' hari',type:'danger'});
-            else if(diff<=3) notifs.push({text:t.name+' ('+t.room+') jatuh tempo '+diff+' hari lagi',type:'warning'});
+            if(diff<0) {
+                notifs.push({
+                    tenant: t, type: 'danger', days: Math.abs(diff),
+                    title: t.name + ' (Kamar ' + (t.room||'-') + ')',
+                    desc: 'Pembayaran telah menunggak ' + Math.abs(diff) + ' hari. Jatuh tempo: ' + formatDateID(t.due) + '.'
+                });
+            } else if(diff<=3) {
+                notifs.push({
+                    tenant: t, type: 'warning', days: diff,
+                    title: t.name + ' (Kamar ' + (t.room||'-') + ')',
+                    desc: 'Jatuh tempo ' + diff + ' hari lagi (' + formatDateID(t.due) + ').'
+                });
+            }
         }
     });
     document.getElementById('notifCount').textContent = notifs.length;
     var html = '';
-    if(!notifs.length) html = '<div class="empty">Tidak ada notifikasi</div>';
-    else notifs.forEach(function(n){ var bg=n.type==='danger'?'#fff5f5':'#fffbeb'; html += '<div class="notif-item" style="background:'+bg+'"><div class="info"><strong>'+esc(n.text)+'</strong></div></div>'; });
+    if(!notifs.length) {
+        html = '<div class="empty">Tidak ada notifikasi. Semua penghuni dalam status baik.</div>';
+    } else {
+        notifs.forEach(function(n) {
+            var cls = n.type==='danger' ? '' : 'warning';
+            var label = n.type==='danger' ? 'Menunggak' : 'Jatuh Tempo';
+            var bc = n.type==='danger' ? 'badge-red' : 'badge-yellow';
+            var waBtn = n.tenant.phone 
+                ? '<button class="btn btn-wa btn-small" onclick="sendNotifWA(\'' + esc(n.tenant.id) + '\', ' + n.days + ', \'' + n.type + '\')" title="Kirim pengingat via WhatsApp"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8M8 14h6m2 6H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v8l-4 4z"/></svg> Kirim WA</button>'
+                : '<small style="color:#94a3b8;">No. WA belum terdaftar</small>';
+            html += '<div class="notif-item ' + cls + '">' +
+                '<div class="info">' +
+                    '<strong>' + esc(n.title) + ' <span class="badge ' + bc + '" style="margin-left:6px;">' + label + '</span></strong>' +
+                    '<small>' + esc(n.desc) + '</small>' +
+                '</div>' +
+                '<div class="actions">' + waBtn + '</div>' +
+            '</div>';
+        });
+    }
     document.getElementById('notifList').innerHTML = html;
 }
+
+function sendNotifWA(tenantId, days, type) {
+    var t = DB.tenants.find(function(x){return x.id===tenantId;});
+    if(!t) { toast('Data penghuni tidak ditemukan','error'); return; }
+    if(!t.phone) { toast('Nomor WhatsApp belum terdaftar','error'); return; }
+    
+    var msg;
+    if(type==='danger') {
+        msg = generateOverdueMessage(t, days);
+    } else {
+        msg = generateDueSoonMessage(t, days);
+    }
+    openWAPopup(t.phone, t.name, msg, t.name);
+}
+
 function showNotifications() { openModal('notifModal'); }
 
 // ================= FORM CLEAR =================
